@@ -3,7 +3,7 @@
 """
 Composite / side-by-side plotting.
 
-The core cfutils workflow plots a single chromatogram.  A recurring request is
+The core sanger workflow plots a single chromatogram.  A recurring request is
 to show *another* tool's output (GC content, coverage, a second read, a custom
 signal computed by the user's own analysis) right next to the chromatogram,
 sharing the same x-axis so features line up.

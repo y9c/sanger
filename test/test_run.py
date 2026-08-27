@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""Unit tests for cfutils run module."""
+"""Unit tests for sanger run module."""
 
-import unittest
-import tempfile
 import os
-from cfutils.run import report_mutation
+import tempfile
+import unittest
+
+from sanger.run import report_mutation
+
 
 class TestRunFunc(unittest.TestCase):
-    """Test report_mutation in cfutils.run."""
+    """Test report_mutation in sanger.run."""
 
     def test_report_mutation(self) -> None:
         """Test report_mutation creates output files without error."""
@@ -27,6 +29,7 @@ class TestRunFunc(unittest.TestCase):
                 self.assertTrue(os.path.exists(tsv_path), f"Missing TSV: {tsv_path}")
             except Exception as e:
                 self.fail(f"report_mutation raised an exception: {e}")
+
 
 if __name__ == "__main__":
     unittest.main()

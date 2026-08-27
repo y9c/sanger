@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
-"""Unit tests for cfutils performance-critical & lab-metric functions."""
+"""Unit tests for sanger performance-critical & lab-metric functions."""
 
 import unittest
-import numpy as np
 
-from cfutils.parser import parse_abi, SeqRecord
-from cfutils.qc import continuous_read_length, signal_intensity, noise_metric
-from cfutils.transform import trim_leading_ns
-from cfutils.align import detect_orientation
+from sanger.align import detect_orientation
+from sanger.parser import SeqRecord, parse_abi
+from sanger.qc import continuous_read_length, noise_metric, signal_intensity
+from sanger.transform import trim_leading_ns
 
 
 def _mk_record(seq, qual):
@@ -53,8 +52,8 @@ class TestLabMetrics(unittest.TestCase):
 
     def test_detect_orientation_forward(self):
         # a read identical to the reference head should be forward (+1)
-        import os
-        from cfutils.parser import parse_fasta
+        from sanger.parser import parse_fasta
+
         ref = parse_fasta("./data/ref.fa")
         # build a synthetic record whose sequence equals a ref substring
         subj = parse_abi("./data/B5-M13R_B07.ab1")

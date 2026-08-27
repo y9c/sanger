@@ -10,7 +10,7 @@ plot them side by side with the chromatogram.
 
 Typical usage::
 
-    from cfutils.features import ChromatogramFeature, plot_features
+    from sanger.features import ChromatogramFeature, plot_features
 
     feat = ChromatogramFeature(start=42, end=60, strand=+1,
                                color="#ff8888", label="primer F")

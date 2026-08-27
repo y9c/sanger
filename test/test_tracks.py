@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
-"""Unit tests for cfutils tracks (split/join) module."""
+"""Unit tests for sanger tracks (split/join) module."""
 
 import unittest
+
 import numpy as np
 
-from cfutils.parser import parse_abi
-from cfutils.tracks import join_tracks, split_track, slice_track, export_tracks, import_tracks
+from sanger.parser import parse_abi
+from sanger.tracks import (
+    export_tracks,
+    import_tracks,
+    join_tracks,
+    slice_track,
+    split_track,
+)
 
 
 class TestTracks(unittest.TestCase):
@@ -20,11 +27,16 @@ class TestTracks(unittest.TestCase):
         b = slice_track(a, 1, 20)
         joined = join_tracks(a, b, name="joined")
         self.assertEqual(joined.seq, a.seq + b.seq)
-        self.assertEqual(len(joined.annotations["channel 1"]),
-                         len(a.annotations["channel 1"]) + len(b.annotations["channel 1"]))
+        self.assertEqual(
+            len(joined.annotations["channel 1"]),
+            len(a.annotations["channel 1"]) + len(b.annotations["channel 1"]),
+        )
         # the x axis should contain a gap between the two records
-        self.assertGreater(len(joined.annotations["trace_x"]),
-                           max(a.annotations["channel 1"]) if False else 0)
+        self.assertGreater(
+            len(joined.annotations["trace_x"]),
+            max(a.annotations["channel 1"]) if False else 0,
+        )
+
     def test_split_reassembles_sequence(self):
         pieces = split_track(self.query, cuts=[20, 40])
         self.assertEqual(len(pieces), 3)
@@ -35,28 +47,40 @@ class TestTracks(unittest.TestCase):
         seg = slice_track(self.query, 10, 15)
         self.assertEqual(seg.seq, self.query.seq[9:15])
         self.assertEqual(len(seg.annotations["peak positions"]), 6)
-        self.assertEqual(len(seg.annotations["channel 1"]),
-                         len(seg.annotations["trace_x"]))
+        self.assertEqual(
+            len(seg.annotations["channel 1"]), len(seg.annotations["trace_x"])
+        )
 
     def test_npz_roundtrip(self):
-        import tempfile, os
+        import tempfile
+
         with tempfile.TemporaryDirectory() as tmp:
             paths = export_tracks([self.query], tmp, fmt="npz")
             rec = import_tracks(paths[0])
-            self.assertTrue(np.allclose(rec.annotations["peak positions"],
-                                        self.query.annotations["peak positions"]))
-            self.assertEqual(len(rec.annotations["channel 1"]),
-                             len(self.query.annotations["channel 1"]))
+            self.assertTrue(
+                np.allclose(
+                    rec.annotations["peak positions"],
+                    self.query.annotations["peak positions"],
+                )
+            )
+            self.assertEqual(
+                len(rec.annotations["channel 1"]),
+                len(self.query.annotations["channel 1"]),
+            )
 
     def test_slice_preserves_channels_and_plots(self):
         seg = slice_track(self.query, 10, 20)
-        self.assertEqual(seg.annotations["channels"],
-                         self.query.annotations["channels"])
+        self.assertEqual(
+            seg.annotations["channels"], self.query.annotations["channels"]
+        )
         # plotting a sliced record must not fail (needs channels annotation)
         import matplotlib
+
         matplotlib.use("Agg", force=True)
         import matplotlib.pyplot as plt
-        from cfutils.show import plot_chromatograph
+
+        from sanger.show import plot_chromatograph
+
         fig, ax = plt.subplots()
         plot_chromatograph(seg, ax=ax)
         plt.close(fig)
@@ -64,8 +88,9 @@ class TestTracks(unittest.TestCase):
     def test_join_preserves_channels(self):
         seg = slice_track(self.query, 1, 20)
         joined = join_tracks(self.query, seg)
-        self.assertEqual(joined.annotations["channels"],
-                         self.query.annotations["channels"])
+        self.assertEqual(
+            joined.annotations["channels"], self.query.annotations["channels"]
+        )
 
     def test_slice_records_offset_and_normalises(self):
         seg = slice_track(self.query, 20, 40)

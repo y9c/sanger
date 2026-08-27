@@ -10,15 +10,15 @@
 The CLI uses rich-click for a styled, grouped help (themed sections) and is
 organised around the package modules::
 
-    cfutils mut            mutation calling & reporting
-    cfutils qc             per-read quality-control metrics
-    cfutils track          split / join / slice chromatogram trace files
-    cfutils edit           trim, strip primers, reverse-complement
-    cfutils basecall       re-call bases from raw four-channel traces
-    cfutils assemble       reference-guided pileup & consensus
-    cfutils analyze        sequence biology (translate, motifs, restriction)
-    cfutils export         FASTA / VCF / JSON / batch summary
-    cfutils plot           chromatogram rendering (+ features / DNA viewer)
+    sanger mut            mutation calling & reporting
+    sanger qc             per-read quality-control metrics
+    sanger track          split / join / slice chromatogram trace files
+    sanger edit           trim, strip primers, reverse-complement
+    sanger basecall       re-call bases from raw four-channel traces
+    sanger assemble       reference-guided pileup & consensus
+    sanger analyze        sequence biology (translate, motifs, restriction)
+    sanger export         FASTA / VCF / JSON / batch summary
+    sanger plot           chromatogram rendering (+ features / DNA viewer)
 """
 
 import importlib.metadata
@@ -26,7 +26,7 @@ import importlib.metadata
 import rich_click as click
 
 try:
-    __VERSION__ = importlib.metadata.version("cfutils")
+    __VERSION__ = importlib.metadata.version("sanger")
 except Exception:  # pragma: no cover - not installed as a package
     __VERSION__ = "0.0.0.dev62"
 
@@ -54,7 +54,7 @@ class CfutilsGroup(click.RichGroup):
 #  Help / option theming (rich-click)
 # --------------------------------------------------------------------------- #
 click.rich_click.COMMAND_GROUPS = {
-    "cfutils": [
+    "sanger": [
         {"name": "Mutation & QC", "commands": ["mut", "qc"]},
         {"name": "Trace Editing", "commands": ["track", "edit"]},
         {"name": "Base Calling & Assembly", "commands": ["basecall", "assemble"]},
@@ -64,19 +64,19 @@ click.rich_click.COMMAND_GROUPS = {
 }
 
 click.rich_click.OPTION_GROUPS = {
-    "cfutils mut": [
+    "sanger mut": [
         {"name": "Inputs", "options": ["--query", "--subject"]},
         {"name": "Output", "options": ["--outdir", "--outbase"]},
         {"name": "Reporting", "options": ["--aligned/--mutated", "--plot/--no-plot"]},
     ],
-    "cfutils edit trim": [
+    "sanger edit trim": [
         {"name": "Trimming", "options": ["--cutoff"]},
         {"name": "Output", "options": ["--outdir"]},
     ],
-    "cfutils track split": [
+    "sanger track split": [
         {"name": "Split", "options": ["--cuts", "--outdir", "--fmt"]},
     ],
-    "cfutils export vcf": [
+    "sanger export vcf": [
         {"name": "Inputs", "options": ["--query", "--subject", "--min-qual"]},
     ],
 }
@@ -93,7 +93,7 @@ def _emit(record, outdir):
     """Write a record to FASTA and echo the path."""
     from pathlib import Path
 
-    from cfutils.export import to_fasta
+    from sanger.export import to_fasta
 
     outdir = Path(outdir or ".")
     outdir.mkdir(parents=True, exist_ok=True)
@@ -108,12 +108,12 @@ def _emit(record, outdir):
 @click.group(
     cls=CfutilsGroup,
     invoke_without_command=False,
-    help="cfutils — Sanger sequencing chromatogram analysis toolkit.",
+    help="sanger — Sanger sequencing chromatogram analysis toolkit.",
     context_settings=CTX,
 )
 @click.version_option(__VERSION__, "--version", "-v")
 def cli():
-    """cfutils — Sanger sequencing chromatogram analysis toolkit."""
+    """sanger — Sanger sequencing chromatogram analysis toolkit."""
 
 
 # --------------------------------------------------------------------------- #
@@ -140,7 +140,7 @@ def cli():
 )
 def mut(query, subject, outdir, outbase, aligned, plot):
     """Call mutations against a reference and report (tsv + optional pdf)."""
-    from cfutils.run import report_mutation
+    from sanger.run import report_mutation
 
     report_mutation(
         query_ab1_file=query,
@@ -162,7 +162,7 @@ def qc(files):
     """Report per-read QC metrics as a table."""
     from pathlib import Path
 
-    from cfutils.qc import read_metrics
+    from sanger.qc import read_metrics
 
     header = [
         "file",
@@ -211,7 +211,7 @@ def track():
 @click.option("--gap", "-g", default=24, type=int, help="Gap samples between reads")
 def track_join(files, outbase, outdir, gap):
     """Join multiple ABI chromatograms end to end into one record."""
-    from cfutils.tracks import export_tracks, join_tracks
+    from sanger.tracks import export_tracks, join_tracks
 
     joined = join_tracks(*[__parse_abi(f) for f in files], name=outbase, gap=gap)
     click.echo(f"✓ Joined {len(files)} tracks into {len(joined.seq)} bases")
@@ -228,7 +228,7 @@ def track_join(files, outbase, outdir, gap):
 @click.option("--fmt", "-f", default="npz", type=click.Choice(["npz", "tsv"]))
 def track_split(file, cuts, outdir, fmt):
     """Split one ABI chromatogram into segments at the given cut positions."""
-    from cfutils.tracks import export_tracks, split_track
+    from sanger.tracks import export_tracks, split_track
 
     cut_positions = [int(c) for c in cuts.split(",") if c.strip()]
     pieces = split_track(__parse_abi(file), cut_positions)
@@ -244,7 +244,7 @@ def track_split(file, cuts, outdir, fmt):
 @click.option("--fmt", "-f", default="npz", type=click.Choice(["npz", "tsv"]))
 def track_slice(file, start, end, outdir, fmt):
     """Extract a 1-based inclusive region [start, end] from a chromatogram."""
-    from cfutils.tracks import export_tracks, slice_track
+    from sanger.tracks import export_tracks, slice_track
 
     seg = slice_track(__parse_abi(file), start, end)
     for p in export_tracks([seg], outdir, fmt=fmt):
@@ -262,7 +262,7 @@ def edit():
 @click.option("--outdir", "-o", default=".")
 def edit_trim(file, cutoff, outdir):
     """Mott quality-trim the read (keeps peak/trace axes aligned)."""
-    from cfutils.transform import trim
+    from sanger.transform import trim
 
     _emit(trim(__parse_abi(file), cutoff=cutoff), outdir)
 
@@ -273,7 +273,7 @@ def edit_trim(file, cutoff, outdir):
 @click.option("--outdir", "-o", default=".")
 def edit_trim_ends(file, min_qual, outdir):
     """Hard-trim low-quality 5' and 3' ends."""
-    from cfutils.transform import trim_ends
+    from sanger.transform import trim_ends
 
     _emit(trim_ends(__parse_abi(file), min_qual=min_qual), outdir)
 
@@ -285,7 +285,7 @@ def edit_trim_ends(file, min_qual, outdir):
 @click.option("--outdir", "-o", default=".")
 def edit_strip_primers(file, forward, reverse, outdir):
     """Remove primer sequences from the read ends."""
-    from cfutils.transform import strip_primers
+    from sanger.transform import strip_primers
 
     _emit(strip_primers(__parse_abi(file), forward=forward, reverse=reverse), outdir)
 
@@ -295,7 +295,7 @@ def edit_strip_primers(file, forward, reverse, outdir):
 @click.option("--outdir", "-o", default=".")
 def edit_reverse(file, outdir):
     """Reverse-complement the whole chromatogram record."""
-    from cfutils.transform import reverse_complement_record
+    from sanger.transform import reverse_complement_record
 
     _emit(reverse_complement_record(__parse_abi(file)), outdir)
 
@@ -322,7 +322,7 @@ def basecall_call(file, hetero_threshold, outdir):
     """Re-call bases from raw traces, print sequence, save FASTA."""
     from pathlib import Path
 
-    from cfutils.basecaller import call_bases
+    from sanger.basecaller import call_bases
 
     rec = __parse_abi(file, rescale=False)
     res = call_bases(rec, hetero_threshold=hetero_threshold)
@@ -340,7 +340,7 @@ def basecall_call(file, hetero_threshold, outdir):
 @click.option("--min-ratio", "-r", default=0.45, type=float)
 def basecall_hetero(file, min_ratio):
     """List mixed/heterozygous bases detected in the traces."""
-    from cfutils.basecaller import call_bases
+    from sanger.basecaller import call_bases
 
     rec = __parse_abi(file, rescale=False)
     res = call_bases(rec, hetero_threshold=min_ratio)
@@ -366,7 +366,7 @@ def assemble():
 @click.option("--quality", "-q", default=0, type=int, help="drop bases below Q")
 def assemble_consensus(reads, reference, min_cov, min_freq, quality):
     """Pile up reads on a reference and print the consensus sequence."""
-    from cfutils.assembly import consensus, pileup
+    from sanger.assembly import consensus, pileup
 
     table = pileup(
         [__parse_abi(f) for f in reads],
@@ -390,7 +390,7 @@ def analyze():
 @click.option("--frame", "-f", default=1, type=int)
 def analyze_translate(file, frame):
     """Translate the called sequence in a reading frame."""
-    from cfutils.analysis import translate
+    from sanger.analysis import translate
 
     click.echo(translate(__parse_abi(file).seq, frame=frame))
 
@@ -401,7 +401,7 @@ def analyze_translate(file, frame):
 @click.option("--both-strands/--forward-only", default=False)
 def analyze_motif(file, motif, both_strands):
     """Find motif occurrence positions."""
-    from cfutils.analysis import find_motifs
+    from sanger.analysis import find_motifs
 
     click.echo(
         "\t".join(
@@ -417,7 +417,7 @@ def analyze_motif(file, motif, both_strands):
 @click.argument("file", type=click.Path(exists=True))
 def analyze_rest(file):
     """Scan for common restriction sites."""
-    from cfutils.analysis import restriction_sites
+    from sanger.analysis import restriction_sites
 
     for name, pos in restriction_sites(__parse_abi(file).seq).items():
         if pos:
@@ -430,7 +430,7 @@ def analyze_rest(file):
 @click.option("--step", "-s", default=1, type=int)
 def analyze_gc(file, window, step):
     """Sliding GC% windows (position<TAB>gc%)."""
-    from cfutils.analysis import gc_windows
+    from sanger.analysis import gc_windows
 
     for pos, gc in gc_windows(__parse_abi(file).seq, window, step):
         click.echo(f"{pos}\t{gc}")
@@ -461,8 +461,8 @@ def export_vcf(query, subject, min_qual):
     """Emit variant calls against a reference as VCF."""
     from pathlib import Path
 
-    from cfutils.align import call_mutations
-    from cfutils.export import to_vcf
+    from sanger.align import call_mutations
+    from sanger.export import to_vcf
 
     sites = call_mutations(
         __parse_abi(query), __parse_fasta(subject), report_all_sites=True
@@ -476,7 +476,7 @@ def export_vcf(query, subject, min_qual):
 @click.argument("file", type=click.Path(exists=True))
 def export_json(file):
     """Emit a self-describing JSON QC/analysis report."""
-    from cfutils.export import to_json
+    from sanger.export import to_json
 
     click.echo(to_json(__parse_abi(file)))
 
@@ -487,7 +487,7 @@ def export_json(file):
 @click.option("--fmt", "-f", default="csv", type=click.Choice(["csv", "tsv", "json"]))
 def export_batch(files, outdir, fmt):
     """Write a QC summary table for many reads."""
-    from cfutils.export import write_batch
+    from sanger.export import write_batch
 
     click.echo(
         "✓ wrote " + write_batch([__parse_abi(f) for f in files], outdir, fmt=fmt)
@@ -508,7 +508,7 @@ def plot_chrom(file, start, end, out):
     """Plot a chromatogram region."""
     import matplotlib.pyplot as plt
 
-    from cfutils.show import plot_chromatograph
+    from sanger.show import plot_chromatograph
 
     region = (start, end if end is not None else start + 30) if start else None
     fig, ax = plt.subplots(figsize=(16, 5))
@@ -526,8 +526,8 @@ def plot_features(file, start, end, out):
     """Plot a chromatogram with attached feature annotations."""
     import matplotlib.pyplot as plt
 
-    from cfutils.features import plot_features as _pf
-    from cfutils.show import plot_chromatograph
+    from sanger.features import plot_features as _pf
+    from sanger.show import plot_chromatograph
 
     region = (start, end if end is not None else start + 30) if start else None
     fig, ax = plt.subplots(figsize=(16, 5))
@@ -544,7 +544,7 @@ def plot_features(file, start, end, out):
 @click.option("--out", "-o", default="dna.png")
 def plot_dnaviewer(file, start, end, out):
     """Plot a chromatogram with a DNA Features Viewer map (optional dep)."""
-    from cfutils.dnalink import plot_combined
+    from sanger.dnalink import plot_combined
 
     region = (start, end if end is not None else start + 30) if start else None
     fig, (ax_feat, ax_chrom) = plot_combined(__parse_abi(file), region=region)
@@ -556,13 +556,13 @@ def plot_dnaviewer(file, start, end, out):
 #  Internal parsing helpers (avoid circular import at module load)
 # --------------------------------------------------------------------------- #
 def __parse_abi(file, rescale=True):
-    from cfutils.parser import parse_abi
+    from sanger.parser import parse_abi
 
     return parse_abi(file, rescale=rescale)
 
 
 def __parse_fasta(file):
-    from cfutils.parser import parse_fasta
+    from sanger.parser import parse_fasta
 
     return parse_fasta(file)
 

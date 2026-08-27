@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Basic environment and sanity tests for cfutils."""
+"""Basic environment and sanity tests for sanger."""
 
 import sys
 import unittest
 
 
 class TestBasicFunc(unittest.TestCase):
-    """Test basic environment requirements for cfutils."""
+    """Test basic environment requirements for sanger."""
 
     def test_python_version(self) -> None:
         """Ensure Python version is >= 3.6."""

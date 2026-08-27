@@ -1,5 +1,5 @@
 [project]
-name = "cfutils"
+name = "sanger"
 version = "0.0.0.dev62"
 description = "Chromatogram File Utils"
 authors = [{ name = "Ye Chang", email = "yech1990@gmail.com" }]
@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-# plotting (importing/using cfutils works without it)
+# plotting (importing/using sanger works without it)
 plot = [
     "matplotlib>=3.9.2,<4",
 ]
@@ -22,7 +22,7 @@ plot = [
 viewer = [
     "dna-features-viewer>=3.0.0",
 ]
-# Model Context Protocol server so agents/LLMs can drive cfutils
+# Model Context Protocol server so agents/LLMs can drive sanger
 agent = [
     "mcp>=2",
 ]
@@ -34,12 +34,12 @@ all = [
 ]
 
 [project.urls]
-Repository = "https://github.com/yech1990/cfutils"
+Repository = "https://github.com/yech1990/sanger"
 Documentation = "https://cf.readthedocs.io/"
 
 [project.scripts]
-cfutils = "cfutils.cli:cli"
-cfutils-mcp = "cfutils.mcp_server:main"
+sanger = "sanger.cli:cli"
+sanger-mcp = "sanger.mcp_server:main"
 
 [build-system]
 requires = ["setuptools>=61", "wheel"]
@@ -47,21 +47,21 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["cfutils*"]
+include = ["sanger*"]
 
 [[tool.setuptools.ext-modules]]
-name = "cfutils._swalign"
-sources = ["cfutils/_swalign.c"]
+name = "sanger._swalign"
+sources = ["sanger/_swalign.c"]
 
 [tool.setuptools.package-data]
-cfutils = ["_swalign.pyx", "_swalign.c"]
+sanger = ["_swalign.pyx", "_swalign.c"]
 
 [tool.black]
 line-length = 79
 
 [tool.ruff]
 line-length = 88
-exclude = ["cfutils/_swalign.c"]
+exclude = ["sanger/_swalign.c"]
 target-version = "py311"
 
 [tool.ruff.lint]
@@ -69,7 +69,7 @@ select = ["E", "F", "I", "W"]
 ignore = ["E501"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["cfutils"]
+known-first-party = ["sanger"]
 
 
 [dependency-groups]

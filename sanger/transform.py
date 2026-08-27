@@ -12,7 +12,7 @@ includes:
 * :func:`reverse_complement_record` -- reverse/complement a whole record,
   including its traces and peaks (Snapgene-style reversed view).
 
-Both reuse the axis-preserving slicing in :mod:`cfutils.tracks` so the
+Both reuse the axis-preserving slicing in :mod:`sanger.tracks` so the
 sequence, quality, peaks and channels never drift apart.
 """
 

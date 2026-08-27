@@ -1,6 +1,6 @@
 # API Reference
 
-## cfutils.run.report_mutation
+## sanger.run.report_mutation
 
 ```python
 def report_mutation(
@@ -23,7 +23,7 @@ def report_mutation(
 
 ---
 
-## cfutils.parser.parse_abi
+## sanger.parser.parse_abi
 
 ```python
 def parse_abi(path: str) -> SeqRecord:
@@ -32,7 +32,7 @@ def parse_abi(path: str) -> SeqRecord:
 
 ---
 
-## cfutils.show.plot_chromatograph
+## sanger.show.plot_chromatograph
 
 ```python
 def plot_chromatograph(

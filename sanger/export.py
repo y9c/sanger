@@ -10,7 +10,7 @@ Covers the formats a wet-lab or downstream pipeline actually needs:
 * **JSON**   -- a self-describing per-read report (QC + basecall + variants).
 * **CSV/TSV**-- a batch summary table for many reads.
 
-The module is symmetric with :mod:`cfutils.parser` so records round-trip.
+The module is symmetric with :mod:`sanger.parser` so records round-trip.
 """
 
 from __future__ import annotations
@@ -50,14 +50,14 @@ def to_vcf(
 ) -> str:
     """Render variant sites as a VCF 4.2 string.
 
-    ``variants`` are :class:`~cfutils.align.SitePair` (or any object exposing
+    ``variants`` are :class:`~sanger.align.SitePair` (or any object exposing
     ``ref_pos``, ``ref_base``, ``cf_base``, ``qual_site``).  Only sites where
     both REF and ALT are canonical and different are emitted; indels (``-``)
     are skipped.
     """
     header = [
         "##fileformat=VCFv4.2",
-        "##source=cfutils",
+        "##source=sanger",
         f"##reference={reference_name}",
         "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO",
     ]

@@ -3,7 +3,7 @@
 """
 Split and join Sanger chromatogram (trace) records.
 
-Chromatograms are modelled as :class:`~cfutils.parser.SeqRecord` objects whose
+Chromatograms are modelled as :class:`~sanger.parser.SeqRecord` objects whose
 ``annotations`` hold the four colour-channel traces, the peak positions and a
 ``trace_x`` axis.  This module provides the operations a wet-lab user asked
 for:

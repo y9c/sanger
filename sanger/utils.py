@@ -14,7 +14,7 @@ import sys
 try:
     assert sys.version_info > (3, 6)
 except AssertionError:
-    raise RuntimeError("cfutils requires Python 3.6+!")
+    raise RuntimeError("sanger requires Python 3.6+!")
 
 
 def get_logger(name: str) -> logging.Logger:

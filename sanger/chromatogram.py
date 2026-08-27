@@ -31,7 +31,7 @@ _NCHANNELS = 4
 class Chromatogram:
     """A parsed Sanger chromatogram with typed accessors and operations.
 
-    Wraps a :class:`~cfutils.parser.SeqRecord` and exposes the trace data as
+    Wraps a :class:`~sanger.parser.SeqRecord` and exposes the trace data as
     convenient properties, plus methods that delegate to the analysis modules.
     """
 
@@ -124,7 +124,7 @@ class Chromatogram:
         return float(q.mean()) if q.size else 0.0
 
     def qc(self) -> dict:
-        """Full QC metrics (see :mod:`cfutils.qc`)."""
+        """Full QC metrics (see :mod:`sanger.qc`)."""
         from .qc import (
             continuous_read_length,
             noise_metric,

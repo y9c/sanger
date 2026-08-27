@@ -3,8 +3,8 @@
 """
 Optional, lazy matplotlib loader.
 
-cfutils' parsing, alignment, QC and export work without matplotlib.  Plotting
-is an optional capability: importing ``cfutils`` never fails when matplotlib
+sanger' parsing, alignment, QC and export work without matplotlib.  Plotting
+is an optional capability: importing ``sanger`` never fails when matplotlib
 is absent, but calling a plotting function raises a clear, actionable error.
 
 Use::
@@ -36,8 +36,8 @@ def require_matplotlib():
     """Return the matplotlib root module, or raise a helpful error."""
     if not HAVE_MPL:
         raise ImportError(
-            "matplotlib is required for cfutils plotting. "
-            "Install it with `pip install cfutils[plot]` (or `pip install matplotlib`)."
+            "matplotlib is required for sanger plotting. "
+            "Install it with `pip install sanger[plot]` (or `pip install matplotlib`)."
         )
     return mpl
 

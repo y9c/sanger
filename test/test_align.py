@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Unit tests for cfutils alignment functions."""
+"""Unit tests for sanger alignment functions."""
 
 import unittest
-from cfutils.align import align_chromatograph, call_mutations
-from cfutils.parser import parse_abi, parse_fasta
+
+from sanger.align import align_chromatograph, call_mutations
+from sanger.parser import parse_abi, parse_fasta
 
 
 class TestAlignFunc(unittest.TestCase):
-    """Test alignment and mutation calling in cfutils.align."""
+    """Test alignment and mutation calling in sanger.align."""
 
     def setUp(self) -> None:
         """Load test data for alignment tests."""

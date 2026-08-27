@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Unit tests for cfutils assembly (pileup/consensus) module."""
+"""Unit tests for sanger assembly (pileup/consensus) module."""
 
 import unittest
 from collections import Counter
 
-from cfutils.parser import parse_abi, parse_fasta, SeqRecord
-from cfutils.assembly import pileup, consensus, coverage, PileupColumn
+from sanger.assembly import PileupColumn, consensus, coverage, pileup
+from sanger.parser import parse_abi, parse_fasta
 
 
 class TestAssembly(unittest.TestCase):
@@ -25,16 +25,19 @@ class TestAssembly(unittest.TestCase):
         self.assertEqual(len(cons), len(table))
 
     def test_consensus_base_majority(self):
-        col = PileupColumn(ref_pos=5, ref_base="A",
-                           counts=Counter({"A": 3, "C": 1}), n_reads=4)
+        col = PileupColumn(
+            ref_pos=5, ref_base="A", counts=Counter({"A": 3, "C": 1}), n_reads=4
+        )
         self.assertEqual(col.consensus_base(), "A")
-        col2 = PileupColumn(ref_pos=6, ref_base="G",
-                            counts=Counter({"C": 4}), n_reads=4)
+        col2 = PileupColumn(
+            ref_pos=6, ref_base="G", counts=Counter({"C": 4}), n_reads=4
+        )
         self.assertEqual(col2.consensus_base(), "C")
 
     def test_low_depth_falls_back_to_ref(self):
-        col = PileupColumn(ref_pos=7, ref_base="T",
-                           counts=Counter({"T": 100, "A": 1}), n_reads=101)
+        col = PileupColumn(
+            ref_pos=7, ref_base="T", counts=Counter({"T": 100, "A": 1}), n_reads=101
+        )
         self.assertEqual(col.consensus_base(), "T")
 
     def test_coverage_sorted(self):

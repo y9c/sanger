@@ -4,7 +4,7 @@
 Generate the README example figures from the bundled real Sanger data.
 
 The examples are written against the **high-level :class:`Chromatogram`
-object** (see ``cfutils.chromatogram``), so the images match the README usage.
+object** (see ``sanger.chromatogram``), so the images match the README usage.
 
 Outputs under ``examples/``:
 
@@ -29,12 +29,12 @@ mpl.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-from cfutils import Chromatogram, style
-from cfutils.align import call_mutations
-from cfutils.composite import _trace_data
-from cfutils.features import ChromatogramFeature, plot_features
-from cfutils.parser import parse_fasta
-from cfutils.show import annotate_mutation, center_region, highlight_base
+from sanger import Chromatogram, style
+from sanger.align import call_mutations
+from sanger.composite import _trace_data
+from sanger.features import ChromatogramFeature, plot_features
+from sanger.parser import parse_fasta
+from sanger.show import annotate_mutation, center_region, highlight_base
 
 HERE = Path(__file__).resolve().parent.parent
 DATA = HERE / "data"
@@ -161,7 +161,7 @@ def main():
     region = (1, 40)
     fig, ax = plt.subplots(figsize=(15, 4.2))
     plot_rec = cg.to_record
-    from cfutils.show import plot_chromatograph
+    from sanger.show import plot_chromatograph
 
     plot_chromatograph(plot_rec, region=region, ax=ax)
     peaks = plot_rec.annotations["peak positions"]
@@ -182,7 +182,7 @@ def main():
     plt.close(fig)
 
     # 6. DNA Features Viewer combined
-    from cfutils.dnalink import plot_combined
+    from sanger.dnalink import plot_combined
 
     feats = [ChromatogramFeature.from_sitepair(s, color="#d62728") for s in snps]
     feats.append(
@@ -202,7 +202,7 @@ def main():
     plt.close(fig)
 
     # 7. assembly (pileup depth + consensus)
-    from cfutils.assembly import consensus, coverage, pileup
+    from sanger.assembly import consensus, coverage, pileup
 
     table = pileup([cg.to_record], ref)
     cov = coverage(table)

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Unit tests for cfutils quality module."""
+"""Unit tests for sanger quality module."""
 
 import unittest
 
-from cfutils.parser import parse_abi
-from cfutils.align import SitePair
-from cfutils.quality import QualityFilter, site_qualities, passed_filter
+from sanger.align import SitePair
+from sanger.parser import parse_abi
+from sanger.quality import QualityFilter, passed_filter, site_qualities
 
 
 class TestQuality(unittest.TestCase):
@@ -23,10 +23,12 @@ class TestQuality(unittest.TestCase):
 
     def test_default_filter(self):
         qf = QualityFilter()
-        good = SitePair(ref_pos=1, ref_base="A", cf_pos=2, cf_base="T",
-                        qual_site=30, qual_local=30)
-        bad = SitePair(ref_pos=1, ref_base="A", cf_pos=2, cf_base="T",
-                       qual_site=5, qual_local=5)
+        good = SitePair(
+            ref_pos=1, ref_base="A", cf_pos=2, cf_base="T", qual_site=30, qual_local=30
+        )
+        bad = SitePair(
+            ref_pos=1, ref_base="A", cf_pos=2, cf_base="T", qual_site=5, qual_local=5
+        )
         self.assertTrue(qf.passed(good))
         self.assertFalse(qf.passed(bad))
 

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Unit tests for cfutils basecaller module."""
+"""Unit tests for sanger basecaller module."""
 
 import unittest
 
-from cfutils.parser import parse_abi
-from cfutils.basecaller import call_bases, detect_peaks, basecaller_score
+from sanger.basecaller import basecaller_score, call_bases, detect_peaks
+from sanger.parser import parse_abi
+
 
 class TestBasecaller(unittest.TestCase):
     """Test the peak-driven base caller (raw traces mode)."""

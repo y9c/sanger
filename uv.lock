@@ -184,7 +184,7 @@ wheels = [
 ]
 
 [[package]]
-name = "cfutils"
+name = "sanger"
 version = "0.0.0.dev62"
 source = { editable = "." }
 dependencies = [

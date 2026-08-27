@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
-"""Unit tests for cfutils features (annotation overlay) module."""
+"""Unit tests for sanger features (annotation overlay) module."""
 
 import unittest
 
 import matplotlib.pyplot as plt
 
-from cfutils.align import SitePair
-from cfutils.features import (
+from sanger.align import SitePair
+from sanger.features import (
     ChromatogramFeature,
     add_feature,
     iter_features,
     peak_to_x,
     plot_features,
 )
-from cfutils.parser import parse_abi
-from cfutils.show import plot_chromatograph
+from sanger.parser import parse_abi
+from sanger.show import plot_chromatograph
 
 
 class TestFeatures(unittest.TestCase):

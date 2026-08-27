@@ -1,4 +1,4 @@
-# Improved Makefile for cfutils
+# Improved Makefile for sanger
 .PHONY: init dev test clean lock
 
 # Install dependencies (production only)
@@ -15,7 +15,7 @@ test:
 
 # Remove Python cache and temp files
 clean:
-	rm -rf __pycache__ */__pycache__ *.pyc *.pyo *.pyd temp/* test/__pycache__ cfutils/__pycache__
+	rm -rf __pycache__ */__pycache__ *.pyc *.pyo *.pyd temp/* test/__pycache__ sanger/__pycache__
 
 # Update lock file from pyproject.toml
 lock:

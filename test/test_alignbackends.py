@@ -9,8 +9,8 @@ the pure-Python/NumPy fallback, and that mutation calling works through either.
 
 import unittest
 
-from cfutils.align import (_HAVE_CY, _sw_align, _cy_swalign, run_align)
-from cfutils.parser import parse_abi, parse_fasta
+from sanger.align import _HAVE_CY, _cy_swalign, _sw_align, run_align
+from sanger.parser import parse_abi, parse_fasta
 
 
 class TestAlignBackends(unittest.TestCase):
@@ -46,7 +46,8 @@ class TestAlignBackends(unittest.TestCase):
         self.assertEqual(sites[0].cf_base, "G")
 
     def test_call_mutations_via_backend(self):
-        from cfutils.align import call_mutations
+        from sanger.align import call_mutations
+
         sites = call_mutations(self.query, self.ref, report_all_sites=True)
         # the sample should align most of its length
         self.assertGreater(len(sites), 1000)

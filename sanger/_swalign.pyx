@@ -3,13 +3,13 @@
 """
 Cython Smith-Waterman local aligner (self-contained; no external ssw, no NumPy).
 
-Compiled into ``cfutils._swalign`` when a C compiler is available at build time;
-otherwise cfutils falls back to the NumPy-vectorised / pure-Python
-implementation in :mod:`cfutils.align`.
+Compiled into ``sanger._swalign`` when a C compiler is available at build time;
+otherwise sanger falls back to the NumPy-vectorised / pure-Python
+implementation in :mod:`sanger.align`.
 
 ``sw_align(reference, query)`` returns ``(reference_begin, query_begin,
 query_aligned, ref_aligned)`` where the aligned strings use ``-`` for gaps,
-matching the interface consumed by :func:`cfutils.align.run_align`.
+matching the interface consumed by :func:`sanger.align.run_align`.
 
 The DP matrices are allocated with ``malloc`` so the extension needs only the C
 compiler -- no NumPy headers -- keeping builds light and portable.

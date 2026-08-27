@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Unit tests for cfutils parser functions."""
+"""Unit tests for sanger parser functions."""
 
 import unittest
-from cfutils.parser import parse_abi, parse_fasta
+
+from sanger.parser import parse_abi, parse_fasta
+
 
 class TestParserFunc(unittest.TestCase):
-    """Test parsing functions in cfutils.parser."""
+    """Test parsing functions in sanger.parser."""
 
     def test_parse_abi(self) -> None:
         """Test parse_abi returns a SeqRecord with expected attributes."""
@@ -18,6 +20,7 @@ class TestParserFunc(unittest.TestCase):
         record = parse_fasta("./data/ref.fa")
         self.assertIsNotNone(record)
         self.assertTrue(hasattr(record, "seq"), "SeqRecord missing 'seq' attribute.")
+
 
 if __name__ == "__main__":
     unittest.main()

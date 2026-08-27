@@ -1,16 +1,16 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Model Context Protocol (MCP) server for cfutils.
+Model Context Protocol (MCP) server for sanger.
 
-Exposes cfutils as agent-friendly tools so LLM agents / MCP clients can analyse
+Exposes sanger as agent-friendly tools so LLM agents / MCP clients can analyse
 Sanger sequencing data programmatically.  The server runs locally and reads
 files from the host, so it is intended for local (or sandboxed) use.
 
 Run with::
 
-    cfutils-mcp                       # stdio transport
-    python -m cfutils.mcp_server       # identical
+    sanger-mcp                       # stdio transport
+    python -m sanger.mcp_server       # identical
 
 Tools (each returns JSON-serialisable data):
 
@@ -23,7 +23,7 @@ Tools (each returns JSON-serialisable data):
 * ``export_sequence``     - write FASTA (or VCF with a reference)
 * ``plot_chromatogram``   - render a PNG of a chromatogram region
 
-Optional extras: ``pip install "cfutils[agent]"`` (i.e. ``mcp>=2``).
+Optional extras: ``pip install "sanger[agent]"`` (i.e. ``mcp>=2``).
 """
 
 from __future__ import annotations
@@ -41,7 +41,7 @@ except Exception:  # pragma: no cover - mcp not installed
 
 from .parser import parse_abi, parse_fasta
 
-mcp = MCPServer("cfutils")
+mcp = MCPServer("sanger")
 
 
 def _require_plot():

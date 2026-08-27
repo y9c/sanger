@@ -15,10 +15,10 @@ from datetime import datetime
 from pathlib import Path
 from typing import List
 
-from cfutils.align import call_mutations
-from cfutils.parser import SeqRecord, parse_abi, parse_fasta
-from cfutils.quality import QualityFilter
-from cfutils.show import annotate_mutation, highlight_base, plot_chromatograph
+from sanger.align import call_mutations
+from sanger.parser import SeqRecord, parse_abi, parse_fasta
+from sanger.quality import QualityFilter
+from sanger.show import annotate_mutation, highlight_base, plot_chromatograph
 
 from ._mpl import plt, require_matplotlib
 from .utils import get_logger

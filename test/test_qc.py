@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Unit tests for cfutils qc (per-read QC metrics) module."""
+"""Unit tests for sanger qc (per-read QC metrics) module."""
 
 import unittest
 
-from cfutils.parser import parse_abi
-from cfutils.qc import read_metrics, trimmed_bounds, summarize
+from sanger.parser import parse_abi
+from sanger.qc import read_metrics, summarize, trimmed_bounds
+
 
 class TestQC(unittest.TestCase):
     """Test the per-read QC metrics."""
@@ -15,8 +16,15 @@ class TestQC(unittest.TestCase):
 
     def test_read_metrics_shape(self):
         m = read_metrics(self.query)
-        for key in ("n_bases", "mean_qual", "min_qual", "n_fraction",
-                    "trim_start", "trim_end", "trimmed_len"):
+        for key in (
+            "n_bases",
+            "mean_qual",
+            "min_qual",
+            "n_fraction",
+            "trim_start",
+            "trim_end",
+            "trimmed_len",
+        ):
             self.assertIn(key, m)
         self.assertEqual(m["n_bases"], len(self.query.seq))
         self.assertGreaterEqual(m["mean_qual"], 0)

@@ -5,12 +5,12 @@
     "distutils": {
         "depends": [],
         "language": "c",
-        "name": "cfutils._swalign",
+        "name": "sanger._swalign",
         "sources": [
-            "cfutils/_swalign.pyx"
+            "sanger/_swalign.pyx"
         ]
     },
-    "module_name": "cfutils._swalign"
+    "module_name": "sanger._swalign"
 }
 END: Cython Metadata */
 
@@ -1257,8 +1257,8 @@ static int __Pyx_init_tpflags_variables(void) {
   #endif
 #endif
 
-#define __PYX_HAVE__cfutils___swalign
-#define __PYX_HAVE_API__cfutils___swalign
+#define __PYX_HAVE__sanger___swalign
+#define __PYX_HAVE_API__sanger___swalign
 /* Early includes */
 #include <string.h>
 #include <stdlib.h>
@@ -1496,7 +1496,7 @@ static const char * const __pyx_cfilenm = __FILE__;
 /* #### Code section: filename_table ### */
 
 static const char* const __pyx_f[] = {
-  "cfutils/_swalign.pyx",
+  "sanger/_swalign.pyx",
 };
 /* #### Code section: utility_code_proto_before_types ### */
 /* Atomics.proto (used by UnpackUnboundCMethod) */
@@ -2446,21 +2446,21 @@ static int __Pyx_State_RemoveModule(void*);
 
 /* Module declarations from "libc.stdlib" */
 
-/* Module declarations from "cfutils._swalign" */
-static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *, int, unsigned char const *, int, int, int, int, int *, unsigned char *, int *, int *, int *); /*proto*/
+/* Module declarations from "sanger._swalign" */
+static int __pyx_f_6sanger_8_swalign__align(unsigned char const *, int, unsigned char const *, int, int, int, int, int *, unsigned char *, int *, int *, int *); /*proto*/
 /* #### Code section: typeinfo ### */
 /* #### Code section: before_global_var ### */
-#define __Pyx_MODULE_NAME "cfutils._swalign"
-extern int __pyx_module_is_main_cfutils___swalign;
-int __pyx_module_is_main_cfutils___swalign = 0;
+#define __Pyx_MODULE_NAME "sanger._swalign"
+extern int __pyx_module_is_main_sanger___swalign;
+int __pyx_module_is_main_sanger___swalign = 0;
 
-/* Implementation of "cfutils._swalign" */
+/* Implementation of "sanger._swalign" */
 /* #### Code section: global_var ### */
 static PyObject *__pyx_builtin_reversed;
 /* #### Code section: string_decls ### */
-static const char __pyx_k_Cython_Smith_Waterman_local_ali[] = "\nCython Smith-Waterman local aligner (self-contained; no external ssw, no NumPy).\n\nCompiled into ``cfutils._swalign`` when a C compiler is available at build time;\notherwise cfutils falls back to the NumPy-vectorised / pure-Python\nimplementation in :mod:`cfutils.align`.\n\n``sw_align(reference, query)`` returns ``(reference_begin, query_begin,\nquery_aligned, ref_aligned)`` where the aligned strings use ``-`` for gaps,\nmatching the interface consumed by :func:`cfutils.align.run_align`.\n\nThe DP matrices are allocated with ``malloc`` so the extension needs only the C\ncompiler -- no NumPy headers -- keeping builds light and portable.\n";
+static const char __pyx_k_Cython_Smith_Waterman_local_ali[] = "\nCython Smith-Waterman local aligner (self-contained; no external ssw, no NumPy).\n\nCompiled into ``sanger._swalign`` when a C compiler is available at build time;\notherwise sanger falls back to the NumPy-vectorised / pure-Python\nimplementation in :mod:`sanger.align`.\n\n``sw_align(reference, query)`` returns ``(reference_begin, query_begin,\nquery_aligned, ref_aligned)`` where the aligned strings use ``-`` for gaps,\nmatching the interface consumed by :func:`sanger.align.run_align`.\n\nThe DP matrices are allocated with ``malloc`` so the extension needs only the C\ncompiler -- no NumPy headers -- keeping builds light and portable.\n";
 /* #### Code section: decls ### */
-static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_reference, PyObject *__pyx_v_query, int __pyx_v_match, int __pyx_v_mismatch, int __pyx_v_gap); /* proto */
+static PyObject *__pyx_pf_6sanger_8_swalign_sw_align(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_reference, PyObject *__pyx_v_query, int __pyx_v_match, int __pyx_v_mismatch, int __pyx_v_gap); /* proto */
 /* #### Code section: late_includes ### */
 /* #### Code section: module_state ### */
 /* SmallCodeConfig */
@@ -2538,7 +2538,7 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_kp_u__3 __pyx_string_tab[2]
 #define __pyx_kp_u_Note_that_Cython_is_deliberately __pyx_string_tab[3]
 #define __pyx_kp_u_add_note __pyx_string_tab[4]
-#define __pyx_kp_u_cfutils__swalign_pyx __pyx_string_tab[5]
+#define __pyx_kp_u_sanger__swalign_pyx __pyx_string_tab[5]
 #define __pyx_n_u_Pyx_PyDict_NextRef __pyx_string_tab[6]
 #define __pyx_n_u_annotate __pyx_string_tab[7]
 #define __pyx_n_u_func __pyx_string_tab[8]
@@ -2552,29 +2552,29 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_n_u_best __pyx_string_tab[16]
 #define __pyx_n_u_bi __pyx_string_tab[17]
 #define __pyx_n_u_bj __pyx_string_tab[18]
-#define __pyx_n_u_cfutils__swalign __pyx_string_tab[19]
-#define __pyx_n_u_cline_in_traceback __pyx_string_tab[20]
-#define __pyx_n_u_dp __pyx_string_tab[21]
-#define __pyx_n_u_gap __pyx_string_tab[22]
-#define __pyx_n_u_i __pyx_string_tab[23]
-#define __pyx_n_u_idx __pyx_string_tab[24]
-#define __pyx_n_u_items __pyx_string_tab[25]
-#define __pyx_n_u_j __pyx_string_tab[26]
-#define __pyx_n_u_m __pyx_string_tab[27]
-#define __pyx_n_u_match __pyx_string_tab[28]
-#define __pyx_n_u_mismatch __pyx_string_tab[29]
-#define __pyx_n_u_move __pyx_string_tab[30]
-#define __pyx_n_u_n __pyx_string_tab[31]
-#define __pyx_n_u_pop __pyx_string_tab[32]
-#define __pyx_n_u_qal __pyx_string_tab[33]
-#define __pyx_n_u_qry_b __pyx_string_tab[34]
-#define __pyx_n_u_qryp __pyx_string_tab[35]
-#define __pyx_n_u_query __pyx_string_tab[36]
-#define __pyx_n_u_ral __pyx_string_tab[37]
-#define __pyx_n_u_ref_b __pyx_string_tab[38]
-#define __pyx_n_u_reference __pyx_string_tab[39]
-#define __pyx_n_u_refp __pyx_string_tab[40]
-#define __pyx_n_u_reversed __pyx_string_tab[41]
+#define __pyx_n_u_cline_in_traceback __pyx_string_tab[19]
+#define __pyx_n_u_dp __pyx_string_tab[20]
+#define __pyx_n_u_gap __pyx_string_tab[21]
+#define __pyx_n_u_i __pyx_string_tab[22]
+#define __pyx_n_u_idx __pyx_string_tab[23]
+#define __pyx_n_u_items __pyx_string_tab[24]
+#define __pyx_n_u_j __pyx_string_tab[25]
+#define __pyx_n_u_m __pyx_string_tab[26]
+#define __pyx_n_u_match __pyx_string_tab[27]
+#define __pyx_n_u_mismatch __pyx_string_tab[28]
+#define __pyx_n_u_move __pyx_string_tab[29]
+#define __pyx_n_u_n __pyx_string_tab[30]
+#define __pyx_n_u_pop __pyx_string_tab[31]
+#define __pyx_n_u_qal __pyx_string_tab[32]
+#define __pyx_n_u_qry_b __pyx_string_tab[33]
+#define __pyx_n_u_qryp __pyx_string_tab[34]
+#define __pyx_n_u_query __pyx_string_tab[35]
+#define __pyx_n_u_ral __pyx_string_tab[36]
+#define __pyx_n_u_ref_b __pyx_string_tab[37]
+#define __pyx_n_u_reference __pyx_string_tab[38]
+#define __pyx_n_u_refp __pyx_string_tab[39]
+#define __pyx_n_u_reversed __pyx_string_tab[40]
+#define __pyx_n_u_sanger__swalign __pyx_string_tab[41]
 #define __pyx_n_u_setdefault __pyx_string_tab[42]
 #define __pyx_n_u_stride __pyx_string_tab[43]
 #define __pyx_n_u_sw_align __pyx_string_tab[44]
@@ -2644,7 +2644,7 @@ return 0;
 #endif
 /* #### Code section: module_code ### */
 
-/* "cfutils/_swalign.pyx":20
+/* "sanger/_swalign.pyx":20
  * from libc.stdlib cimport malloc, free
  * 
  * cdef int _align(const unsigned char* ref, int n,             # <<<<<<<<<<<<<<
@@ -2652,7 +2652,7 @@ return 0;
  *                 int match, int mismatch, int gap,
 */
 
-static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, int __pyx_v_n, unsigned char const *__pyx_v_qry, int __pyx_v_m, int __pyx_v_match, int __pyx_v_mismatch, int __pyx_v_gap, int *__pyx_v_dp, unsigned char *__pyx_v_tr, int *__pyx_v_out_bi, int *__pyx_v_out_bj, int *__pyx_v_out_best) {
+static int __pyx_f_6sanger_8_swalign__align(unsigned char const *__pyx_v_ref, int __pyx_v_n, unsigned char const *__pyx_v_qry, int __pyx_v_m, int __pyx_v_match, int __pyx_v_mismatch, int __pyx_v_gap, int *__pyx_v_dp, unsigned char *__pyx_v_tr, int *__pyx_v_out_bi, int *__pyx_v_out_bj, int *__pyx_v_out_best) {
   int __pyx_v_i;
   int __pyx_v_j;
   int __pyx_v_up;
@@ -2676,7 +2676,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
   int __pyx_t_7;
   int __pyx_t_8;
 
-  /* "cfutils/_swalign.pyx":25
+  /* "sanger/_swalign.pyx":25
  *                 int* dp, unsigned char* tr,
  *                 int* out_bi, int* out_bj, int* out_best) nogil:
  *     cdef int i, j, up, diag, left, best_local, move, sc, stride = m + 1             # <<<<<<<<<<<<<<
@@ -2685,7 +2685,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
 */
   __pyx_v_stride = (__pyx_v_m + 1);
 
-  /* "cfutils/_swalign.pyx":26
+  /* "sanger/_swalign.pyx":26
  *                 int* out_bi, int* out_bj, int* out_best) nogil:
  *     cdef int i, j, up, diag, left, best_local, move, sc, stride = m + 1
  *     cdef int best = 0, bi = 0, bj = 0             # <<<<<<<<<<<<<<
@@ -2696,7 +2696,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
   __pyx_v_bi = 0;
   __pyx_v_bj = 0;
 
-  /* "cfutils/_swalign.pyx":28
+  /* "sanger/_swalign.pyx":28
  *     cdef int best = 0, bi = 0, bj = 0
  *     cdef unsigned char rc
  *     for i in range(1, n + 1):             # <<<<<<<<<<<<<<
@@ -2710,7 +2710,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
   for (__pyx_t_3 = 1; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "cfutils/_swalign.pyx":29
+    /* "sanger/_swalign.pyx":29
  *     cdef unsigned char rc
  *     for i in range(1, n + 1):
  *         rc = ref[i - 1]             # <<<<<<<<<<<<<<
@@ -2719,7 +2719,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
 */
     __pyx_v_rc = (__pyx_v_ref[(__pyx_v_i - 1)]);
 
-    /* "cfutils/_swalign.pyx":30
+    /* "sanger/_swalign.pyx":30
  *     for i in range(1, n + 1):
  *         rc = ref[i - 1]
  *         for j in range(1, m + 1):             # <<<<<<<<<<<<<<
@@ -2733,7 +2733,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
     for (__pyx_t_6 = 1; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_j = __pyx_t_6;
 
-      /* "cfutils/_swalign.pyx":31
+      /* "sanger/_swalign.pyx":31
  *         rc = ref[i - 1]
  *         for j in range(1, m + 1):
  *             sc = match if rc == qry[j - 1] else mismatch             # <<<<<<<<<<<<<<
@@ -2752,7 +2752,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
 
       __pyx_v_sc = __pyx_t_7;
 
-      /* "cfutils/_swalign.pyx":32
+      /* "sanger/_swalign.pyx":32
  *         for j in range(1, m + 1):
  *             sc = match if rc == qry[j - 1] else mismatch
  *             diag = dp[(i - 1) * stride + j - 1] + sc             # <<<<<<<<<<<<<<
@@ -2761,7 +2761,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
 */
       __pyx_v_diag = ((__pyx_v_dp[((((__pyx_v_i - 1) * __pyx_v_stride) + __pyx_v_j) - 1)]) + __pyx_v_sc);
 
-      /* "cfutils/_swalign.pyx":33
+      /* "sanger/_swalign.pyx":33
  *             sc = match if rc == qry[j - 1] else mismatch
  *             diag = dp[(i - 1) * stride + j - 1] + sc
  *             up = dp[(i - 1) * stride + j] + gap             # <<<<<<<<<<<<<<
@@ -2770,7 +2770,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
 */
       __pyx_v_up = ((__pyx_v_dp[(((__pyx_v_i - 1) * __pyx_v_stride) + __pyx_v_j)]) + __pyx_v_gap);
 
-      /* "cfutils/_swalign.pyx":34
+      /* "sanger/_swalign.pyx":34
  *             diag = dp[(i - 1) * stride + j - 1] + sc
  *             up = dp[(i - 1) * stride + j] + gap
  *             left = dp[i * stride + j - 1] + gap             # <<<<<<<<<<<<<<
@@ -2779,7 +2779,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
 */
       __pyx_v_left = ((__pyx_v_dp[(((__pyx_v_i * __pyx_v_stride) + __pyx_v_j) - 1)]) + __pyx_v_gap);
 
-      /* "cfutils/_swalign.pyx":35
+      /* "sanger/_swalign.pyx":35
  *             up = dp[(i - 1) * stride + j] + gap
  *             left = dp[i * stride + j - 1] + gap
  *             best_local = diag             # <<<<<<<<<<<<<<
@@ -2788,7 +2788,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
 */
       __pyx_v_best_local = __pyx_v_diag;
 
-      /* "cfutils/_swalign.pyx":36
+      /* "sanger/_swalign.pyx":36
  *             left = dp[i * stride + j - 1] + gap
  *             best_local = diag
  *             move = 1             # <<<<<<<<<<<<<<
@@ -2797,7 +2797,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
 */
       __pyx_v_move = 1;
 
-      /* "cfutils/_swalign.pyx":37
+      /* "sanger/_swalign.pyx":37
  *             best_local = diag
  *             move = 1
  *             if up > best_local:             # <<<<<<<<<<<<<<
@@ -2809,7 +2809,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
       if (__pyx_t_8) {
 
 
-        /* "cfutils/_swalign.pyx":38
+        /* "sanger/_swalign.pyx":38
  *             move = 1
  *             if up > best_local:
  *                 best_local = up; move = 2             # <<<<<<<<<<<<<<
@@ -2819,7 +2819,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
         __pyx_v_best_local = __pyx_v_up;
         __pyx_v_move = 2;
 
-        /* "cfutils/_swalign.pyx":37
+        /* "sanger/_swalign.pyx":37
  *             best_local = diag
  *             move = 1
  *             if up > best_local:             # <<<<<<<<<<<<<<
@@ -2828,7 +2828,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
 */
       }
 
-      /* "cfutils/_swalign.pyx":39
+      /* "sanger/_swalign.pyx":39
  *             if up > best_local:
  *                 best_local = up; move = 2
  *             if left > best_local:             # <<<<<<<<<<<<<<
@@ -2840,7 +2840,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
       if (__pyx_t_8) {
 
 
-        /* "cfutils/_swalign.pyx":40
+        /* "sanger/_swalign.pyx":40
  *                 best_local = up; move = 2
  *             if left > best_local:
  *                 best_local = left; move = 3             # <<<<<<<<<<<<<<
@@ -2850,7 +2850,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
         __pyx_v_best_local = __pyx_v_left;
         __pyx_v_move = 3;
 
-        /* "cfutils/_swalign.pyx":39
+        /* "sanger/_swalign.pyx":39
  *             if up > best_local:
  *                 best_local = up; move = 2
  *             if left > best_local:             # <<<<<<<<<<<<<<
@@ -2859,7 +2859,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
 */
       }
 
-      /* "cfutils/_swalign.pyx":41
+      /* "sanger/_swalign.pyx":41
  *             if left > best_local:
  *                 best_local = left; move = 3
  *             if best_local < 0:             # <<<<<<<<<<<<<<
@@ -2871,7 +2871,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
       if (__pyx_t_8) {
 
 
-        /* "cfutils/_swalign.pyx":42
+        /* "sanger/_swalign.pyx":42
  *                 best_local = left; move = 3
  *             if best_local < 0:
  *                 best_local = 0; move = 0             # <<<<<<<<<<<<<<
@@ -2881,7 +2881,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
         __pyx_v_best_local = 0;
         __pyx_v_move = 0;
 
-        /* "cfutils/_swalign.pyx":41
+        /* "sanger/_swalign.pyx":41
  *             if left > best_local:
  *                 best_local = left; move = 3
  *             if best_local < 0:             # <<<<<<<<<<<<<<
@@ -2890,7 +2890,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
 */
       }
 
-      /* "cfutils/_swalign.pyx":43
+      /* "sanger/_swalign.pyx":43
  *             if best_local < 0:
  *                 best_local = 0; move = 0
  *             dp[i * stride + j] = best_local             # <<<<<<<<<<<<<<
@@ -2899,7 +2899,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
 */
       (__pyx_v_dp[((__pyx_v_i * __pyx_v_stride) + __pyx_v_j)]) = __pyx_v_best_local;
 
-      /* "cfutils/_swalign.pyx":44
+      /* "sanger/_swalign.pyx":44
  *                 best_local = 0; move = 0
  *             dp[i * stride + j] = best_local
  *             tr[i * stride + j] = move             # <<<<<<<<<<<<<<
@@ -2908,7 +2908,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
 */
       (__pyx_v_tr[((__pyx_v_i * __pyx_v_stride) + __pyx_v_j)]) = __pyx_v_move;
 
-      /* "cfutils/_swalign.pyx":45
+      /* "sanger/_swalign.pyx":45
  *             dp[i * stride + j] = best_local
  *             tr[i * stride + j] = move
  *             if best_local > best:             # <<<<<<<<<<<<<<
@@ -2920,7 +2920,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
       if (__pyx_t_8) {
 
 
-        /* "cfutils/_swalign.pyx":46
+        /* "sanger/_swalign.pyx":46
  *             tr[i * stride + j] = move
  *             if best_local > best:
  *                 best = best_local; bi = i; bj = j             # <<<<<<<<<<<<<<
@@ -2931,7 +2931,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
         __pyx_v_bi = __pyx_v_i;
         __pyx_v_bj = __pyx_v_j;
 
-        /* "cfutils/_swalign.pyx":45
+        /* "sanger/_swalign.pyx":45
  *             dp[i * stride + j] = best_local
  *             tr[i * stride + j] = move
  *             if best_local > best:             # <<<<<<<<<<<<<<
@@ -2944,7 +2944,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
   }
 
 
-  /* "cfutils/_swalign.pyx":47
+  /* "sanger/_swalign.pyx":47
  *             if best_local > best:
  *                 best = best_local; bi = i; bj = j
  *     out_bi[0] = bi             # <<<<<<<<<<<<<<
@@ -2953,7 +2953,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
 */
   (__pyx_v_out_bi[0]) = __pyx_v_bi;
 
-  /* "cfutils/_swalign.pyx":48
+  /* "sanger/_swalign.pyx":48
  *                 best = best_local; bi = i; bj = j
  *     out_bi[0] = bi
  *     out_bj[0] = bj             # <<<<<<<<<<<<<<
@@ -2962,7 +2962,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
 */
   (__pyx_v_out_bj[0]) = __pyx_v_bj;
 
-  /* "cfutils/_swalign.pyx":49
+  /* "sanger/_swalign.pyx":49
  *     out_bi[0] = bi
  *     out_bj[0] = bj
  *     out_best[0] = best             # <<<<<<<<<<<<<<
@@ -2971,7 +2971,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
 */
   (__pyx_v_out_best[0]) = __pyx_v_best;
 
-  /* "cfutils/_swalign.pyx":50
+  /* "sanger/_swalign.pyx":50
  *     out_bj[0] = bj
  *     out_best[0] = best
  *     return 0             # <<<<<<<<<<<<<<
@@ -2984,7 +2984,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
   }
   goto __pyx_L0;
 
-  /* "cfutils/_swalign.pyx":20
+  /* "sanger/_swalign.pyx":20
  * from libc.stdlib cimport malloc, free
  * 
  * cdef int _align(const unsigned char* ref, int n,             # <<<<<<<<<<<<<<
@@ -3010,7 +3010,7 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
   return __pyx_r;
 }
 
-/* "cfutils/_swalign.pyx":53
+/* "sanger/_swalign.pyx":53
  * 
  * 
  * def sw_align(str reference, str query, int match=2, int mismatch=-1, int gap=-1):             # <<<<<<<<<<<<<<
@@ -3019,16 +3019,16 @@ static int __pyx_f_7cfutils_8_swalign__align(unsigned char const *__pyx_v_ref, i
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_7cfutils_8_swalign_1sw_align(PyObject *__pyx_self, 
+static PyObject *__pyx_pw_6sanger_8_swalign_1sw_align(PyObject *__pyx_self, 
 #if CYTHON_VECTORCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-PyDoc_STRVAR(__pyx_doc_7cfutils_8_swalign_sw_align, "Local Smith-Waterman alignment of ``query`` onto ``reference``.");
-static PyMethodDef __pyx_mdef_7cfutils_8_swalign_1sw_align = {"sw_align", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7cfutils_8_swalign_1sw_align, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_7cfutils_8_swalign_sw_align};
-static PyObject *__pyx_pw_7cfutils_8_swalign_1sw_align(PyObject *__pyx_self, 
+PyDoc_STRVAR(__pyx_doc_6sanger_8_swalign_sw_align, "Local Smith-Waterman alignment of ``query`` onto ``reference``.");
+static PyMethodDef __pyx_mdef_6sanger_8_swalign_1sw_align = {"sw_align", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_6sanger_8_swalign_1sw_align, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_6sanger_8_swalign_sw_align};
+static PyObject *__pyx_pw_6sanger_8_swalign_1sw_align(PyObject *__pyx_self, 
 #if CYTHON_VECTORCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -3143,13 +3143,13 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
     Py_XDECREF(values[__pyx_temp]);
   }
-  __Pyx_AddTraceback("cfutils._swalign.sw_align", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("sanger._swalign.sw_align", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_reference), (&PyUnicode_Type), 1, "reference", 1))) __PYX_ERR(0, 53, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_query), (&PyUnicode_Type), 1, "query", 1))) __PYX_ERR(0, 53, __pyx_L1_error)
-  __pyx_r = __pyx_pf_7cfutils_8_swalign_sw_align(__pyx_self, __pyx_v_reference, __pyx_v_query, __pyx_v_match, __pyx_v_mismatch, __pyx_v_gap);
+  __pyx_r = __pyx_pf_6sanger_8_swalign_sw_align(__pyx_self, __pyx_v_reference, __pyx_v_query, __pyx_v_match, __pyx_v_mismatch, __pyx_v_gap);
 
   /* function exit code */
   goto __pyx_L0;
@@ -3171,7 +3171,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_reference, PyObject *__pyx_v_query, int __pyx_v_match, int __pyx_v_mismatch, int __pyx_v_gap) {
+static PyObject *__pyx_pf_6sanger_8_swalign_sw_align(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_reference, PyObject *__pyx_v_query, int __pyx_v_match, int __pyx_v_mismatch, int __pyx_v_gap) {
   PyObject *__pyx_v_ref_b = NULL;
   PyObject *__pyx_v_qry_b = NULL;
   int __pyx_v_n;
@@ -3214,7 +3214,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("sw_align", 0);
 
-  /* "cfutils/_swalign.pyx":55
+  /* "sanger/_swalign.pyx":55
  * def sw_align(str reference, str query, int match=2, int mismatch=-1, int gap=-1):
  *     """Local Smith-Waterman alignment of ``query`` onto ``reference``."""
  *     ref_b = reference.encode("ascii")             # <<<<<<<<<<<<<<
@@ -3230,7 +3230,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
   __pyx_v_ref_b = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "cfutils/_swalign.pyx":56
+  /* "sanger/_swalign.pyx":56
  *     """Local Smith-Waterman alignment of ``query`` onto ``reference``."""
  *     ref_b = reference.encode("ascii")
  *     qry_b = query.encode("ascii")             # <<<<<<<<<<<<<<
@@ -3246,7 +3246,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
   __pyx_v_qry_b = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "cfutils/_swalign.pyx":57
+  /* "sanger/_swalign.pyx":57
  *     ref_b = reference.encode("ascii")
  *     qry_b = query.encode("ascii")
  *     cdef int n = len(ref_b), m = len(qry_b)             # <<<<<<<<<<<<<<
@@ -3258,7 +3258,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
   __pyx_t_2 = __Pyx_PyBytes_GET_SIZE(__pyx_v_qry_b); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 57, __pyx_L1_error)
   __pyx_v_m = __pyx_t_2;
 
-  /* "cfutils/_swalign.pyx":58
+  /* "sanger/_swalign.pyx":58
  *     qry_b = query.encode("ascii")
  *     cdef int n = len(ref_b), m = len(qry_b)
  *     cdef int stride = m + 1             # <<<<<<<<<<<<<<
@@ -3267,7 +3267,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
 */
   __pyx_v_stride = (__pyx_v_m + 1);
 
-  /* "cfutils/_swalign.pyx":59
+  /* "sanger/_swalign.pyx":59
  *     cdef int n = len(ref_b), m = len(qry_b)
  *     cdef int stride = m + 1
  *     if n == 0 or m == 0:             # <<<<<<<<<<<<<<
@@ -3293,7 +3293,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
   if (__pyx_t_3) {
 
 
-    /* "cfutils/_swalign.pyx":60
+    /* "sanger/_swalign.pyx":60
  *     cdef int stride = m + 1
  *     if n == 0 or m == 0:
  *         return 0, 0, query, reference             # <<<<<<<<<<<<<<
@@ -3325,7 +3325,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
     __pyx_t_1 = 0;
     goto __pyx_L0;
 
-    /* "cfutils/_swalign.pyx":59
+    /* "sanger/_swalign.pyx":59
  *     cdef int n = len(ref_b), m = len(qry_b)
  *     cdef int stride = m + 1
  *     if n == 0 or m == 0:             # <<<<<<<<<<<<<<
@@ -3334,7 +3334,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
 */
   }
 
-  /* "cfutils/_swalign.pyx":61
+  /* "sanger/_swalign.pyx":61
  *     if n == 0 or m == 0:
  *         return 0, 0, query, reference
  *     cdef const unsigned char* refp = ref_b             # <<<<<<<<<<<<<<
@@ -3344,7 +3344,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
   __pyx_t_5 = __Pyx_PyBytes_AsUString(__pyx_v_ref_b); if (unlikely((!__pyx_t_5) && PyErr_Occurred())) __PYX_ERR(0, 61, __pyx_L1_error)
   __pyx_v_refp = __pyx_t_5;
 
-  /* "cfutils/_swalign.pyx":62
+  /* "sanger/_swalign.pyx":62
  *         return 0, 0, query, reference
  *     cdef const unsigned char* refp = ref_b
  *     cdef const unsigned char* qryp = qry_b             # <<<<<<<<<<<<<<
@@ -3354,7 +3354,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
   __pyx_t_6 = __Pyx_PyBytes_AsUString(__pyx_v_qry_b); if (unlikely((!__pyx_t_6) && PyErr_Occurred())) __PYX_ERR(0, 62, __pyx_L1_error)
   __pyx_v_qryp = __pyx_t_6;
 
-  /* "cfutils/_swalign.pyx":63
+  /* "sanger/_swalign.pyx":63
  *     cdef const unsigned char* refp = ref_b
  *     cdef const unsigned char* qryp = qry_b
  *     cdef int* dp = <int*> malloc((n + 1) * stride * sizeof(int))             # <<<<<<<<<<<<<<
@@ -3363,7 +3363,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
 */
   __pyx_v_dp = ((int *)malloc((((__pyx_v_n + 1) * __pyx_v_stride) * (sizeof(int)))));
 
-  /* "cfutils/_swalign.pyx":64
+  /* "sanger/_swalign.pyx":64
  *     cdef const unsigned char* qryp = qry_b
  *     cdef int* dp = <int*> malloc((n + 1) * stride * sizeof(int))
  *     cdef unsigned char* tr = <unsigned char*> malloc((n + 1) * stride * sizeof(unsigned char))             # <<<<<<<<<<<<<<
@@ -3372,7 +3372,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
 */
   __pyx_v_tr = ((unsigned char *)malloc((((__pyx_v_n + 1) * __pyx_v_stride) * (sizeof(unsigned char)))));
 
-  /* "cfutils/_swalign.pyx":65
+  /* "sanger/_swalign.pyx":65
  *     cdef int* dp = <int*> malloc((n + 1) * stride * sizeof(int))
  *     cdef unsigned char* tr = <unsigned char*> malloc((n + 1) * stride * sizeof(unsigned char))
  *     if dp == NULL or tr == NULL:             # <<<<<<<<<<<<<<
@@ -3398,7 +3398,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
   if (__pyx_t_3) {
 
 
-    /* "cfutils/_swalign.pyx":66
+    /* "sanger/_swalign.pyx":66
  *     cdef unsigned char* tr = <unsigned char*> malloc((n + 1) * stride * sizeof(unsigned char))
  *     if dp == NULL or tr == NULL:
  *         if dp != NULL: free(dp)             # <<<<<<<<<<<<<<
@@ -3412,7 +3412,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
       free(__pyx_v_dp);
     }
 
-    /* "cfutils/_swalign.pyx":67
+    /* "sanger/_swalign.pyx":67
  *     if dp == NULL or tr == NULL:
  *         if dp != NULL: free(dp)
  *         if tr != NULL: free(tr)             # <<<<<<<<<<<<<<
@@ -3426,7 +3426,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
       free(__pyx_v_tr);
     }
 
-    /* "cfutils/_swalign.pyx":68
+    /* "sanger/_swalign.pyx":68
  *         if dp != NULL: free(dp)
  *         if tr != NULL: free(tr)
  *         raise MemoryError()             # <<<<<<<<<<<<<<
@@ -3435,7 +3435,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
 */
     PyErr_NoMemory(); __PYX_ERR(0, 68, __pyx_L1_error)
 
-    /* "cfutils/_swalign.pyx":65
+    /* "sanger/_swalign.pyx":65
  *     cdef int* dp = <int*> malloc((n + 1) * stride * sizeof(int))
  *     cdef unsigned char* tr = <unsigned char*> malloc((n + 1) * stride * sizeof(unsigned char))
  *     if dp == NULL or tr == NULL:             # <<<<<<<<<<<<<<
@@ -3444,7 +3444,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
 */
   }
 
-  /* "cfutils/_swalign.pyx":69
+  /* "sanger/_swalign.pyx":69
  *         if tr != NULL: free(tr)
  *         raise MemoryError()
  *     cdef int idx, total = (n + 1) * stride             # <<<<<<<<<<<<<<
@@ -3453,7 +3453,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
 */
   __pyx_v_total = ((__pyx_v_n + 1) * __pyx_v_stride);
 
-  /* "cfutils/_swalign.pyx":70
+  /* "sanger/_swalign.pyx":70
  *         raise MemoryError()
  *     cdef int idx, total = (n + 1) * stride
  *     for idx in range(total):             # <<<<<<<<<<<<<<
@@ -3467,7 +3467,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
   for (__pyx_t_9 = 0; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
     __pyx_v_idx = __pyx_t_9;
 
-    /* "cfutils/_swalign.pyx":71
+    /* "sanger/_swalign.pyx":71
  *     cdef int idx, total = (n + 1) * stride
  *     for idx in range(total):
  *         dp[idx] = 0             # <<<<<<<<<<<<<<
@@ -3476,7 +3476,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
 */
     (__pyx_v_dp[__pyx_v_idx]) = 0;
 
-    /* "cfutils/_swalign.pyx":72
+    /* "sanger/_swalign.pyx":72
  *     for idx in range(total):
  *         dp[idx] = 0
  *         tr[idx] = 0             # <<<<<<<<<<<<<<
@@ -3487,7 +3487,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
   }
 
 
-  /* "cfutils/_swalign.pyx":73
+  /* "sanger/_swalign.pyx":73
  *         dp[idx] = 0
  *         tr[idx] = 0
  *     cdef int bi = 0, bj = 0, best = 0             # <<<<<<<<<<<<<<
@@ -3498,7 +3498,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
   __pyx_v_bj = 0;
   __pyx_v_best = 0;
 
-  /* "cfutils/_swalign.pyx":74
+  /* "sanger/_swalign.pyx":74
  *         tr[idx] = 0
  *     cdef int bi = 0, bj = 0, best = 0
  *     with nogil:             # <<<<<<<<<<<<<<
@@ -3511,18 +3511,18 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
       __Pyx_FastGIL_Remember();
       /*try:*/ {
 
-        /* "cfutils/_swalign.pyx":75
+        /* "sanger/_swalign.pyx":75
  *     cdef int bi = 0, bj = 0, best = 0
  *     with nogil:
  *         _align(refp, n, qryp, m, match, mismatch, gap, dp, tr, &bi, &bj, &best)             # <<<<<<<<<<<<<<
  * 
  *     # traceback
 */
-        __pyx_t_7 = __pyx_f_7cfutils_8_swalign__align(__pyx_v_refp, __pyx_v_n, __pyx_v_qryp, __pyx_v_m, __pyx_v_match, __pyx_v_mismatch, __pyx_v_gap, __pyx_v_dp, __pyx_v_tr, (&__pyx_v_bi), (&__pyx_v_bj), (&__pyx_v_best)); if (unlikely(__pyx_t_7 == ((int)-1) && __Pyx_ErrOccurredWithGIL())) __PYX_ERR(0, 75, __pyx_L14_error)
+        __pyx_t_7 = __pyx_f_6sanger_8_swalign__align(__pyx_v_refp, __pyx_v_n, __pyx_v_qryp, __pyx_v_m, __pyx_v_match, __pyx_v_mismatch, __pyx_v_gap, __pyx_v_dp, __pyx_v_tr, (&__pyx_v_bi), (&__pyx_v_bj), (&__pyx_v_best)); if (unlikely(__pyx_t_7 == ((int)-1) && __Pyx_ErrOccurredWithGIL())) __PYX_ERR(0, 75, __pyx_L14_error)
 
       }
 
-      /* "cfutils/_swalign.pyx":74
+      /* "sanger/_swalign.pyx":74
  *         tr[idx] = 0
  *     cdef int bi = 0, bj = 0, best = 0
  *     with nogil:             # <<<<<<<<<<<<<<
@@ -3544,7 +3544,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
       }
   }
 
-  /* "cfutils/_swalign.pyx":78
+  /* "sanger/_swalign.pyx":78
  * 
  *     # traceback
  *     cdef int i = bi, j = bj, move             # <<<<<<<<<<<<<<
@@ -3554,7 +3554,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
   __pyx_v_i = __pyx_v_bi;
   __pyx_v_j = __pyx_v_bj;
 
-  /* "cfutils/_swalign.pyx":79
+  /* "sanger/_swalign.pyx":79
  *     # traceback
  *     cdef int i = bi, j = bj, move
  *     qal = []             # <<<<<<<<<<<<<<
@@ -3566,7 +3566,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
   __pyx_v_qal = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "cfutils/_swalign.pyx":80
+  /* "sanger/_swalign.pyx":80
  *     cdef int i = bi, j = bj, move
  *     qal = []
  *     ral = []             # <<<<<<<<<<<<<<
@@ -3578,7 +3578,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
   __pyx_v_ral = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "cfutils/_swalign.pyx":81
+  /* "sanger/_swalign.pyx":81
  *     qal = []
  *     ral = []
  *     while i > 0 and j > 0:             # <<<<<<<<<<<<<<
@@ -3605,7 +3605,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
 
     if (!__pyx_t_3) break;
 
-    /* "cfutils/_swalign.pyx":82
+    /* "sanger/_swalign.pyx":82
  *     ral = []
  *     while i > 0 and j > 0:
  *         move = tr[i * stride + j]             # <<<<<<<<<<<<<<
@@ -3614,7 +3614,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
 */
     __pyx_v_move = (__pyx_v_tr[((__pyx_v_i * __pyx_v_stride) + __pyx_v_j)]);
 
-    /* "cfutils/_swalign.pyx":83
+    /* "sanger/_swalign.pyx":83
  *     while i > 0 and j > 0:
  *         move = tr[i * stride + j]
  *         if move == 0:             # <<<<<<<<<<<<<<
@@ -3626,7 +3626,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
     if (__pyx_t_3) {
 
 
-      /* "cfutils/_swalign.pyx":84
+      /* "sanger/_swalign.pyx":84
  *         move = tr[i * stride + j]
  *         if move == 0:
  *             break             # <<<<<<<<<<<<<<
@@ -3635,7 +3635,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
 */
       goto __pyx_L17_break;
 
-      /* "cfutils/_swalign.pyx":83
+      /* "sanger/_swalign.pyx":83
  *     while i > 0 and j > 0:
  *         move = tr[i * stride + j]
  *         if move == 0:             # <<<<<<<<<<<<<<
@@ -3644,7 +3644,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
 */
     }
 
-    /* "cfutils/_swalign.pyx":85
+    /* "sanger/_swalign.pyx":85
  *         if move == 0:
  *             break
  *         if move == 1:             # <<<<<<<<<<<<<<
@@ -3654,7 +3654,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
     switch (__pyx_v_move) {
       case 1:
 
-      /* "cfutils/_swalign.pyx":86
+      /* "sanger/_swalign.pyx":86
  *             break
  *         if move == 1:
  *             qal.append(chr(qry_b[j - 1]))             # <<<<<<<<<<<<<<
@@ -3672,7 +3672,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
 
-      /* "cfutils/_swalign.pyx":87
+      /* "sanger/_swalign.pyx":87
  *         if move == 1:
  *             qal.append(chr(qry_b[j - 1]))
  *             ral.append(chr(ref_b[i - 1]))             # <<<<<<<<<<<<<<
@@ -3690,7 +3690,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
 
-      /* "cfutils/_swalign.pyx":88
+      /* "sanger/_swalign.pyx":88
  *             qal.append(chr(qry_b[j - 1]))
  *             ral.append(chr(ref_b[i - 1]))
  *             i -= 1; j -= 1             # <<<<<<<<<<<<<<
@@ -3700,7 +3700,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
       __pyx_v_i = (__pyx_v_i - 1);
       __pyx_v_j = (__pyx_v_j - 1);
 
-      /* "cfutils/_swalign.pyx":85
+      /* "sanger/_swalign.pyx":85
  *         if move == 0:
  *             break
  *         if move == 1:             # <<<<<<<<<<<<<<
@@ -3710,7 +3710,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
       break;
       case 2:
 
-      /* "cfutils/_swalign.pyx":90
+      /* "sanger/_swalign.pyx":90
  *             i -= 1; j -= 1
  *         elif move == 2:
  *             qal.append("-")             # <<<<<<<<<<<<<<
@@ -3720,7 +3720,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
       __pyx_t_11 = __Pyx_PyList_Append(__pyx_v_qal, __pyx_mstate_global->__pyx_kp_u_); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 90, __pyx_L1_error)
 
 
-      /* "cfutils/_swalign.pyx":91
+      /* "sanger/_swalign.pyx":91
  *         elif move == 2:
  *             qal.append("-")
  *             ral.append(chr(ref_b[i - 1]))             # <<<<<<<<<<<<<<
@@ -3738,7 +3738,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
 
-      /* "cfutils/_swalign.pyx":92
+      /* "sanger/_swalign.pyx":92
  *             qal.append("-")
  *             ral.append(chr(ref_b[i - 1]))
  *             i -= 1             # <<<<<<<<<<<<<<
@@ -3747,7 +3747,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
 */
       __pyx_v_i = (__pyx_v_i - 1);
 
-      /* "cfutils/_swalign.pyx":89
+      /* "sanger/_swalign.pyx":89
  *             ral.append(chr(ref_b[i - 1]))
  *             i -= 1; j -= 1
  *         elif move == 2:             # <<<<<<<<<<<<<<
@@ -3757,7 +3757,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
       break;
       default:
 
-      /* "cfutils/_swalign.pyx":94
+      /* "sanger/_swalign.pyx":94
  *             i -= 1
  *         else:
  *             qal.append(chr(qry_b[j - 1]))             # <<<<<<<<<<<<<<
@@ -3775,7 +3775,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
 
-      /* "cfutils/_swalign.pyx":95
+      /* "sanger/_swalign.pyx":95
  *         else:
  *             qal.append(chr(qry_b[j - 1]))
  *             ral.append("-")             # <<<<<<<<<<<<<<
@@ -3785,7 +3785,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
       __pyx_t_11 = __Pyx_PyList_Append(__pyx_v_ral, __pyx_mstate_global->__pyx_kp_u_); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 95, __pyx_L1_error)
 
 
-      /* "cfutils/_swalign.pyx":96
+      /* "sanger/_swalign.pyx":96
  *             qal.append(chr(qry_b[j - 1]))
  *             ral.append("-")
  *             j -= 1             # <<<<<<<<<<<<<<
@@ -3798,7 +3798,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
   }
   __pyx_L17_break:;
 
-  /* "cfutils/_swalign.pyx":97
+  /* "sanger/_swalign.pyx":97
  *             ral.append("-")
  *             j -= 1
  *     free(dp)             # <<<<<<<<<<<<<<
@@ -3807,7 +3807,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
 */
   free(__pyx_v_dp);
 
-  /* "cfutils/_swalign.pyx":98
+  /* "sanger/_swalign.pyx":98
  *             j -= 1
  *     free(dp)
  *     free(tr)             # <<<<<<<<<<<<<<
@@ -3815,7 +3815,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
 */
   free(__pyx_v_tr);
 
-  /* "cfutils/_swalign.pyx":99
+  /* "sanger/_swalign.pyx":99
  *     free(dp)
  *     free(tr)
  *     return i, j, "".join(reversed(qal)), "".join(reversed(ral))             # <<<<<<<<<<<<<<
@@ -3873,7 +3873,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
   __pyx_t_13 = 0;
   goto __pyx_L0;
 
-  /* "cfutils/_swalign.pyx":53
+  /* "sanger/_swalign.pyx":53
  * 
  * 
  * def sw_align(str reference, str query, int match=2, int mismatch=-1, int gap=-1):             # <<<<<<<<<<<<<<
@@ -3888,7 +3888,7 @@ static PyObject *__pyx_pf_7cfutils_8_swalign_sw_align(CYTHON_UNUSED PyObject *__
   __Pyx_XDECREF(__pyx_t_13);
   __Pyx_XDECREF(__pyx_t_14);
   __Pyx_XDECREF(__pyx_t_16);
-  __Pyx_AddTraceback("cfutils._swalign.sw_align", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("sanger._swalign.sw_align", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_ref_b);
@@ -4238,13 +4238,13 @@ __Pyx_RefNannySetupContext("PyInit__swalign", 0);
   if (__Pyx_InitConstants(__pyx_mstate) < (0)) __PYX_ERR(0, 1, __pyx_L1_error)
   stringtab_initialized = 1;
   if (__Pyx_InitGlobals() < (0)) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__pyx_module_is_main_cfutils___swalign) {
+  if (__pyx_module_is_main_sanger___swalign) {
     if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_name, __pyx_mstate_global->__pyx_n_u_main) < (0)) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "cfutils._swalign")) {
-      if (unlikely((PyDict_SetItemString(modules, "cfutils._swalign", __pyx_m) < 0))) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "sanger._swalign")) {
+      if (unlikely((PyDict_SetItemString(modules, "sanger._swalign", __pyx_m) < 0))) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   /*--- Builtin init code ---*/
@@ -4263,7 +4263,7 @@ __Pyx_RefNannySetupContext("PyInit__swalign", 0);
   if (__Pyx_InitAfterSharedUtility() < (0)) __PYX_ERR(0, 1, __pyx_L1_error)
   /*--- Execution code ---*/
 
-  /* "cfutils/_swalign.pyx":53
+  /* "sanger/_swalign.pyx":53
  * 
  * 
  * def sw_align(str reference, str query, int match=2, int mismatch=-1, int gap=-1):             # <<<<<<<<<<<<<<
@@ -4284,7 +4284,7 @@ __Pyx_RefNannySetupContext("PyInit__swalign", 0);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_7cfutils_8_swalign_1sw_align, 0, __pyx_mstate_global->__pyx_n_u_sw_align, NULL, __pyx_mstate_global->__pyx_n_u_cfutils__swalign, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 53, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_6sanger_8_swalign_1sw_align, 0, __pyx_mstate_global->__pyx_n_u_sw_align, NULL, __pyx_mstate_global->__pyx_n_u_sanger__swalign, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_4);
@@ -4294,7 +4294,7 @@ __Pyx_RefNannySetupContext("PyInit__swalign", 0);
   if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_sw_align, __pyx_t_4) < (0)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "cfutils/_swalign.pyx":1
+  /* "sanger/_swalign.pyx":1
  * # cython: language_level=3, boundscheck=False, wraparound=False, cdivision=True             # <<<<<<<<<<<<<<
  * # distutils: language = c
  * """
@@ -4314,7 +4314,7 @@ __Pyx_RefNannySetupContext("PyInit__swalign", 0);
   __Pyx_XDECREF(__pyx_t_5);
   if (__pyx_m) {
     if (__pyx_mstate->__pyx_d && stringtab_initialized) {
-      __Pyx_AddTraceback("init cfutils._swalign", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init sanger._swalign", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     #if !CYTHON_USE_MODULE_STATE
     Py_CLEAR(__pyx_m);
@@ -4328,7 +4328,7 @@ __Pyx_RefNannySetupContext("PyInit__swalign", 0);
     }
     #endif
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init cfutils._swalign");
+    PyErr_SetString(PyExc_ImportError, "init sanger._swalign");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -4376,22 +4376,22 @@ static int __Pyx_InitConstants(__pyx_mstatetype *__pyx_mstate) {
   int __pyx_clineno = 0;
   CYTHON_UNUSED_VAR(__pyx_mstate);
   {
-    const struct { const unsigned int length: 8; } str_length_index[] = {{0},{1},{1},{179},{8},{20},{20},{12},{8},{8},{10},{8},{12},{8},{13},{18},{4},{2},{2},{16},{18},{2},{3},{1},{3},{5},{1},{1},{5},{8},{4},{1},{3},{3},{5},{4},{5},{3},{5},{9},{4},{8},{10},{6},{8},{5},{2},{6}};
+    const struct { const unsigned int length: 8; } str_length_index[] = {{0},{1},{1},{179},{8},{19},{20},{12},{8},{8},{10},{8},{12},{8},{13},{18},{4},{2},{2},{18},{2},{3},{1},{3},{5},{1},{1},{5},{8},{4},{1},{3},{3},{5},{4},{5},{3},{5},{9},{4},{8},{15},{10},{6},{8},{5},{2},{6}};
     const struct { const unsigned int length: 10; } bytes_length_index[] = {{527}};
     #ifndef CYTHON_COMPRESS_STRINGS
       #define CYTHON_COMPRESS_STRINGS 0
     #endif
-    #if (CYTHON_COMPRESS_STRINGS) == 1 /* compression: zlib (691 bytes) */
-static const char cstring[] = "x\332}Q\277O\0331\024n \205@\241(\211\004H\025\222\003\242T\225H\005\004\321\255\"-\225X\020\320V]*\235|w/`z\361\335\331\276\300\r\225:\336\350\321\343\215\031o\314\230\221\221\361F\376\204\376\t}\027~\252j\353\341\275g\373\363\367\275\367y\375\335\201\257\200\250S\252\310\373X\235\372\2340I\\\360\230\r\202*\360b\"\225`\216\002Q\20089\334;\\o\275m\021\312]\"\340\014\034%\211\214l\307\243R\202$~\207\330\021\363\024\343D\305\001\310&\331\357\220\330\217\010\007p\211\362I\200\270\307\017\324)p\"A\025\005Y\243\234\373\212*\346s\013\2373~\262F\\&P\204\365\240x\375\221z\022\232\324u-\304\201\323\211\024\363\344\033K\236S\217\235\360f\020_X\326!\206\303\370\003\366l\035\300\205:\206\216e\335\362\202\205\253\023q\247\310]\312\370(\373n\344\215n8\355\216r\030Q\357\256V \025&&-\307\027>\352q\2402\346\016\363\233\367\007\322F\220\315\354\263\333\206\232w\r9\036\336Z(\243\004u\300\246\316w78\241\001c\356\005S\320\225g\335.U\316i\227\311\233\354\367\200\007~\020R/\024\261ec\010\302\010D,\250\047p\014\033\003\010\340\016\206N \240\007B\202\213\346\271\320\241\221\247\212\237rA\236[#q\205\023{J\364\250\027\201\274z\262\226\376\270j\355\r\217\256\3133\311\276\376jv\315Q\216\345\236^0%S\315\313U]\327\273\372[ZOwS\274\231\327\266\0313\215\274<\371S$\365\244\2358\272\246\2674\315+s\211\324+\005A^^-\220\243P\327;\346e:\226.\247\355\324\351\327\372;\331r\206\200\245\253\245f\277\223\2653{06X\031\034\017\316\207\366e\251 \225\311J\362\005y>\231q\263\221W\236%[\2500\257\225\331@\342?\267Sy\371\205\3314\307F\242\000\322V\222\311$\302n\217\362\312t\322Hvt\343\241(\327\364+\363\032QS\323y\345yB\223\036jL\030\047]\350Og\253\231\032\264\006\341\260<\334\035~\276\254^6~M<yZ\323\213\205\001Hp\037\226q`[\227u\033](\025#\013]\325\313\270=\301&\302\242\277m=\2567\362\231\331G\365\\r\256\251\226\246a\266\323RZK7\321\230\277\037\026^\357\241\346l\r\035\270\007\205\377DW\257\377G\036\216 \205+\245\344!\335XX\323\333\370\275\213i5]\303_\331\316J\331\342\240:h\374\006\351\021\211K";
-    PyObject *data = __Pyx_DecompressString(cstring, 691, 1);
+    #if (CYTHON_COMPRESS_STRINGS) == 1 /* compression: zlib (690 bytes) */
+static const char cstring[] = "x\332}Q=O\033A\020\305\340\200!\020d[\002\244\010imD\210\"\341\010\260E\272\010\022\"\321 C\022\245\211t\332\273\033\333K\316{\347\335=\233+\"\245\274r\313-\257\244t\351\322%%\345\225\374\204\374\204\314\231\360\241(\311\0263\263\263o\337\314\274\331~{\342+ \252C\025y\027\251\216\317\t\223\304\005\217\331 \250\002/\"R\t\346(\020\031\210\223\346Qs\273\376\246N(w\211\200sp\224$2\264\035\217J\t\222\370-b\207\314S\214\023\025\005 k\344\270E\"?$\034\300%\312\047\001\342\036\177P\035\340D\202\312\002\262E9\367\025U\314\347\026~g\274\275E\\&\260\010\353C\366\373\003\365$\324\250\353Z\210\003Iy\033\304kK\016\250\307\332\274\026D\027\226\325D\323\214\336c\313\326\t\\\2503hY\326oZ\260\360\264B\356d\276K\031\237x\337\r\275\311\013\247\335\211\357\205\324\273\213\261\210B\307\244\345\370\302\017q.\2402\342\016\363k\367\ti#\310f\366\271\343\341\315BZ%\250\0036u\276\271A\233\006\214\271\027LAW\236w\273T9\235.\223\267\336\357\003\017\374\240G\275\236\210,\033M\320\013AD\202z\002\333\266\321\200\000\356\240i\005\002\372 $\270\267C\327\356\206F\351\\h\321\320S\331\236\\\220\003k\222W8\260\247D\237z!\310\353\251\255\344\373u\375h|z\223_\214\217\365\027s`NS\014\217\364\252\311\231b\232/\352\262>\320_\223rr\220\340\313\212\266\315\264\251\244\371\271\037\".\307\207\261\243KzO\323\264\260\034K\275\221\021\244\371\315\01491e\275o^$\323I59L\234\313\322\345\376\260:D\300\372\365z\355\2625<\034\332\243\351\321\306\350l4\030\333W\271\214T\306\033\361g\344\371hf\314NZx\032\357a\205\025\255\314\016\022\377y\235O\363\317\315\25693\022\013 m!\236\213C\354\3664-,\304\225x_W\036\202|I\2774\257\0205\277\220\026\236\3054\356c\215Y\343$\253\227\013\303\315\241\032\325G\275q~|0\376tU\274\252\374\234\235zR\322k\231\000Hpo\2528\260\255\363\372\020U\310e#\013]\324U\274\266\261\211^\326_C\317\350\235tq\351Q\274\034\0174\325\322TL#\311%\245d\027\205\371{2\323\372\010k.\225P\201{P\357\237\350\342\315\377\310{\023H\246J.~p\267\022\226t\003\327\273\226\024\223-\334Jc\230\033\256\215\212\243\312/q8\210W";
+    PyObject *data = __Pyx_DecompressString(cstring, 690, 1);
     #define __Pyx_DecompressString_LZSS_UNUSED
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #else /* compression: none (1015 bytes) */
-static const char bytes[] = "-?Note that Cython is deliberately stricter than PEP-484 and rejects subclasses of builtin types. If you need to pass subclasses then set the \047annotation_typing\047 directive to False.add_notecfutils/_swalign.pyx__Pyx_PyDict_NextRef__annotate____func____main____module____name____qualname____test___is_coroutineasyncio.coroutinesbestbibjcfutils._swaligncline_in_tracebackdpgapiidxitemsjmmatchmismatchmovenpopqalqry_bqrypqueryralref_breferencerefpreversedsetdefaultstridesw_aligntotaltrvalues\320\000\047\240}\3204E\300Q\340\004\014\210I\220W\230A\230Q\330\004\014\210E\220\027\230\001\230\021\330\004\021\220\023\220A\220\\\240\023\240A\240Q\330\004\026\220b\230\002\230!\330\004\007\200r\210\023\210B\210c\220\022\2203\220a\330\010\017\210s\220#\220W\230A\330\004%\240Q\330\004%\240Q\330\004\023\2207\230&\240\002\240\"\240B\240c\250\022\2507\260\"\260A\330\004\035\320\035.\250f\260B\260b\270\002\270#\270R\270w\300b\310\001\330\004\007\200s\210#\210U\220#\220S\230\003\2301\330\010\013\2103\210c\220\026\220t\2301\230A\330\010\013\2103\210c\220\026\220t\2301\230A\330\010\t\330\004\033\2302\230R\230s\240\"\240A\330\004\010\210\007\210u\220A\220Q\330\010\n\210!\2107\220!\330\010\n\210!\2107\220!\330\004\022\220(\230*\240A\330\t\n\330\010\016\210a\210v\220S\230\006\230c\240\027\250\n\260%\260t\2704\270q\300\004\300A\300T\310\021\310!\360\006\000\005\022\220\030\230\021\330\004\n\210!\330\004\n\210!\330\004\n\210\"\210B\210b\220\004\220B\220b\230\001\330\010\017\210r\220\021\220\"\220B\220g\230R\230q\330\010\013\2105\220\003\2201\330\014\r\330\010\013\2105\220\003\2201\330\014\017\210w\220a\220s\230!\2305\240\001\240\022\2402\240Q\330\014\017\210w\220a\220s\230!\2305\240\001\240\022\2402\240Q\330\014\021\220\023\220E\230\021\330\r\022\220#\220Q\330\014\017\210w\220a\220q\330\014\017\210w\220a\220s\230!\2305\240\001\240\022\2402\240Q\330\014\021\220\021\340\014\017\210w\220a\220s\230!\2305\240\001\240\022\2402\240Q\330\014\017\210w\220a\220q\330\014\021\220\021\330\004\010\210""\001\210\021\330\004\010\210\001\210\021\330\004\013\2103\210c\220\022\2205\230\001\230\030\240\021\240\047\250\022\2505\260\001\260\030\270\021\270!";
+    #else /* compression: none (1013 bytes) */
+static const char bytes[] = "-?Note that Cython is deliberately stricter than PEP-484 and rejects subclasses of builtin types. If you need to pass subclasses then set the \047annotation_typing\047 directive to False.add_notesanger/_swalign.pyx__Pyx_PyDict_NextRef__annotate____func____main____module____name____qualname____test___is_coroutineasyncio.coroutinesbestbibjcline_in_tracebackdpgapiidxitemsjmmatchmismatchmovenpopqalqry_bqrypqueryralref_breferencerefpreversedsanger._swalignsetdefaultstridesw_aligntotaltrvalues\320\000\047\240}\3204E\300Q\340\004\014\210I\220W\230A\230Q\330\004\014\210E\220\027\230\001\230\021\330\004\021\220\023\220A\220\\\240\023\240A\240Q\330\004\026\220b\230\002\230!\330\004\007\200r\210\023\210B\210c\220\022\2203\220a\330\010\017\210s\220#\220W\230A\330\004%\240Q\330\004%\240Q\330\004\023\2207\230&\240\002\240\"\240B\240c\250\022\2507\260\"\260A\330\004\035\320\035.\250f\260B\260b\270\002\270#\270R\270w\300b\310\001\330\004\007\200s\210#\210U\220#\220S\230\003\2301\330\010\013\2103\210c\220\026\220t\2301\230A\330\010\013\2103\210c\220\026\220t\2301\230A\330\010\t\330\004\033\2302\230R\230s\240\"\240A\330\004\010\210\007\210u\220A\220Q\330\010\n\210!\2107\220!\330\010\n\210!\2107\220!\330\004\022\220(\230*\240A\330\t\n\330\010\016\210a\210v\220S\230\006\230c\240\027\250\n\260%\260t\2704\270q\300\004\300A\300T\310\021\310!\360\006\000\005\022\220\030\230\021\330\004\n\210!\330\004\n\210!\330\004\n\210\"\210B\210b\220\004\220B\220b\230\001\330\010\017\210r\220\021\220\"\220B\220g\230R\230q\330\010\013\2105\220\003\2201\330\014\r\330\010\013\2105\220\003\2201\330\014\017\210w\220a\220s\230!\2305\240\001\240\022\2402\240Q\330\014\017\210w\220a\220s\230!\2305\240\001\240\022\2402\240Q\330\014\021\220\023\220E\230\021\330\r\022\220#\220Q\330\014\017\210w\220a\220q\330\014\017\210w\220a\220s\230!\2305\240\001\240\022\2402\240Q\330\014\021\220\021\340\014\017\210w\220a\220s\230!\2305\240\001\240\022\2402\240Q\330\014\017\210w\220a\220q\330\014\021\220\021\330\004\010\210\001""\210\021\330\004\010\210\001\210\021\330\004\013\2103\210c\220\022\2205\230\001\230\030\240\021\240\047\250\022\2505\260\001\260\030\270\021\270!";
     PyObject *data = NULL;
     #define __Pyx_DecompressString_UNUSED
     #define __Pyx_DecompressString_LZSS_UNUSED
@@ -4516,7 +4516,7 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
   {
     const __Pyx_PyCode_New_function_description descr = {5, 0, 0, 24, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 53};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_reference, __pyx_mstate->__pyx_n_u_query, __pyx_mstate->__pyx_n_u_match, __pyx_mstate->__pyx_n_u_mismatch, __pyx_mstate->__pyx_n_u_gap, __pyx_mstate->__pyx_n_u_ref_b, __pyx_mstate->__pyx_n_u_qry_b, __pyx_mstate->__pyx_n_u_n, __pyx_mstate->__pyx_n_u_m, __pyx_mstate->__pyx_n_u_stride, __pyx_mstate->__pyx_n_u_refp, __pyx_mstate->__pyx_n_u_qryp, __pyx_mstate->__pyx_n_u_dp, __pyx_mstate->__pyx_n_u_tr, __pyx_mstate->__pyx_n_u_idx, __pyx_mstate->__pyx_n_u_total, __pyx_mstate->__pyx_n_u_bi, __pyx_mstate->__pyx_n_u_bj, __pyx_mstate->__pyx_n_u_best, __pyx_mstate->__pyx_n_u_i, __pyx_mstate->__pyx_n_u_j, __pyx_mstate->__pyx_n_u_move, __pyx_mstate->__pyx_n_u_qal, __pyx_mstate->__pyx_n_u_ral};
-    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cfutils__swalign_pyx, __pyx_mstate->__pyx_n_u_sw_align, __pyx_mstate->__pyx_kp_b_iso88591_4EQ_IWAQ_E_A_AQ_b_r_Bc_3a_s_WA, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_sanger__swalign_pyx, __pyx_mstate->__pyx_n_u_sw_align, __pyx_mstate->__pyx_kp_b_iso88591_4EQ_IWAQ_E_A_AQ_b_r_Bc_3a_s_WA, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
   }
   Py_DECREF(tuple_dedup_map);
   return 0;

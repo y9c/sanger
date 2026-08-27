@@ -3,8 +3,8 @@
 
 import unittest
 
-from cfutils.chromatogram import Chromatogram
-from cfutils.parser import parse_fasta
+from sanger.chromatogram import Chromatogram
+from sanger.parser import parse_fasta
 
 
 class TestChromatogram(unittest.TestCase):

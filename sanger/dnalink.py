@@ -1,11 +1,11 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Plot cfutils chromatograms together with DNA Features Viewer.
+Plot sanger chromatograms together with DNA Features Viewer.
 
 `DNA Features Viewer <https://github.com/Edinburgh-Genome-Foundry/DnaFeaturesViewer>`_
 renders rich feature maps (genes, primers, mutation sites) with automatic label
-handling.  This module bridges the two libraries so you can show a cfutils
+handling.  This module bridges the two libraries so you can show a sanger
 Sanger chromatogram and a DNA-features-viewer feature track in the same figure,
 sharing a common x axis.
 
@@ -14,7 +14,7 @@ not require it, but calling any function here does.
 
 Typical usage::
 
-    from cfutils.dnalink import plot_combined, to_graphic_record
+    from sanger.dnalink import plot_combined, to_graphic_record
     fig, (ax_feat, ax_chrom) = plot_combined(query_record, region=(55, 90))
 """
 
@@ -43,7 +43,7 @@ def _dfv():
         import dna_features_viewer as dfv
     except ImportError as exc:  # pragma: no cover
         raise ImportError(
-            "dna_features_viewer is required for cfutils.dnalink; "
+            "dna_features_viewer is required for sanger.dnalink; "
             "install it with `pip install dna_features_viewer`."
         ) from exc
     return dfv
@@ -53,7 +53,7 @@ def to_graphic_features(
     features: List[ChromatogramFeature],
     length: int,
 ) -> List:
-    """Translate cfutils :class:`ChromatogramFeature` to dfv ``GraphicFeature``.
+    """Translate sanger :class:`ChromatogramFeature` to dfv ``GraphicFeature``.
 
     Coordinates are converted from 1-based to dfv's 0-based convention.
     """
@@ -82,7 +82,7 @@ def to_graphic_record(
     record: SeqRecord,
     features: Optional[List[ChromatogramFeature]] = None,
 ):
-    """Build a dfv ``GraphicRecord`` from a cfutils record + its features.
+    """Build a dfv ``GraphicRecord`` from a sanger record + its features.
 
     When ``features`` is omitted the record's attached features are used.
     """
@@ -108,7 +108,7 @@ def plot_combined(
     plot_sequence: bool = False,
     with_ruler: bool = True,
 ) -> Tuple[Figure, Tuple[Axes, Axes]]:
-    """Plot a DNA-features-viewer feature map above a cfutils chromatogram.
+    """Plot a DNA-features-viewer feature map above a sanger chromatogram.
 
     The top panel is the dfv feature track (base coordinates), the bottom panel
     is the chromatogram.  When plotting a region, both panels are cropped to the

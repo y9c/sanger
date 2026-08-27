@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""Unit tests for cfutils advanced mutation reporting."""
+"""Unit tests for sanger advanced mutation reporting."""
 
-import unittest
-import tempfile
 import os
-from cfutils.run import report_mutation
+import tempfile
+import unittest
+
+from sanger.run import report_mutation
+
 
 class TestFunc(unittest.TestCase):
-    """Test advanced mutation reporting in cfutils."""
+    """Test advanced mutation reporting in sanger."""
 
     def test_plot_mutation(self) -> None:
         """Test report_mutation with plot output enabled and check output files."""
@@ -31,12 +33,18 @@ class TestFunc(unittest.TestCase):
                         lines = f.readlines()
                     # If there are mutations, PDF should exist
                     if len(lines) > 1:
-                        self.assertTrue(os.path.exists(pdf_path), f"Missing PDF: {pdf_path} (but TSV has mutations)")
+                        self.assertTrue(
+                            os.path.exists(pdf_path),
+                            f"Missing PDF: {pdf_path} (but TSV has mutations)",
+                        )
                     else:
                         if not os.path.exists(pdf_path):
-                            print(f"Warning: No mutations found, so PDF was not generated. TSV content: {lines}")
+                            print(
+                                f"Warning: No mutations found, so PDF was not generated. TSV content: {lines}"
+                            )
             except Exception as e:
                 self.fail(f"report_mutation raised an exception: {e}")
+
 
 if __name__ == "__main__":
     unittest.main()

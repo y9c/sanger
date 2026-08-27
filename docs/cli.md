@@ -3,13 +3,13 @@
 ## Detect and visualize mutations in one step
 
 ```bash
-cfutils mut --query ./data/B5-M13R_B07.ab1 --subject ./data/ref.fa --outdir ./data/ --plot
+sanger mut --query ./data/B5-M13R_B07.ab1 --subject ./data/ref.fa --outdir ./data/ --plot
 ```
 
 ## For help on CLI options
 
 ```bash
-cfutils mut --help
+sanger mut --help
 ```
 
 ## Running Tests

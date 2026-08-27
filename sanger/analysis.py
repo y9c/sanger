@@ -8,7 +8,7 @@ computations on the called DNA: translate a coding region, find restriction
 sites / primer motifs, compute GC windows, and detect a poly-A / repeat tail.
 This module is deliberately small and dependency-free.
 
-All coordinates returned are 1-based, consistent with the rest of cfutils.
+All coordinates returned are 1-based, consistent with the rest of sanger.
 """
 
 from __future__ import annotations

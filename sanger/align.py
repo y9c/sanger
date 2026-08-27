@@ -46,7 +46,7 @@ def _sw_align(reference: str, query: str, match=2, mismatch=-1, gap=-1):
     """Pure-Python/NumPy Smith-Waterman local alignment of ``query`` onto ``reference``.
 
     Returns a :class:`_PyAlignment`.  Used only when the compiled ``ssw``
-    extension is unavailable, so cfutils stays dependency-light.  The DP fill
+    extension is unavailable, so sanger stays dependency-light.  The DP fill
     is vectorised per reference row with NumPy (linear-gap recurrence), giving
     near-native speed on reads of a few kilobases.
     """
@@ -158,7 +158,7 @@ def run_align(reference: str, query: str) -> List[SitePair]:
     query = str(query).upper()
     alignment = _align(reference, query)
     results = []
-    # begin positions are 0-based; cfutils uses 1-based positions throughout
+    # begin positions are 0-based; sanger uses 1-based positions throughout
     query_pos = alignment.query_begin + 1
     ref_pos = alignment.reference_begin + 1
     for query_base, _, ref_base in zip(*alignment.alignment):
@@ -242,7 +242,7 @@ def detect_orientation(
     Compares the score of aligning the read's 5' segment to the reference in
     the forward orientation against the reverse-complemented orientation and
     returns ``+1`` (forward) or ``-1`` (reverse-complement).  Usefully,
-    ``rc == -1`` means you should :func:`cfutils.transform.reverse_complement_record`
+    ``rc == -1`` means you should :func:`sanger.transform.reverse_complement_record`
     before analysis.  Returns ``+1`` on tie/low-signal.
     """
     from .utils import reverse_complement

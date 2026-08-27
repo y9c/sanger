@@ -1,6 +1,6 @@
-[![Readthedocs](https://readthedocs.org/projects/cfutils/badge/?version=latest)](https://cfutils.readthedocs.io/en/latest/?badge=latest)
-[![Pypi Releases](https://img.shields.io/pypi/v/cfutils.svg)](https://pypi.python.org/pypi/cfutils)
-[![Downloads](https://static.pepy.tech/badge/cfutils)](https://pepy.tech/project/cfutils)
+[![Readthedocs](https://readthedocs.org/projects/sanger/badge/?version=latest)](https://sanger.readthedocs.io/en/latest/?badge=latest)
+[![Pypi Releases](https://img.shields.io/pypi/v/sanger.svg)](https://pypi.python.org/pypi/sanger)
+[![Downloads](https://static.pepy.tech/badge/sanger)](https://pepy.tech/project/sanger)
 
 # Chromatogram File Utils
 
@@ -12,12 +12,12 @@ MCP server for LLM agents.
 ## Quick start
 
 ```bash
-pip install cfutils
-cfutils mut -q read.ab1 -s ref.fa -o out --plot
+pip install sanger
+sanger mut -q read.ab1 -s ref.fa -o out --plot
 ```
 
 ```python
-from cfutils import Chromatogram, parse_fasta
+from sanger import Chromatogram, parse_fasta
 
 cg = Chromatogram.from_abi("./data/B5-M13R_B07.ab1")
 print(cg.length, cg.mean_quality, cg.gc_percent)   # 1141 50.2 52.0
@@ -64,63 +64,63 @@ Cython Smith-Waterman with a NumPy fallback), analysis and export all work out
 of the box.
 
 ```bash
-pip install cfutils
+pip install sanger
 ```
 
 Optional extras:
 
 ```bash
-pip install "cfutils[plot]"     # matplotlib -> chromatogram figures
-pip install "cfutils[viewer]"   # DNA Features Viewer integration
-pip install "cfutils[agent]"    # MCP server for LLM agents
-pip install "cfutils[all]"      # everything
+pip install "sanger[plot]"     # matplotlib -> chromatogram figures
+pip install "sanger[viewer]"   # DNA Features Viewer integration
+pip install "sanger[agent]"    # MCP server for LLM agents
+pip install "sanger[all]"      # everything
 ```
 
-The bundled Cython Smith-Waterman accelerator (`cfutils._swalign`,
+The bundled Cython Smith-Waterman accelerator (`sanger._swalign`,
 self-contained, no `ssw` dependency) is compiled automatically when a C
 compiler is present at build time; otherwise the NumPy fallback is used.
 
 From source:
 
 ```bash
-git clone git@github.com:y9c/cfutils.git
-cd cfutils
+git clone git@github.com:y9c/sanger.git
+cd sanger
 make init       # install dependencies
 make test       # run the test-suite
 ```
 
 ## Command-line interface
 
-Built on `rich-click`, with themed command groups (`cfutils --help`):
+Built on `rich-click`, with themed command groups (`sanger --help`):
 
 ```text
-cfutils mut            mutation calling & reporting
-cfutils qc             per-read quality-control metrics
-cfutils track          split / join / slice chromatogram trace files
-cfutils edit           trim, strip primers, reverse-complement
-cfutils basecall       re-call bases from raw four-channel traces
-cfutils assemble       reference-guided pileup & consensus
-cfutils analyze        sequence biology (translate, motifs, restriction)
-cfutils export         FASTA / VCF / JSON / batch summary
-cfutils plot           chromatogram rendering (+ features / DNA viewer)
+sanger mut            mutation calling & reporting
+sanger qc             per-read quality-control metrics
+sanger track          split / join / slice chromatogram trace files
+sanger edit           trim, strip primers, reverse-complement
+sanger basecall       re-call bases from raw four-channel traces
+sanger assemble       reference-guided pileup & consensus
+sanger analyze        sequence biology (translate, motifs, restriction)
+sanger export         FASTA / VCF / JSON / batch summary
+sanger plot           chromatogram rendering (+ features / DNA viewer)
 ```
 
 Examples:
 
 ```bash
-cfutils mut -q read.ab1 -s ref.fa -o out --plot        # mutation report + figure
-cfutils qc r1.ab1 r2.ab1                               # QC table
-cfutils track split read.ab1 -c 20,40 -f tsv           # split traces
-cfutils edit trim read.ab1 -c 0.05 -o out              # Mott quality trim
-cfutils edit strip-primers read.ab1 -f AAAA -r CCCA    # primer removal
-cfutils basecall call read.ab1 -r 0.45                 # re-call bases
-cfutils basecall hetero read.ab1                       # mixed/heterozygous sites
-cfutils assemble consensus a.ab1 b.ab1 -r ref.fa       # reference-guided consensus
-cfutils analyze rest read.ab1                          # restriction sites
-cfutils analyze translate read.ab1 -f 1                # protein translation
-cfutils export vcf -q read.ab1 -s ref.fa               # VCF of variants
-cfutils export batch *.ab1 -o out -f csv               # batch QC table
-cfutils plot dnaviewer read.ab1 --start 50 --end 100   # with DNA Features Viewer
+sanger mut -q read.ab1 -s ref.fa -o out --plot        # mutation report + figure
+sanger qc r1.ab1 r2.ab1                               # QC table
+sanger track split read.ab1 -c 20,40 -f tsv           # split traces
+sanger edit trim read.ab1 -c 0.05 -o out              # Mott quality trim
+sanger edit strip-primers read.ab1 -f AAAA -r CCCA    # primer removal
+sanger basecall call read.ab1 -r 0.45                 # re-call bases
+sanger basecall hetero read.ab1                       # mixed/heterozygous sites
+sanger assemble consensus a.ab1 b.ab1 -r ref.fa       # reference-guided consensus
+sanger analyze rest read.ab1                          # restriction sites
+sanger analyze translate read.ab1 -f 1                # protein translation
+sanger export vcf -q read.ab1 -s ref.fa               # VCF of variants
+sanger export batch *.ab1 -o out -f csv               # batch QC table
+sanger plot dnaviewer read.ab1 --start 50 --end 100   # with DNA Features Viewer
 ```
 
 ## Python API
@@ -129,7 +129,7 @@ The high-level [`Chromatogram`](#chromatogram-object) object is the easiest way
 to work with the toolkit; the low-level modules remain available for custom work.
 
 ```python
-from cfutils import Chromatogram, parse_fasta
+from sanger import Chromatogram, parse_fasta
 
 cg = Chromatogram.from_abi("./data/B5-M13R_B07.ab1")
 ref = parse_fasta("./data/ref.fa")
@@ -141,7 +141,7 @@ ref = parse_fasta("./data/ref.fa")
 **Mutation calling & quality filtering**
 
 ```python
-from cfutils.quality import QualityFilter
+from sanger.quality import QualityFilter
 
 snps = cg.call_mutations(ref)
 confident = QualityFilter(min_base_qual=20, min_local_qual=20).filter(snps)
@@ -191,8 +191,8 @@ cg.export("out")                                    # write FASTA to disk
 **Feature overlay (for external tools)**
 
 ```python
-from cfutils import ChromatogramFeature
-from cfutils.features import plot_features
+from sanger import ChromatogramFeature
+from sanger.features import plot_features
 
 feat = ChromatogramFeature(start=90, end=130, strand=+1, label="primer F")
 fig, ax = cg.plot(region=(80, 140))
@@ -202,7 +202,7 @@ plot_features(cg.to_record, ax, features=[feat])
 **Side-by-side with another tool's output (shared x-axis)**
 
 ```python
-from cfutils.composite import side_by_side
+from sanger.composite import side_by_side
 
 def my_panel(ax, trace_x, peaks, seq, record, start=None):
     ax.bar(range(len(seq)), [1.0] * len(seq), color="0.66")
@@ -214,19 +214,19 @@ fig, (ax_chrom, ax_panel) = side_by_side(cg.to_record, my_panel, region=(10, 40)
 **Consensus / assembly from many reads**
 
 ```python
-from cfutils import parse_abi
-from cfutils.assembly import pileup, consensus
+from sanger import parse_abi
+from sanger.assembly import pileup, consensus
 
 reads = [parse_abi(f) for f in ["a.ab1", "b.ab1", "c.ab1"]]
 table = pileup(reads, ref, quality_threshold=20)
 print(consensus(table))
 ```
 
-**Plot together with DNA Features Viewer** (needs `cfutils[viewer]`)
+**Plot together with DNA Features Viewer** (needs `sanger[viewer]`)
 
 ```python
-from cfutils import ChromatogramFeature
-from cfutils.dnalink import plot_combined
+from sanger import ChromatogramFeature
+from sanger.dnalink import plot_combined
 
 feats = [ChromatogramFeature(start=90, end=130, strand=+1, label="primer F")]
 fig, (ax_feat, ax_chrom) = plot_combined(cg.to_record, features=feats, region=(55, 90))
@@ -239,7 +239,7 @@ fig, (ax_feat, ax_chrom) = plot_combined(cg.to_record, features=feats, region=(5
 A terse, idiomatic workflow in one object:
 
 ```python
-from cfutils import Chromatogram
+from sanger import Chromatogram
 
 cg = Chromatogram.from_abi("./data/B5-M13R_B07.ab1")
 cg.length, cg.mean_quality, cg.gc_percent, cg.channels   # 1141 50.2 52.0 GATC
@@ -256,13 +256,13 @@ cg.export("out")                   # write to disk
 
 ## Agent / MCP
 
-cfutils ships a [Model Context Protocol](https://modelcontextprotocol.io) server
+sanger ships a [Model Context Protocol](https://modelcontextprotocol.io) server
 so LLM agents and MCP clients can call the toolkit as tools:
 
 ```bash
-pip install "cfutils[agent]"     # adds mcp>=2
-cfutils-mcp                        # run the MCP server over stdio
-python -m cfutils.mcp_server       # identical
+pip install "sanger[agent]"     # adds mcp>=2
+sanger-mcp                        # run the MCP server over stdio
+python -m sanger.mcp_server       # identical
 ```
 
 | Tool | Purpose |
@@ -279,7 +279,7 @@ python -m cfutils.mcp_server       # identical
 Register it in an MCP client's config, e.g.:
 
 ```json
-{ "mcpServers": { "cfutils": { "command": "cfutils-mcp" } } }
+{ "mcpServers": { "sanger": { "command": "sanger-mcp" } } }
 ```
 
 ## ChangeLog

@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
-"""Unit tests for cfutils show module."""
+"""Unit tests for sanger show module."""
 
 import unittest
+
 import matplotlib.pyplot as plt
-from cfutils.parser import parse_abi, parse_fasta
-from cfutils.show import highlight_base, plot_chromatograph, annotate_mutation
-from cfutils.align import SitePair
+
+from sanger.align import SitePair
+from sanger.parser import parse_abi, parse_fasta
+from sanger.show import annotate_mutation, highlight_base, plot_chromatograph
+
 
 class TestShowFunc(unittest.TestCase):
-    """Test visualization functions in cfutils.show."""
+    """Test visualization functions in sanger.show."""
 
     def setUp(self) -> None:
         """Set up test data and figure for plotting tests."""
@@ -29,13 +32,14 @@ class TestShowFunc(unittest.TestCase):
 
     def test_annotate_mutation(self) -> None:
         """Test annotate_mutation overlays mutation annotation."""
-        mutation = SitePair(ref_pos=10, ref_base='A', cf_pos=14, cf_base='T')
+        mutation = SitePair(ref_pos=10, ref_base="A", cf_pos=14, cf_base="T")
         annotate_mutation(mutation, self.query_record, self.ax)
         self.assertTrue(True)
 
     def tearDown(self) -> None:
         """Close the matplotlib figure after each test."""
         plt.close(self.fig)
+
 
 if __name__ == "__main__":
     unittest.main()

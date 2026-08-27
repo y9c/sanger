@@ -10,11 +10,11 @@ sequence (with quality) is derived -- the foundation for assembling overlapping
 reads into one answer.
 
 The alignment core is the C-accelerated ``ssw`` library (already used by
-:mod:`cfutils.align`), so pileup scales well to many/long reads.
+:mod:`sanger.align`), so pileup scales well to many/long reads.
 
 Typical usage::
 
-    from cfutils.assembly import pileup, consensus
+    from sanger.assembly import pileup, consensus
     reads = [parse_abi(f) for f in ["a.ab1", "b.ab1"]]
     ref   = parse_fasta("ref.fa")
     table = pileup(reads, ref)

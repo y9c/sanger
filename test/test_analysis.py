@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
-"""Unit tests for cfutils analysis (sequence biology) module."""
+"""Unit tests for sanger analysis (sequence biology) module."""
 
 import unittest
 
-from cfutils.analysis import (
-    translate, find_motifs, restriction_sites, reverse_complement, gc_windows,
+from sanger.analysis import (
+    find_motifs,
+    gc_windows,
+    restriction_sites,
+    reverse_complement,
+    translate,
 )
+
 
 class TestAnalysis(unittest.TestCase):
     """Test sequence-level helpers."""
@@ -32,7 +37,9 @@ class TestAnalysis(unittest.TestCase):
     def test_find_motifs_both_strands(self):
         # 'AATT' forward (pos1) and reverse-complement 'AATT' is palindrome
         self.assertEqual(find_motifs("AATTGGAA", "AATT", both_strands=False), [1])
-        self.assertGreaterEqual(len(find_motifs("AATTGGAA", "AATT", both_strands=True)), 1)
+        self.assertGreaterEqual(
+            len(find_motifs("AATTGGAA", "AATT", both_strands=True)), 1
+        )
 
     def test_restriction_sites(self):
         # EcoRI is GAATTC; "GAATTC" appears at pos 1
@@ -46,7 +53,8 @@ class TestAnalysis(unittest.TestCase):
         self.assertEqual(w[1][1], 0.0)
 
     def test_re_basic_available(self):
-        from cfutils.analysis import RE_BASIC
+        from sanger.analysis import RE_BASIC
+
         self.assertIn("EcoRI", RE_BASIC)
 
 

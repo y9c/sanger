@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
-"""Unit tests for cfutils dnalink (dna-features-viewer integration) module."""
+"""Unit tests for sanger dnalink (dna-features-viewer integration) module."""
 
 import unittest
 
 try:
     import dna_features_viewer  # noqa: F401
+
     HAVE_DFV = True
 except ImportError:
     HAVE_DFV = False
 
-from cfutils.parser import parse_abi
-from cfutils.features import ChromatogramFeature
-from cfutils.dnalink import to_graphic_record, to_graphic_features
+from sanger.dnalink import to_graphic_features, to_graphic_record
+from sanger.features import ChromatogramFeature
+from sanger.parser import parse_abi
 
 
 @unittest.skipUnless(HAVE_DFV, "dna_features_viewer not installed")
@@ -37,10 +38,13 @@ class TestDnaLink(unittest.TestCase):
 
     def test_plot_combined_runs(self):
         import matplotlib.pyplot as plt
-        from cfutils.dnalink import plot_combined
+
+        from sanger.dnalink import plot_combined
+
         feats = [ChromatogramFeature(start=10, end=15, strand=+1, label="p")]
         fig, (ax_feat, ax_chrom) = plot_combined(
-            self.query, features=feats, region=(5, 25))
+            self.query, features=feats, region=(5, 25)
+        )
         self.assertIsNotNone(fig)
         plt.close(fig)
 

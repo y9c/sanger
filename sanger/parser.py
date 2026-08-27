@@ -398,7 +398,7 @@ def parse_abi(filename: str, rescale: bool = True) -> SeqRecord:
             peak axis is in 0-based sequence positions (convenient for
             plotting).  If False, keep the raw trace arrays and sample-index
             peak positions, which is required for peak/baseline analysis such
-            as :func:`cfutils.basecaller.call_bases`.
+            as :func:`sanger.basecaller.call_bases`.
     """
     with open(filename, "rb") as abifile:
         seq = list(abi_iterator(abifile))[0]
