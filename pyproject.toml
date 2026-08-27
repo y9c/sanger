@@ -48,10 +48,6 @@ build-backend = "setuptools.build_meta"
 where = ["."]
 include = ["sanger*"]
 
-[[tool.setuptools.ext-modules]]
-name = "sanger._swalign"
-sources = ["sanger/_swalign.c"]
-
 [tool.setuptools.package-data]
 sanger = ["_swalign.pyx", "_swalign.c"]
 
