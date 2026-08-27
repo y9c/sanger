@@ -1,7 +1,7 @@
 [![Pypi Releases](https://img.shields.io/pypi/v/sanger.svg)](https://pypi.python.org/pypi/sanger)
 [![Downloads](https://static.pepy.tech/badge/sanger)](https://pepy.tech/project/sanger)
 
-# Chromatogram File Utils
+# sanger
 
 A lightweight toolkit for **Sanger sequencing** data: chromatogram
 visualization, alignment & mutation calling, quality control, base-calling,
