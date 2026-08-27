@@ -1,6 +1,6 @@
 [project]
 name = "sanger"
-version = "0.0.0.dev62"
+version = "0.1.0"
 description = "Chromatogram File Utils"
 authors = [{ name = "Ye Chang", email = "yech1990@gmail.com" }]
 requires-python = ">=3.11"

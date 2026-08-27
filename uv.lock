@@ -184,55 +184,6 @@ wheels = [
 ]
 
 [[package]]
-name = "sanger"
-version = "0.0.0.dev62"
-source = { editable = "." }
-dependencies = [
-    { name = "click" },
-    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
-    { name = "numpy", version = "2.5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
-    { name = "rich-click" },
-]
-
-[package.optional-dependencies]
-agent = [
-    { name = "mcp" },
-]
-all = [
-    { name = "dna-features-viewer" },
-    { name = "matplotlib" },
-    { name = "mcp" },
-]
-plot = [
-    { name = "matplotlib" },
-]
-viewer = [
-    { name = "dna-features-viewer" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "pytest" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "click", specifier = ">=8.0.0,<9" },
-    { name = "dna-features-viewer", marker = "extra == 'all'", specifier = ">=3.0.0" },
-    { name = "dna-features-viewer", marker = "extra == 'viewer'", specifier = ">=3.0.0" },
-    { name = "matplotlib", marker = "extra == 'all'", specifier = ">=3.9.2,<4" },
-    { name = "matplotlib", marker = "extra == 'plot'", specifier = ">=3.9.2,<4" },
-    { name = "mcp", marker = "extra == 'agent'", specifier = ">=2" },
-    { name = "mcp", marker = "extra == 'all'", specifier = ">=2" },
-    { name = "numpy", specifier = ">=2.3.3,<3" },
-    { name = "rich-click", specifier = ">=1.8.0,<2" },
-]
-provides-extras = ["plot", "viewer", "agent", "all"]
-
-[package.metadata.requires-dev]
-dev = [{ name = "pytest", specifier = ">=8.3.5" }]
-
-[[package]]
 name = "click"
 version = "8.2.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1309,6 +1260,55 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/f6/40/02355f0e134f783a8f9814c4680a1bd311d37671577a5964ea838573ff37/rpds_py-2026.6.3-pp311-pypy311_pp73-musllinux_1_2_i686.whl", hash = "sha256:ca6546b66be9dc4738b1b043d5ebd5488c66c578c5ff0fd0e8065313fe3afb76", size = 623138, upload-time = "2026-06-30T07:17:49.355Z" },
     { url = "https://files.pythonhosted.org/packages/10/85/48f0abdcef5cce4e034c7a5b0ceeceba0b01bf0d942824f4bb720afe2dec/rpds_py-2026.6.3-pp311-pypy311_pp73-musllinux_1_2_x86_64.whl", hash = "sha256:8e65860d238379ed982fd9ba690579b5e95af2f4840f99c772816dbe573cb826", size = 586486, upload-time = "2026-06-30T07:17:51.141Z" },
 ]
+
+[[package]]
+name = "sanger"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "click" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
+    { name = "numpy", version = "2.5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+    { name = "rich-click" },
+]
+
+[package.optional-dependencies]
+agent = [
+    { name = "mcp" },
+]
+all = [
+    { name = "dna-features-viewer" },
+    { name = "matplotlib" },
+    { name = "mcp" },
+]
+plot = [
+    { name = "matplotlib" },
+]
+viewer = [
+    { name = "dna-features-viewer" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "click", specifier = ">=8.0.0,<9" },
+    { name = "dna-features-viewer", marker = "extra == 'all'", specifier = ">=3.0.0" },
+    { name = "dna-features-viewer", marker = "extra == 'viewer'", specifier = ">=3.0.0" },
+    { name = "matplotlib", marker = "extra == 'all'", specifier = ">=3.9.2,<4" },
+    { name = "matplotlib", marker = "extra == 'plot'", specifier = ">=3.9.2,<4" },
+    { name = "mcp", marker = "extra == 'agent'", specifier = ">=2" },
+    { name = "mcp", marker = "extra == 'all'", specifier = ">=2" },
+    { name = "numpy", specifier = ">=2.3.3,<3" },
+    { name = "rich-click", specifier = ">=1.8.0,<2" },
+]
+provides-extras = ["plot", "viewer", "agent", "all"]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8.3.5" }]
 
 [[package]]
 name = "six"
