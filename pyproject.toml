@@ -1,6 +1,6 @@
 [project]
 name = "sanger"
-version = "0.1.0"
+version = "0.1.1"
 description = "Sanger sequencing toolkit"
 authors = [{ name = "Ye Chang", email = "yech1990@gmail.com" }]
 requires-python = ">=3.11"

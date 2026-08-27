@@ -56,7 +56,7 @@ from .transform import (
     trim_leading_ns,
 )
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = [
     "SeqRecord",

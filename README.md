@@ -33,27 +33,27 @@ The gallery below is produced from the bundled real ABI sample
 
 **Mutation calling** — the SNP `T61A` is highlighted and annotated.
 
-![Mutation calling](examples/mutation_call.png)
+![Mutation calling](https://raw.githubusercontent.com/y9c/sanger/master/examples/mutation_call.png)
 
 **Quality control** — per-base Phred quality, CRL and Mott trimming.
 
-![Quality profile](examples/quality_profile.png)
+![Quality profile](https://raw.githubusercontent.com/y9c/sanger/master/examples/quality_profile.png)
 
 **Side-by-side panels** — chromatogram + GC% + quality on a shared axis.
 
-![Side-by-side](examples/side_by_side.png)
+![Side-by-side](https://raw.githubusercontent.com/y9c/sanger/master/examples/side_by_side.png)
 
 **Feature overlay** — primers, amplicon and SNPs on the trace.
 
-![Feature overlay](examples/feature_overlay.png)
+![Feature overlay](https://raw.githubusercontent.com/y9c/sanger/master/examples/feature_overlay.png)
 
 **Re-called bases** — mixed/heterozygous sites are marked (M/W/K).
 
-![Re-called bases](examples/basecall_hetero.png)
+![Re-called bases](https://raw.githubusercontent.com/y9c/sanger/master/examples/basecall_hetero.png)
 
 **Assembly** — pileup depth and consensus against a reference.
 
-![Assembly](examples/assembly.png)
+![Assembly](https://raw.githubusercontent.com/y9c/sanger/master/examples/assembly.png)
 
 ## Installation
 
