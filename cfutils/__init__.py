@@ -29,8 +29,10 @@ from .assembly import pileup, consensus, coverage
 from .composite import side_by_side, add_panel
 from .basecaller import call_bases, detect_peaks
 from .qc import read_metrics, summarize, trimmed_bounds
-from .transform import trim, reverse_complement_record
+from .transform import trim, trim_ends, strip_primers, reverse_complement_record
 from .dnalink import to_graphic_record, plot_combined
+from .analysis import translate, find_motifs, restriction_sites, gc_windows
+from .export import to_fasta, to_vcf, to_json, batch_summary, write_batch
 
 __version__ = "0.0.0.dev62"
 
@@ -46,7 +48,9 @@ __all__ = [
     "side_by_side", "add_panel",
     "call_bases", "detect_peaks",
     "read_metrics", "summarize", "trimmed_bounds",
-    "trim", "reverse_complement_record",
+    "trim", "trim_ends", "strip_primers", "reverse_complement_record",
     "to_graphic_record", "plot_combined",
+    "translate", "find_motifs", "restriction_sites", "gc_windows",
+    "to_fasta", "to_vcf", "to_json", "batch_summary", "write_batch",
     "__version__",
 ]

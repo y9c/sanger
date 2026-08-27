@@ -9,6 +9,7 @@ license = "MIT"
 keywords = ["DNA", "mutation", "chromatogram", "biology"]
 dependencies = [
     "click>=8.0.0,<9",
+ "rich-click>=1.8.0,<2",
  "ssw>=0.4.1,<0.5",
  "matplotlib>=3.9.2,<4",
  "numpy>=2.3.3,<3",

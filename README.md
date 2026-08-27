@@ -102,7 +102,46 @@ make test
 - fix false-positive mutations from lowercase reference bases (case-insensitive compare)
 - add `dnalink` module: plot cfutils chromatograms together with DNA Features Viewer
 - expose `parse_abi(rescale=...)`; base/peak analysis requires `rescale=False`
-- new CLI commands: `cfutils track split|join|slice`, `cfutils qc`
+- add `analysis` module: translate, motif/restriction-site scan, sliding GC
+- add `export` module: FASTA / VCF / JSON / batch summary
+- add heterozygote (mixed-base) calling to `basecaller`
+- add `trim_ends` / `strip_primers` to `transform`
+- rich-click CLI UX: themed command groups, option groups, short options, `--version`
+
+## Command-line interface
+
+The CLI is built on `rich-click` and organised into themed groups (see
+`cfutils --help`):
+
+```text
+cfutils mut            mutation calling & reporting
+cfutils qc             per-read quality-control metrics
+cfutils track          split / join / slice chromatogram trace files
+cfutils edit           trim, strip primers, reverse-complement
+cfutils basecall       re-call bases from raw four-channel traces
+cfutils assemble       reference-guided pileup & consensus
+cfutils analyze        sequence biology (translate, motifs, restriction)
+cfutils export         FASTA / VCF / JSON / batch summary
+cfutils plot           chromatogram rendering (+ features / DNA viewer)
+```
+
+Examples:
+
+```bash
+cfutils mut -q read.ab1 -s ref.fa -o out --plot        # mutation report + figure
+cfutils qc r1.ab1 r2.ab1                                # QC table
+cfutils track split read.ab1 -c 20,40 -f tsv            # split traces
+cfutils edit trim read.ab1 -c 0.05 -o out               # Mott quality trim
+cfutils edit strip-primers read.ab1 -f AAAA -r CCCA     # primer removal
+cfutils basecall call read.ab1 -r 0.45                  # re-call bases
+cfutils basecall hetero read.ab1                        # mixed/heterozygous sites
+cfutils assemble consensus a.ab1 b.ab1 -r ref.fa        # reference-guided consensus
+cfutils analyze rest read.ab1                           # restriction sites
+cfutils analyze translate read.ab1 -f 1                 # protein translation
+cfutils export vcf -q read.ab1 -s ref.fa                # VCF of variants
+cfutils export batch *.ab1 -o out -f csv                # batch QC table
+cfutils plot dnaviewer read.ab1 --start 50 --end 100    # with DNA Features Viewer
+```
 
 ## New analysis modules
 

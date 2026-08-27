@@ -100,6 +100,20 @@ class BaseCall:
     quality: int           # approximate Phred-like quality
     second_base: Optional[str] = None
     second_ratio: Optional[float] = None
+    is_ambiguous: bool = False
+
+
+#: IUPAC ambiguity code for every unordered pair of canonical bases
+_TWO_BASE_CODE = {
+    frozenset("AG"): "R", frozenset("CT"): "Y",
+    frozenset("GC"): "S", frozenset("AT"): "W",
+    frozenset("GT"): "K", frozenset("AC"): "M",
+}
+
+
+def _two_base_code(a: str, b: str) -> str:
+    """Return the IUPAC ambiguity code for two canonical bases (e.g. AG->R)."""
+    return _TWO_BASE_CODE[frozenset({a, b})]
 
 
 @dataclass
@@ -120,8 +134,31 @@ class BaseCallResult:
     def n_calls(self) -> int:
         return len(self.calls)
 
+    @property
+    def n_ambiguous(self) -> int:
+        return sum(1 for c in self.calls if c.is_ambiguous)
+
+    def call_table(self, to_dict: bool = False):
+        """List ``(pos, base, quality, second_base, second_ratio, ambiguous)``."""
+        rows = [
+            (c.position, c.base, c.quality, c.second_base,
+             c.second_ratio, c.is_ambiguous)
+            for c in self.calls
+        ]
+        if to_dict:
+            keys = ["pos", "base", "quality", "second_base",
+                    "second_ratio", "ambiguous"]
+            return [dict(zip(keys, r)) for r in rows]
+        return rows
+
     def accuracy(self, reference_seq: str) -> float:
-        """Fraction of calls matching a reference (same-length) sequence."""
+        """Fraction of calls matching a reference (same-length) sequence.
+
+        Ambiguity codes match when the reference base is one of the possible
+        bases the code represents.
+        """
+        from .utils import ambiguity_to_set, IUPAC
+
         ref = str(reference_seq).upper()
         mine = self.sequence.upper()
         if not mine:
@@ -129,7 +166,13 @@ class BaseCallResult:
         m = min(len(ref), len(mine))
         if m == 0:
             return 0.0
-        return sum(a == b for a, b in zip(ref[:m], mine[:m])) / m
+        matches = 0
+        for a, b in zip(ref[:m], mine[:m]):
+            if a == b:
+                matches += 1
+            elif b in IUPAC:
+                matches += a in ambiguity_to_set(b)
+        return matches / m
 
 
 def _quality_from_margin(margin: float) -> int:
@@ -169,7 +212,8 @@ def detect_peaks(record: SeqRecord, min_distance: int = 5,
 def call_bases(record: SeqRecord, min_distance: int = 5,
                cluster_dx: int = 6, threshold_quantile: float = 0.2,
                max_calls: Optional[int] = None,
-               use_peak_positions: bool = True) -> BaseCallResult:
+               use_peak_positions: bool = True,
+               hetero_threshold: float = 0.45) -> BaseCallResult:
     """Call bases from the raw traces of a chromatogram.
 
     Two modes:
@@ -181,6 +225,10 @@ def call_bases(record: SeqRecord, min_distance: int = 5,
       record parsed with ``parse_abi(..., rescale=False)``.
     * ``use_peak_positions=False``: detect peaks de novo from the traces.
 
+    Heterozygote / mixed-base detection: when the second-strongest channel rises
+    above ``hetero_threshold`` of the strongest, the base is reported as an
+    IUPAC ambiguity code (e.g. ``A``+``G`` -> ``R``) and flagged ``is_ambiguous``.
+
     Args:
         record: parsed chromatogram whose four channel traces are used.
         min_distance: de novo peak spacing (ignored in peak-position mode).
@@ -188,6 +236,8 @@ def call_bases(record: SeqRecord, min_distance: int = 5,
         threshold_quantile: baseline threshold quantile for detection.
         max_calls: cap the number of base positions (for speed on long reads).
         use_peak_positions: use the vendor peak positions when present.
+        hetero_threshold: second-peak ratio above which a mixed/ambiguous base
+            is called (0 disables ambiguity calling).
 
     Returns:
         A :class:`BaseCallResult`.
@@ -243,18 +293,29 @@ def call_bases(record: SeqRecord, min_distance: int = 5,
         peak_i = int(np.argmax(heights))
         base = order[peak_i] if peak_i < len(order) else "N"
         # margin = how much the winner beats the runner-up
-        sorted_heights = np.sort(heights)[::-1]
-        top, second = sorted_heights[0], sorted_heights[1] if sorted_heights.size > 1 else 0.0
-        second_ratio = (second / top) if top > 0 else 0.0
+        sorted_idx = np.argsort(heights)[::-1]
+        top = float(heights[sorted_idx[0]]) if sorted_idx.size else 0.0
+        second_ratio = 0.0
+        second_base = None
+        if sorted_idx.size > 1:
+            second = float(heights[sorted_idx[1]])
+            second_base = order[sorted_idx[1]] if sorted_idx[1] < len(order) else None
+            second_ratio = (second / top) if top > 0 else 0.0
         margin = 1.0 - second_ratio
+        is_ambiguous = False
+        if top > 0 and hetero_threshold > 0 and second_base \
+                and second_ratio >= hetero_threshold:
+            base = _two_base_code(base, second_base)
+            is_ambiguous = True
         calls.append(BaseCall(
             position=i,
-            base=base if top > 0 else "N",
+            base=base,
             trace_x=float(x),
             confidence=margin,
             quality=_quality_from_margin(margin),
-            second_base=None,
+            second_base=second_base,
             second_ratio=second_ratio,
+            is_ambiguous=is_ambiguous,
         ))
 
     return BaseCallResult(calls=calls)

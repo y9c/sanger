@@ -5,7 +5,7 @@ import unittest
 import numpy as np
 
 from cfutils.parser import parse_abi
-from cfutils.transform import trim, reverse_complement_record
+from cfutils.transform import trim, trim_ends, strip_primers, reverse_complement_record
 from cfutils.utils import normalize_ambiguity
 
 class TestTransform(unittest.TestCase):
@@ -53,6 +53,33 @@ class TestTransform(unittest.TestCase):
         self.assertEqual(normalize_ambiguity("ACGN"), "ACGN")
         self.assertEqual(normalize_ambiguity("ARYN"), "ANNN")
         self.assertEqual(normalize_ambiguity("acgu"), "ACGT")
+
+    def test_trim_ends(self):
+        # build a tiny record with low-quality 5' and 3' ends
+        from cfutils.parser import SeqRecord
+        rec = SeqRecord("ACGTACGTAC", name="t")
+        rec.annotations["channel 1"] = list(range(100))
+        rec.annotations["channel 2"] = list(range(100))[::-1]
+        rec.annotations["channel 3"] = list(range(100))
+        rec.annotations["channel 4"] = list(range(100))[::-1]
+        rec.annotations["peak positions"] = [float(i) for i in range(10)]
+        rec.annotations["trace_x"] = [float(i) for i in range(100)]
+        rec.letter_annotations["phred_quality"] = [5]*3 + [40]*4 + [5]*3
+        out = trim_ends(rec, min_qual=20)
+        self.assertEqual(out.seq, "TACG")
+
+    def test_strip_primers(self):
+        from cfutils.parser import SeqRecord
+        rec = SeqRecord("AAAAATGCGTACGTAAA", name="t")
+        rec.annotations["channel 1"] = list(range(20))
+        rec.annotations["channel 2"] = list(range(20))
+        rec.annotations["channel 3"] = list(range(20))
+        rec.annotations["channel 4"] = list(range(20))
+        rec.annotations["peak positions"] = [float(i) for i in range(18)]
+        rec.annotations["trace_x"] = [float(i) for i in range(20)]
+        rec.letter_annotations["phred_quality"] = [40]*18
+        out = strip_primers(rec, forward="AAAAA", reverse="AAA")
+        self.assertEqual(out.seq, "TGCGTACGT")
 
 
 if __name__ == "__main__":

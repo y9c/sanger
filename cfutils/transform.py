@@ -28,7 +28,9 @@ from .tracks import slice_track
 if TYPE_CHECKING:
     from .parser import SeqRecord
 
-__all__ = ["trim", "reverse_complement_record", "NCHANNELS"]
+__all__ = [
+    "trim", "trim_ends", "strip_primers", "reverse_complement_record", "NCHANNELS",
+]
 
 
 def trim(record: "SeqRecord", cutoff: float = 0.05, segment: int = 20,
@@ -53,6 +55,72 @@ def trim(record: "SeqRecord", cutoff: float = 0.05, segment: int = 20,
     trimmed = slice_track(record, start, end,
                           name=name or f"{record.name or 'trimmed'}_trimmed")
     return trimmed
+
+
+def trim_ends(record: "SeqRecord", min_qual: int = 20,
+              name: Optional[str] = None) -> "SeqRecord":
+    """Hard-trim the low-quality 5' and 3' ends of a read.
+
+    The trimmed region is the longest interior span whose bases are all at or
+    above ``min_qual`` (a common, simple lab criterion).  Peak/trace axes stay
+    aligned via the same slicing used by :func:`trim`.
+
+    Args:
+        record: the chromatogram to trim.
+        min_qual: minimum per-base quality to keep.
+        name: optional output name.
+    """
+    qual = record.letter_annotations.get("phred_quality", [])
+    if not qual or len(qual) != len(record):
+        return record
+    # walk in from both ends while quality < min_qual
+    start = 0
+    while start < len(qual) and qual[start] < min_qual:
+        start += 1
+    end = len(qual) - 1
+    while end >= start and qual[end] < min_qual:
+        end -= 1
+    if end < start:
+        return slice_track(record, 1, 1, name=name or f"{record.name or 'tr'}_tr")
+    return slice_track(record, start + 1, end + 1,
+                       name=name or f"{record.name or 'tr'}_trimmed")
+
+
+def strip_primers(record: "SeqRecord", forward: str = "",
+                  reverse: Optional[str] = None,
+                  name: Optional[str] = None) -> "SeqRecord":
+    """Remove primer sequences from the 5' (and optionally 3') read ends.
+
+    The primer is matched at the read start (``forward``) and, if given, the
+    ``reverse`` primer at the 3' end.  Exact matching only; if a primer is not
+    found the corresponding end is left untouched.  Traces/peaks stay aligned.
+
+    Args:
+        record: the chromatogram to strip.
+        forward: 5' primer sequence (matched and removed if present).
+        reverse: 3' primer sequence (matched and removed if present).
+        name: optional output name.
+    """
+    seq = record.seq.upper()
+    start = 1
+    if forward:
+        f = forward.upper()
+        if seq.startswith(f):
+            start = len(f) + 1
+        else:
+            # tolerate the primer being reverse-complemented on the read
+            rc = reverse_complement_record(record).seq.upper()
+            if rc.startswith(f):
+                pass  # user should reverse-complement the record first
+    end = len(record)
+    if reverse:
+        r = reverse.upper()
+        if seq.endswith(r):
+            end = len(record) - len(r)
+    if start == 1 and end == len(record):
+        return record
+    return slice_track(record, start, end,
+                       name=name or f"{record.name or 's'}_primers_removed")
 
 
 def reverse_complement_record(record: "SeqRecord",
