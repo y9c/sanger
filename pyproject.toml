@@ -52,8 +52,7 @@ include = ["sanger*"]
 sanger = ["_swalign.pyx", "_swalign.c"]
 
 [tool.cibuildwheel]
-build = "cp311-* cp312-* cp313-*"
-build-platforms = ["linux"]
+build = "cp311-* cp312-* cp313-* cp314-*"
 # verify the built wheel imports (the C extension should be present)
 test-command = "python -c \"import sanger; from sanger.align import _HAVE_CY; print('wheel import ok', _HAVE_CY)\""
 
