@@ -67,6 +67,15 @@ class TestTracks(unittest.TestCase):
         self.assertEqual(joined.annotations["channels"],
                          self.query.annotations["channels"])
 
+    def test_slice_records_offset_and_normalises(self):
+        seg = slice_track(self.query, 20, 40)
+        # provenance: 0-based offset into the parent read
+        self.assertEqual(seg.annotations["offset"], 19)
+        self.assertEqual(seg.annotations["parent"], self.query.name)
+        # peak axis is re-normalised to start near 0
+        self.assertAlmostEqual(seg.annotations["peak positions"][0], 0.0, delta=1.0)
+        self.assertEqual(len(seg.annotations["peak positions"]), 21)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -175,6 +175,12 @@ def slice_track(
     if len(seg_x) == 0:
         raise ValueError(f"no trace samples in slice [{start}, {end}]")
 
+    # re-normalise the slice so its peak axis starts at 0 (self-consistent),
+    # and record where it came from so positions can be mapped back
+    shift = float(seg_peaks[0])
+    seg_peaks = seg_peaks - shift
+    seg_x = seg_x - shift
+
     extra = {}
     for key in (
         "sample_well",
@@ -187,6 +193,10 @@ def slice_track(
     ):
         if key in record.annotations:
             extra[key] = record.annotations[key]
+    # provenance: 0-based offset of this slice within the original read
+    parent_offset = int(record.annotations.get("offset", 0))
+    extra["offset"] = parent_offset + lo_idx
+    extra["parent"] = record.name or record.id or ""
 
     new_name = name or f"{record.name or 'slice'}_[{start1}-{end1}]"
     rec = _build_record(

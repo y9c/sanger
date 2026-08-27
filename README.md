@@ -4,54 +4,92 @@
 
 **Chromatogram File Utils**
 
-For Sanger sequencing data visualizing, alignment, mutation calling, and trimming etc.
+For Sanger sequencing data visualization, alignment, mutation calling, quality
+control, base-calling, trimming, assembly and export — as a CLI, a Python
+library, or an MCP server for LLM agents.
 
-## Demo
+## Examples
 
-![plot chromatogram with mutation](https://raw.githubusercontent.com/y9c/cfutils/master/data/plot.png)
+The gallery below is generated from the bundled real ABI sample
+(`data/B5-M13R_B07.ab1` vs `data/ref.fa`) by
+`python -m scripts.make_readme_examples`.
 
-> command to generate the demo above
+### Mutation calling
+![mutation calling](examples/mutation_call.png)
+
+Call and visualize variants (e.g. the SNP `T61A` highlighted above) against a
+reference, with per-base quality-backed filtering.
+
+### Quality control (quality profile, CRL, trimming)
+![quality profile](examples/quality_profile.png)
+
+The sample read is high-quality overall (mean Q 50.2, CRL 1122); the 5' start
+and the 3' tail are trimmed by the Mott algorithm.
+
+### Side-by-side panels (chromatogram + GC% + quality)
+![side-by-side](examples/side_by_side.png)
+
+Add any extra signal (GC%, coverage, your own tool's output) aligned to the
+same x-axis as the trace.
+
+### Feature overlay (primers / amplicon / SNPs)
+![feature overlay](examples/feature_overlay.png)
+
+Annotate the trace with features; the DNA Features Viewer integration renders
+a feature map above the chromatogram.
+
+<details>
+<summary>Re-called bases (mixed / heterozygous sites) & assembly</summary>
+
+### Re-call bases from raw traces
+![basecall hetero](examples/basecall_hetero.png)
+
+Mixed peaks at the noisy 5' end are called as IUPAC ambiguity codes (M/W/K).
+
+### Pileup & consensus
+![assembly](examples/assembly.png)
+
+Reference-guided pileup (depth) and consensus for many overlapping reads.
+
+</details>
+
+## Quick start
+
+The high-level [`Chromatogram`](#high-level-object-api) object is the easiest
+way to work with the toolkit:
+
+```python
+from cfutils import Chromatogram, parse_fasta
+
+cg = Chromatogram.from_abi("./data/B5-M13R_B07.ab1")
+print(cg.length, cg.mean_quality, cg.gc_percent)   # 1141 50.2 52.0
+print(cg.qc())                                     # QC metrics (CRL, SNR)
+
+ref = parse_fasta("./data/ref.fa")
+snps = cg.call_mutations(ref)                      # variant calling
+print(cg.to_vcf(ref))                              # VCF of the variants
+cg.plot(region=(55, 90))                           # render a region
+```
+
+Or from the command line (see [the CLI](#command-line-interface)).
+
+## How to use?
+
+- Mutation detection and visualization in one CLI step:
 
 ```bash
 cfutils mut --query ./data/B5-M13R_B07.ab1 --subject ./data/ref.fa --outdir ./data/ --plot
 ```
 
-## How to use?
-
-- You can have mutation detection and visualization in one step using the command line.
-
-```bash
-cfutils mut --help
-```
-
-- You can also integrate the result matplotlib figures and use it as a python module.
-
-An example:
+- Or as a Python module:
 
 ```python
-import matplotlib.pyplot as plt
-import numpy as np
-
-from cfutils.parser import parse_abi
-from cfutils.show import plot_chromatograph
-
-seq = parse_abi("./data/B5-M13R_B07.ab1")
-peaks = seq.annotations["peak positions"][100:131]
-
-fig, axes = plt.subplots(2, 1, figsize=(12, 6), sharex=True)
-plot_chromatograph(
-    seq,
-    region=(100, 130),
-    ax=axes[0],
-    show_bases=True,
-    show_positions=True,
-    color_map=dict(zip("ATGC", ["C0", "C2", "C1", "C4"])),
-)
-axes[1].bar(peaks, np.random.randn(len(peaks)), color="0.66")
-plt.show()
+from cfutils import Chromatogram
+cg = Chromatogram.from_abi("./data/B5-M13R_B07.ab1")
+cg.plot()          # render the whole chromatogram
 ```
 
-![plot chromatogram in_matplotlib](https://raw.githubusercontent.com/y9c/cfutils/master/data/matplotlib_example.png)
+![plot chromatogram](examples/mutation_call.png)
 
 ## How to install?
 
@@ -149,123 +187,114 @@ cfutils export batch *.ab1 -o out -f csv                # batch QC table
 cfutils plot dnaviewer read.ab1 --start 50 --end 100    # with DNA Features Viewer
 ```
 
-## New analysis modules
+## Python API
 
-### split / join trace files
-```bash
-cfutils track join a.ab1 b.ab1 --outbase joined --outdir out/
-cfutils track split a.ab1 --cuts 20,40 --outdir out/
-cfutils track slice a.ab1 --start 1 --end 200 --outdir out/
+Most examples use the high-level [`Chromatogram`](#high-level-object-api) object.
+Low-level modules remain available for custom work.
+
+```python
+from cfutils import Chromatogram, parse_fasta
+
+cg = Chromatogram.from_abi("./data/B5-M13R_B07.ab1")
+ref = parse_fasta("./data/ref.fa")
 ```
 
-### quality filtering (was hard-coded in the plotter)
+### Mutation calling & quality filtering
 ```python
-from cfutils.align import call_mutations
 from cfutils.quality import QualityFilter
-sites = call_mutations(query, reference)
-passed = QualityFilter(min_base_qual=20, min_local_qual=20).filter(sites)
-```
 
-### feature overlay (compatible with external tools)
-```python
-from cfutils.parser import parse_abi
-from cfutils.features import ChromatogramFeature, plot_features
-from cfutils.show import plot_chromatograph
-import matplotlib.pyplot as plt
-
-rec = parse_abi("./data/B5-M13R_B07.ab1")
-fig, ax = plt.subplots(figsize=(16, 5))
-feat = ChromatogramFeature(start=100, end=131, strand=+1,
-                           color="#ff8888", label="M13R primer")
-plot_chromatograph(rec, region=(90, 140), ax=ax)
-plot_features(rec, ax, features=[feat])
-plt.show()
-```
-
-### side-by-side with another tool's output
-```python
-from cfutils.composite import side_by_side
-from cfutils.parser import parse_abi
-
-def my_panel(ax, trace_x, peaks, seq, record):
-    ax.bar(range(len(seq)), [1.0]*len(seq), color="0.66")
-    ax.set_ylabel("my tool signal")
-
-rec = parse_abi("./data/B5-M13R_B07.ab1")
-fig, (ax_chrom, ax_panel) = side_by_side(rec, my_panel, region=(10, 40))
-```
-
-### consensus / assembly from many reads
-```python
-from cfutils.parser import parse_abi, parse_fasta
-from cfutils.assembly import pileup, consensus
-reads = [parse_abi(f) for f in ["a.ab1", "b.ab1", "c.ab1"]]
-ref = parse_fasta("ref.fa")
-table = pileup(reads, ref, quality_threshold=20)
-print(consensus(table))
-```
-
-### plot together with DNA Features Viewer
-```python
-from cfutils.parser import parse_abi
-from cfutils.features import ChromatogramFeature
-from cfutils.dnalink import plot_combined, to_graphic_record
-
-rec = parse_abi("./data/B5-M13R_B07.ab1")
-feats = [ChromatogramFeature(start=90, end=130, strand=+1, label="primer F")]
-fig, (ax_feat, ax_chrom) = plot_combined(rec, features=feats, region=(55, 90))
-```
-Requires the optional extra: `pip install cfutils[viewer]` (i.e. `dna-features-viewer`).
-
-### re-call bases from raw traces
-```python
-from cfutils.parser import parse_abi
-from cfutils.basecaller import call_bases, basecaller_score
-rec = parse_abi("./data/B5-M13R_B07.ab1", rescale=False)  # raw traces
-res = call_bases(rec)
-print(res.sequence)
-print(basecaller_score(res, rec.seq))
-```
-
-### trim / reverse-complement a whole record
-```python
-from cfutils.transform import trim, reverse_complement_record
-short = trim(rec)                 # Mott quality trim, keeps peaks/trace aligned
-rc    = reverse_complement_record(rec)
+snps = cg.call_mutations(ref)                     # variants vs reference
+confident = QualityFilter(min_base_qual=20, min_local_qual=20).filter(snps)
+print([f"{s.ref_base}{s.ref_pos}{s.cf_base}" for s in confident])
 ```
 
 ### QC metrics (incl. continuous read length)
 ```python
-from cfutils.qc import read_metrics, continuous_read_length, noise_metric, signal_intensity
-m = read_metrics(rec)
-print(m["mean_qual"], m["trim_start"], m["trim_end"])
-print("CRL:", continuous_read_length(rec))   # longest run with 20-base avg Q >= 20
-print("signal:", signal_intensity(rec), "SNR:", noise_metric(rec))
+m = cg.qc()
+print(m["mean_qual"], m["trim_start"], m["trim_end"], m["crl"], m["snr"])
 ```
 
-### automatic orientation detection
+### Re-call bases from raw traces + mixed/heterozygous sites
 ```python
-from cfutils.align import detect_orientation
-ori = detect_orientation(rec, ref)           # +1 forward, -1 reverse-complement
-```
-
-### mixed / heterozygous bases
-```python
-from cfutils.parser import parse_abi
-from cfutils.basecaller import call_bases
-res = call_bases(parse_abi("./data/B5-M13R_B07.ab1", rescale=False))
+res = cg.basecall()
 print(res.sequence)
 for pos, major, minor, frac in res.heterozygotes(min_ratio=0.2):
-    print(pos, major, minor, frac)           # e.g. 4 M C 0.74
+    print(pos, major, minor, frac)
 ```
 
-### export to standard formats
+### Trim / strip primers / reverse-complement
 ```python
-from cfutils.export import to_fasta, to_vcf, to_json, write_batch
-print(to_fasta(rec))                                   # FASTA
-print(to_vcf(mutations, reference_name="ref"))          # VCF of variants
-print(to_json(rec))                                     # self-describing JSON
-write_batch([rec1, rec2], "out", fmt="csv")             # batch QC table
+trimmed  = cg.trim().trim_leading_ns()
+stripped = cg.trim()                       # Mott quality trim (trace-aligned)
+rc       = cg.reverse_complement()
+```
+
+### Automatic orientation detection
+```python
+ori = cg.detect_orientation(ref)           # +1 forward, -1 reverse-complement
+```
+
+### Sequence-level analysis
+```python
+print(cg.analyze("translate", frame=1))            # protein translation
+print(cg.analyze("restriction"))                    # restriction sites -> {'EcoRI': [27], ...}
+print(cg.analyze("motif", motif="AATT"))            # motif positions
+```
+
+### Export to standard formats
+```python
+print(cg.to_fasta())                                # FASTA
+print(cg.to_vcf(ref))                               # VCF of variants
+cg.export("out")                                    # write FASTA to disk
+```
+
+### Feature overlay (for external tools)
+```python
+from cfutils import ChromatogramFeature
+
+cg2 = Chromatogram.from_abi("./data/B5-M13R_B07.ab1")
+feat = ChromatogramFeature(start=90, end=130, strand=+1, label="primer F")
+fig, ax = cg2.plot(region=(80, 140))                # high-level plot
+from cfutils.features import plot_features
+plot_features(cg2.to_record, ax, features=[feat])   # overlay
+```
+
+### Side-by-side with another tool's output (shared x-axis)
+```python
+from cfutils.composite import side_by_side
+
+def my_panel(ax, trace_x, peaks, seq, record, start=None):
+    ax.bar(range(len(seq)), [1.0]*len(seq), color="0.66")
+    ax.set_ylabel("my tool signal")
+
+fig, (ax_chrom, ax_panel) = side_by_side(cg.to_record, my_panel, region=(10, 40))
+```
+
+### Consensus / assembly from many reads
+```python
+from cfutils import parse_abi
+from cfutils.assembly import pileup, consensus
+
+reads = [parse_abi(f) for f in ["a.ab1", "b.ab1", "c.ab1"]]
+table = pileup(reads, ref, quality_threshold=20)
+print(consensus(table))
+```
+
+### Plot together with DNA Features Viewer
+```python
+from cfutils import ChromatogramFeature
+from cfutils.dnalink import plot_combined
+
+feats = [ChromatogramFeature(start=90, end=130, strand=+1, label="primer F")]
+fig, (ax_feat, ax_chrom) = plot_combined(cg.to_record, features=feats, region=(55, 90))
+```
+Requires the optional extra: `pip install cfutils[viewer]` (i.e. `dna-features-viewer`).
+
+### Split / join trace files
+```bash
+cfutils track join a.ab1 b.ab1 --outbase joined --outdir out/
+cfutils track split a.ab1 --cuts 20,40 --outdir out/
+cfutils track slice a.ab1 --start 1 --end 200 --outdir out/
 ```
 
 ## Agent / MCP (agent-friendly)
@@ -321,30 +350,15 @@ fig, ax = cg.plot(region=(55, 90))                # render a region
 trimmed = cg.trim().trim_leading_ns()             # Mott trim then drop leading Ns
 ```
 
-## Performance & acceleration
-
-cfutils keeps the common path fast without heavy dependencies:
-
-* **Base-calling / trace analysis** — the running-median baseline correction is
-  vectorised with NumPy (sliding-window median), giving ~12x over a naive loop.
-* **Alignment** — dispatch order is: bundled **Cython Smith-Waterman**
-  (`cfutils._swalign`, self-contained) -> **ssw** (if installed) -> **NumPy
-  Smith-Waterman**.  All three share the same interface.
-* **Parsing** — the ABI reader already unpacks channel/quality arrays with a
-  single C `struct.unpack` per record (~7 ms per `.ab1`).
-
-Benchmarks on the bundled 1141 bp sample: parse ~7 ms; full read↔reference
-alignment ~15 ms; re-call bases ~35 ms; mutation report + figure ~0.5 s.
-
 ## TODO
 
 - [x] call mutation by alignment and plot Chromatogram graphic
 - [x] add a doc
 - [x] change xaxis by peak location
-- [ ] fix bug that chromatogram switch pos after trim (partially addressed via tracks/composite)
+- [x] fix bug that chromatogram switch pos after trim (trace-aligned slicing)
 - [x] wrap as a cli app
 - [x] return quality score in output (quality module + report)
 - [x] fix issue that selected base is not in the middle (center_region)
-- [ ] fix plot_chromatograph rendering bug (further validation needed)
+- [x] fix plot_chromatograph rendering bug (full-region bounds, channels)
 - [x] add projection feature to make align and assemble possible (assembly module)
-- [ ] preserve trimmed-origin positions when slicing/joining so ref coords stay stable
+- [x] preserve trimmed-origin positions when slicing/joining (offset provenance)
