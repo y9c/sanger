@@ -164,8 +164,15 @@ def plot_features(
     lw = band_height * 0.55
     drawn_labels = []
 
+    # clip features to the visible x-range so out-of-region features do not
+    # expand the axes and squeeze the trace into a sliver
+    xmin, xmax = ax.get_xlim()
+
     for feat in features:
         x0, x1 = peak_to_x(record, (feat.start, feat.end))
+        # skip features entirely outside the visible window
+        if x1 < xmin - 0.5 or x0 > xmax + 0.5:
+            continue
         y_correction = band_height * 0.16
 
         if feat.strand != 0 and x1 != x0:

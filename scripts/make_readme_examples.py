@@ -90,10 +90,15 @@ def main():
     region = center_region(snps[0].cf_pos, 20, cg.length)
     fig, ax = plt.subplots(figsize=(15, 4.2))
     cg.plot(region=region, ax=ax)
-    for mut in mutations:
-        if region[0] - 6 <= mut.cf_pos <= region[1] + 6:
-            highlight_base(mut.cf_pos, cg.to_record, ax, passed_filter=True)
-            annotate_mutation(mut, cg.to_record, ax)
+    # stagger annotation heights so adjacent mutation labels do not overlap
+    in_region = sorted(
+        [m for m in mutations if region[0] - 6 <= m.cf_pos <= region[1] + 6],
+        key=lambda m: m.cf_pos,
+    )
+    for i, mut in enumerate(in_region):
+        highlight_base(mut.cf_pos, cg.to_record, ax, passed_filter=True)
+        label_y = 1.02 if i % 2 == 0 else 0.90
+        annotate_mutation(mut, cg.to_record, ax, label_y=label_y)
     snp = snps[0]
     ax.set_title(
         f"Mutation calling ({snp.ref_base}{snp.ref_pos}{snp.cf_base} highlighted)",
@@ -109,13 +114,9 @@ def main():
     ax.plot(np.arange(1, len(q) + 1), q, color="#1f77b4", lw=1.1)
     ax.fill_between(np.arange(1, len(q) + 1), q, 0, alpha=0.12, color="#1f77b4")
     ax.axhline(20, color="orange", ls="--", lw=1)
-    ax.axvspan(
-        m["trim_start"],
-        m["trim_end"],
-        color="green",
-        alpha=0.10,
-        label="Mott-trimmed region",
-    )
+    # shade only the (small) trimmed-off ends, not the kept high-quality span
+    ax.axvspan(0, m["trim_start"], color="red", alpha=0.10, label="trimmed ends")
+    ax.axvspan(m["trim_end"], len(q), color="red", alpha=0.10)
     ax.set_xlabel("Read position")
     ax.set_ylabel("Phred Q")
     ax.set_title(
@@ -142,7 +143,9 @@ def main():
     r = center_region(215, 32, cg.length)
     fig, ax = plt.subplots(figsize=(15, 4.5))
     cg.plot(region=r, ax=ax)
-    feats = [ChromatogramFeature.from_sitepair(s, color="#d62728") for s in snps]
+    # only annotate features that fall inside the visible window
+    in_region = [s for s in snps if r[0] - 4 <= s.cf_pos <= r[1] + 4]
+    feats = [ChromatogramFeature.from_sitepair(s, color="#d62728") for s in in_region]
     feats.append(
         ChromatogramFeature(
             start=r[0] + 1, end=r[1] - 1, strand=+1, color="#7fbf7b", label="amplicon"

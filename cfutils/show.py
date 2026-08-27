@@ -259,20 +259,25 @@ def highlight_base(
     return ax
 
 
-def annotate_mutation(mut: SitePair, seq: SeqRecord, ax) -> Axes:
+def annotate_mutation(
+    mut: SitePair, seq: SeqRecord, ax, label_y: float = 0.99, rotation: float = 45.0
+) -> Axes:
     """
     Annotate mutation pattern chromatograph position.
+
+    ``label_y`` lets callers stagger the label height so annotations of
+    adjacent mutations do not overlap; ``rotation`` sets the label angle.
     """
     peaks = seq.annotations["peak positions"]
     peak = peaks[mut.cf_pos - 1]
     ax.text(
         peak,
-        0.99,
+        label_y,
         f"{mut.ref_base}{mut.ref_pos}{mut.cf_base}",
         color="c",
         fontsize="large",
         fontweight="bold",
-        rotation=45,
+        rotation=rotation,
         ha="center",
         va="center",
     )

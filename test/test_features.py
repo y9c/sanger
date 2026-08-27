@@ -2,14 +2,19 @@
 """Unit tests for cfutils features (annotation overlay) module."""
 
 import unittest
+
 import matplotlib.pyplot as plt
 
-from cfutils.parser import parse_abi
-from cfutils.features import (
-    ChromatogramFeature, add_feature, iter_features, plot_features,
-    peak_to_x,
-)
 from cfutils.align import SitePair
+from cfutils.features import (
+    ChromatogramFeature,
+    add_feature,
+    iter_features,
+    peak_to_x,
+    plot_features,
+)
+from cfutils.parser import parse_abi
+from cfutils.show import plot_chromatograph
 
 
 class TestFeatures(unittest.TestCase):
@@ -47,12 +52,28 @@ class TestFeatures(unittest.TestCase):
     def test_plot_features_runs(self):
         fig, ax = plt.subplots(1, 1, figsize=(15, 6))
         feats = [
-            ChromatogramFeature(start=10, end=20, strand=+1, label="fwd", color="#ff8888"),
-            ChromatogramFeature(start=30, end=25, strand=-1, label="rev", color="#8888ff") if False else
-            ChromatogramFeature(start=25, end=30, strand=-1, label="rev", color="#8888ff"),
+            ChromatogramFeature(
+                start=10, end=20, strand=+1, label="fwd", color="#ff8888"
+            ),
+            ChromatogramFeature(
+                start=25, end=30, strand=-1, label="rev", color="#8888ff"
+            ),
             ChromatogramFeature(start=40, end=40, strand=0, label="snv"),
         ]
         plot_features(self.query, ax, features=feats)
+        plt.close(fig)
+
+    def test_plot_features_clips_out_of_range(self):
+        """Features outside the visible x-range must not expand the axes."""
+        fig, ax = plt.subplots(1, 1, figsize=(15, 6))
+        plot_chromatograph(self.query, region=(10, 20), ax=ax)
+        xlim_before = ax.get_xlim()
+        # a feature far outside the plotted region
+        far = ChromatogramFeature(start=800, end=810, label="faraway")
+        plot_features(self.query, ax, features=[far])
+        # drawing an out-of-range feature must not widen the x-axis
+        self.assertAlmostEqual(ax.get_xlim()[0], xlim_before[0], delta=2)
+        self.assertAlmostEqual(ax.get_xlim()[1], xlim_before[1], delta=2)
         plt.close(fig)
 
 
