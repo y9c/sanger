@@ -20,6 +20,7 @@ import matplotlib.pyplot as plt
 
 from cfutils.align import call_mutations
 from cfutils.parser import parse_abi, parse_fasta, SeqRecord
+from cfutils.quality import QualityFilter
 from cfutils.show import annotate_mutation, highlight_base, plot_chromatograph
 
 from .utils import get_logger
@@ -29,10 +30,15 @@ mpl.use("Agg", force=True)
 LOGGER = get_logger(__name__)
 
 
-def do_mutation_showing(query_record: SeqRecord, mutations: List, output_fig_file: str) -> None:
+def do_mutation_showing(
+    query_record: SeqRecord,
+    mutations: List,
+    output_fig_file: str,
+    quality_filter: QualityFilter = None,
+) -> None:
     """report mutations in pdf format."""
-    min_base_qual = 50
-    min_local_qual = 20
+    if quality_filter is None:
+        quality_filter = QualityFilter(min_base_qual=20, min_local_qual=20)
 
     mutations = sorted(mutations, key=lambda x: x.cf_pos)
     flanking_size = 6
@@ -64,12 +70,7 @@ def do_mutation_showing(query_record: SeqRecord, mutations: List, output_fig_fil
             ax=ax,
         )
         for mut in mutation_region:
-            base_passed = (
-                mut.qual_site is not None
-                and mut.qual_site >= min_base_qual
-                and mut.qual_local is not None
-                and mut.qual_local >= min_local_qual
-            )
+            base_passed = quality_filter.passed(mut)
             highlight_base(mut.cf_pos, query_record, ax, passed_filter=base_passed)
             annotate_mutation(mut, query_record, ax)
     fig.savefig(output_fig_file, bbox_inches="tight")

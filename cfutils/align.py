@@ -48,6 +48,10 @@ def run_align(reference: str, query: str) -> List[SitePair]:
     Returns:
         List[SitePair]: A list of SitePair objects representing alignment.
     """
+    # normalise case so that lowercase reference/query bases do not create
+    # spurious "mutations" from case-only differences
+    reference = str(reference).upper()
+    query = str(query).upper()
     aligner = ssw.Aligner()
     alignment = aligner.align(reference=reference, query=query)
     results = []

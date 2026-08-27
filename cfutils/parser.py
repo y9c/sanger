@@ -372,12 +372,22 @@ def rescale_trace(seq: SeqRecord) -> SeqRecord:
     return seq
 
 
-def parse_abi(filename: str) -> SeqRecord:
-    """Parse an ABI file from Sanger sequencing."""
+def parse_abi(filename: str, rescale: bool = True) -> SeqRecord:
+    """Parse an ABI file from Sanger sequencing.
+
+    Args:
+        filename: path to an ``.ab1`` file.
+        rescale: if True (default), rescale the trace coordinates so the
+            peak axis is in 0-based sequence positions (convenient for
+            plotting).  If False, keep the raw trace arrays and sample-index
+            peak positions, which is required for peak/baseline analysis such
+            as :func:`cfutils.basecaller.call_bases`.
+    """
     with open(filename, "rb") as abifile:
         seq = list(abi_iterator(abifile))[0]
 
-    seq = rescale_trace(seq)
+    if rescale:
+        seq = rescale_trace(seq)
     return seq
 
 

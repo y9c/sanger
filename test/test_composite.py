@@ -1,0 +1,53 @@
+#!/usr/bin/env python3
+"""Unit tests for cfutils composite (side-by-side plotting) module."""
+
+import unittest
+import matplotlib.pyplot as plt
+
+from cfutils.parser import parse_abi
+from cfutils.composite import side_by_side, add_panel
+from cfutils.features import ChromatogramFeature
+
+
+def gc_panel(ax, trace_x, peaks, seq, record, start_pos=None):
+    """A minimal user panel function drawing GC content over windows."""
+    n = len(seq)
+    if n < 4:
+        ax.set_yticks([])
+        return
+    start_pos = start_pos or 1
+    xs = [start_pos + i for i in range(n)]
+    gc = [100.0 * (seq[max(0, i - 1):i + 2].count("G")
+                   + seq[max(0, i - 1):i + 2].count("C")) / 3
+          for i in range(n)]
+    ax.fill_between(xs, gc, alpha=0.3)
+    ax.set_ylim(0, 100)
+
+
+class TestComposite(unittest.TestCase):
+    """Test side-by-side composite plotting."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.query = parse_abi("./data/B5-M13R_B07.ab1")
+
+    def test_side_by_side_runs(self):
+        fig, (ax_chrom, ax_panel) = side_by_side(
+            self.query, gc_panel, region=(10, 40),
+            features=[ChromatogramFeature(start=20, end=25, label="amplicon",
+                                          color="#ffcc88")],
+        )
+        self.assertIsNotNone(fig)
+        plt.close(fig)
+
+    def test_add_panel_runs(self):
+        fig, ax = plt.subplots(1, 1, figsize=(16, 5))
+        from cfutils.show import plot_chromatograph
+        plot_chromatograph(self.query, region=(10, 40), ax=ax)
+        ax_panel = add_panel(fig, ax, gc_panel, self.query, region=(10, 40))
+        self.assertIsNotNone(ax_panel)
+        plt.close(fig)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -3,7 +3,7 @@ name = "cfutils"
 version = "0.0.0.dev62"
 description = "Chromatogram File Utils"
 authors = [{ name = "Ye Chang", email = "yech1990@gmail.com" }]
-requires-python = "~=3.9"
+requires-python = ">=3.11"
 readme = "README.md"
 license = "MIT"
 keywords = ["DNA", "mutation", "chromatogram", "biology"]
@@ -11,7 +11,7 @@ dependencies = [
     "click>=8.0.0,<9",
  "ssw>=0.4.1,<0.5",
  "matplotlib>=3.9.2,<4",
- "numpy>=2.0.2",
+ "numpy>=2.3.3,<3",
 ]
 
 [project.urls]
@@ -34,4 +34,9 @@ line-length = 79
 [dependency-groups]
 dev = [
     "pytest>=8.3.5",
+]
+
+[project.optional-dependencies]
+viewer = [
+    "dna-features-viewer>=3.0.0",
 ]

@@ -89,16 +89,121 @@ make test
 - build as python package for pypi
 - fix bug that highlighting wrong base
 - replace blastn with buildin python aligner
+- add `features` module: dna-features-viewer style feature overlay API
+- add `quality` module: tunable quality-score filtering (was hard-coded in plot)
+- add `tracks` module: split / join / slice chromatogram trace files
+- add `assembly` module: multi-read pileup + consensus calling
+- add `composite` module: side-by-side plotting with external tools
+- add `center_region` + fix `highlight_base` end-boundary bug in `show`
+- add `basecaller` module: re-call bases from raw four-channel traces
+- add `qc` module: per-read QC metrics + batch summaries
+- add `transform` module: public Mott `trim` (keeps traces/peaks aligned) + `reverse_complement_record`
+- add `utils.normalize_ambiguity` (IUPAC handling)
+- fix false-positive mutations from lowercase reference bases (case-insensitive compare)
+- add `dnalink` module: plot cfutils chromatograms together with DNA Features Viewer
+- expose `parse_abi(rescale=...)`; base/peak analysis requires `rescale=False`
+- new CLI commands: `cfutils track split|join|slice`, `cfutils qc`
+
+## New analysis modules
+
+### split / join trace files
+```bash
+cfutils track join a.ab1 b.ab1 --outbase joined --outdir out/
+cfutils track split a.ab1 --cuts 20,40 --outdir out/
+cfutils track slice a.ab1 --start 1 --end 200 --outdir out/
+```
+
+### quality filtering (was hard-coded in the plotter)
+```python
+from cfutils.align import call_mutations
+from cfutils.quality import QualityFilter
+sites = call_mutations(query, reference)
+passed = QualityFilter(min_base_qual=20, min_local_qual=20).filter(sites)
+```
+
+### feature overlay (compatible with external tools)
+```python
+from cfutils.parser import parse_abi
+from cfutils.features import ChromatogramFeature, plot_features
+from cfutils.show import plot_chromatograph
+import matplotlib.pyplot as plt
+
+rec = parse_abi("./data/B5-M13R_B07.ab1")
+fig, ax = plt.subplots(figsize=(16, 5))
+feat = ChromatogramFeature(start=100, end=131, strand=+1,
+                           color="#ff8888", label="M13R primer")
+plot_chromatograph(rec, region=(90, 140), ax=ax)
+plot_features(rec, ax, features=[feat])
+plt.show()
+```
+
+### side-by-side with another tool's output
+```python
+from cfutils.composite import side_by_side
+from cfutils.parser import parse_abi
+
+def my_panel(ax, trace_x, peaks, seq, record):
+    ax.bar(range(len(seq)), [1.0]*len(seq), color="0.66")
+    ax.set_ylabel("my tool signal")
+
+rec = parse_abi("./data/B5-M13R_B07.ab1")
+fig, (ax_chrom, ax_panel) = side_by_side(rec, my_panel, region=(10, 40))
+```
+
+### consensus / assembly from many reads
+```python
+from cfutils.parser import parse_abi, parse_fasta
+from cfutils.assembly import pileup, consensus
+reads = [parse_abi(f) for f in ["a.ab1", "b.ab1", "c.ab1"]]
+ref = parse_fasta("ref.fa")
+table = pileup(reads, ref, quality_threshold=20)
+print(consensus(table))
+```
+
+### plot together with DNA Features Viewer
+```python
+from cfutils.parser import parse_abi
+from cfutils.features import ChromatogramFeature
+from cfutils.dnalink import plot_combined, to_graphic_record
+
+rec = parse_abi("./data/B5-M13R_B07.ab1")
+feats = [ChromatogramFeature(start=90, end=130, strand=+1, label="primer F")]
+fig, (ax_feat, ax_chrom) = plot_combined(rec, features=feats, region=(55, 90))
+```
+Requires the optional extra: `pip install cfutils[viewer]` (i.e. `dna-features-viewer`).
+
+### re-call bases from raw traces
+```python
+from cfutils.parser import parse_abi
+from cfutils.basecaller import call_bases, basecaller_score
+rec = parse_abi("./data/B5-M13R_B07.ab1", rescale=False)  # raw traces
+res = call_bases(rec)
+print(res.sequence)
+print(basecaller_score(res, rec.seq))
+```
+
+### trim / reverse-complement a whole record
+```python
+from cfutils.transform import trim, reverse_complement_record
+short = trim(rec)                 # Mott quality trim, keeps peaks/trace aligned
+rc    = reverse_complement_record(rec)
+```
+
+### QC metrics
+```python
+from cfutils.qc import read_metrics, summarize
+print(read_metrics(rec))          # length, GC%, N%, mean/min Q, trimmed interval...
+```
 
 ## TODO
 
-- [ ] call mutation by alignment and plot Chromatogram graphic
-- [ ] add a doc
+- [x] call mutation by alignment and plot Chromatogram graphic
+- [x] add a doc
 - [x] change xaxis by peak location
-- [ ] fix bug that chromatogram switch pos after trim
+- [ ] fix bug that chromatogram switch pos after trim (partially addressed via tracks/composite)
 - [x] wrap as a cli app
-- [ ] return quality score in output
-- [ ] fix issue that selected base is not in the middle
-- [ ] fix plot_chromatograph rendering bug
-
-- [ ] add projection feature to make align and assemble possible
+- [x] return quality score in output (quality module + report)
+- [x] fix issue that selected base is not in the middle (center_region)
+- [ ] fix plot_chromatograph rendering bug (further validation needed)
+- [x] add projection feature to make align and assemble possible (assembly module)
+- [ ] preserve trimmed-origin positions when slicing/joining so ref coords stay stable

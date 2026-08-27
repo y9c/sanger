@@ -198,6 +198,29 @@ def show_reference(
     return ax
 
 
+def center_region(
+    pos: int, half_window: int, seq_length: int
+) -> Tuple[int, int]:
+    """Return a 1-based ``(start, end)`` region of width ``2*half_window``
+    centred on ``pos``, clamped to the sequence bounds.
+
+    This addresses the "selected base is not in the middle" issue by letting
+    callers build a plot window that always keeps base ``pos`` centred when
+    possible.
+    """
+    start = pos - half_window
+    end = pos + half_window
+    # shift window back into bounds rather than cropping it unevenly
+    if start < 1:
+        end += 1 - start
+        start = 1
+    if end > seq_length:
+        start -= end - seq_length
+        end = seq_length
+    start = max(1, start)
+    return int(start), int(end)
+
+
 def highlight_base(
     pos_highlight: int, seq: SeqRecord, ax: Axes, passed_filter=True
 ) -> Axes:
@@ -213,12 +236,12 @@ def highlight_base(
         raise ValueError("peak not within plot bounds")
 
     if pos_highlight == 1:
-        xmin = -0.5
+        xmin = xmin
     else:
         xmin = 0.5 * (peaks[pos_highlight - 1] + peaks[pos_highlight - 2])
 
     if pos_highlight == len(peaks):
-        xmax = -0.5
+        xmax = xmax
     else:
         xmax = 0.5 * (peaks[pos_highlight - 1] + peaks[pos_highlight])
     ymin, ymax = ax.get_ylim()

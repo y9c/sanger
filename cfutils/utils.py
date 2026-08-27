@@ -55,3 +55,40 @@ def chunked_lines(string, chunksize=10, chunks_per_line=5, spacer=" "):
 def reverse_complement(dna):
     "Return the reverse complement of a DNA sequence."
     return dna.translate(str.maketrans("ATCG", "TAGC"))[::-1]
+
+
+#: IUPAC nucleotide ambiguity code -> the set of canonical bases it represents
+IUPAC = {
+    "A": "A", "C": "C", "G": "G", "T": "T", "U": "T",
+    "R": "AG", "Y": "CT", "S": "GC", "W": "AT", "K": "GT", "M": "AC",
+    "B": "CGT", "D": "AGT", "H": "ACT", "V": "ACG", "N": "ACGT",
+}
+
+
+def normalize_ambiguity(seq, as_upper=True):
+    """Normalise an IUPAC ambiguity string to canonical (ACGT) bases.
+
+    Ambiguity codes are mapped to their canonical base set; a sequence with
+    ambiguity codes is expanded to a deterministic canonical form by
+    replacing multi-base codes with ``N`` (unless they are unambiguous).
+    ``U`` is mapped to ``T``.
+    """
+    out = []
+    for ch in seq:
+        c = ch.upper()
+        if c in IUPAC:
+            b = IUPAC[c]
+            if len(b) == 1:
+                out.append(b)
+            else:
+                out.append("N")
+        else:
+            out.append("N")
+    s = "".join(out)
+    return s if not as_upper else s
+
+
+def ambiguity_to_set(base):
+    """Return the set of canonical bases an IUPAC code represents."""
+    return set(IUPAC.get(str(base).upper(), "N"))
+
