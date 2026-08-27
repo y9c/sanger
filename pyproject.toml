@@ -10,7 +10,7 @@ keywords = ["DNA", "mutation", "chromatogram", "biology"]
 dependencies = [
     "click>=8.0.0,<9",
  "rich-click>=1.8.0,<2",
- "numpy>=2.3.3,<3",
+ "numpy>=2.1,<3",
 ]
 
 [project.optional-dependencies]
