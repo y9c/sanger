@@ -35,6 +35,6 @@ jobs:
           name: dist
           path: dist
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release
+        uses: pypa/gh-action-pypi-publish@v1
         with:
           packages-dir: dist
