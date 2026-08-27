@@ -1,6 +1,6 @@
 [project]
 name = "sanger"
-version = "0.1.4"
+version = "0.1.5"
 description = "Sanger sequencing toolkit"
 authors = [{ name = "Ye Chang", email = "yech1990@gmail.com" }]
 requires-python = ">=3.10"
@@ -55,6 +55,10 @@ sanger = ["_swalign.pyx", "_swalign.c"]
 build = "cp310-* cp311-* cp312-* cp313-* cp314-*"
 # verify the built wheel imports (the C extension should be present)
 test-command = "python -c \"import sanger; from sanger.align import _HAVE_CY; print('wheel import ok', _HAVE_CY)\""
+
+[tool.cibuildwheel.macos]
+# build BOTH Apple Silicon (arm64) and Intel (x86_64) macOS wheels
+archs = ["x86_64", "arm64"]
 
 [tool.black]
 line-length = 79
