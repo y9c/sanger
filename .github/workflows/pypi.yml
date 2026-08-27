@@ -19,7 +19,7 @@ jobs:
           # source distribution (platform-independent; optional C ext built
           # opportunistically at install time)
           python -m build --sdist --outdir dist
-          # manylinux wheels for CPython 3.11-3.14 (Linux, x86_64)
+          # manylinux wheels for CPython 3.10-3.14 (Linux, x86_64)
           cibuildwheel --platform linux --output-dir dist
       - uses: actions/upload-artifact@v4
         with:

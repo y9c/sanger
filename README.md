@@ -1,6 +1,7 @@
 [![Pypi Releases](https://img.shields.io/pypi/v/sanger.svg)](https://pypi.python.org/pypi/sanger)
 [![Downloads](https://static.pepy.tech/badge/sanger)](https://pepy.tech/project/sanger)
 [![CI](https://github.com/y9c/sanger/actions/workflows/ci.yml/badge.svg)](https://github.com/y9c/sanger/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/pypi/pyversions/sanger.svg)](https://pypi.org/project/sanger/)
 
 # sanger
 
