@@ -18,7 +18,7 @@ sequence, quality, peaks and channels never drift apart.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, Tuple
+from typing import TYPE_CHECKING, Optional
 
 import numpy as np
 
@@ -29,13 +29,21 @@ if TYPE_CHECKING:
     from .parser import SeqRecord
 
 __all__ = [
-    "trim", "trim_ends", "trim_leading_ns", "strip_primers",
-    "reverse_complement_record", "NCHANNELS",
+    "trim",
+    "trim_ends",
+    "trim_leading_ns",
+    "strip_primers",
+    "reverse_complement_record",
+    "NCHANNELS",
 ]
 
 
-def trim(record: "SeqRecord", cutoff: float = 0.05, segment: int = 20,
-         name: Optional[str] = None) -> "SeqRecord":
+def trim(
+    record: "SeqRecord",
+    cutoff: float = 0.05,
+    segment: int = 20,
+    name: Optional[str] = None,
+) -> "SeqRecord":
     """Return a quality-trimmed copy of the record.
 
     Richard Mott's trimming algorithm finds the contiguous segment of the read
@@ -53,13 +61,15 @@ def trim(record: "SeqRecord", cutoff: float = 0.05, segment: int = 20,
     start, end = trimmed_bounds(record, cutoff=cutoff, segment=segment)
     if start <= 1 and end >= len(record):
         return record
-    trimmed = slice_track(record, start, end,
-                          name=name or f"{record.name or 'trimmed'}_trimmed")
+    trimmed = slice_track(
+        record, start, end, name=name or f"{record.name or 'trimmed'}_trimmed"
+    )
     return trimmed
 
 
-def trim_ends(record: "SeqRecord", min_qual: int = 20,
-              name: Optional[str] = None) -> "SeqRecord":
+def trim_ends(
+    record: "SeqRecord", min_qual: int = 20, name: Optional[str] = None
+) -> "SeqRecord":
     """Hard-trim the low-quality 5' and 3' ends of a read.
 
     The trimmed region is the longest interior span whose bases are all at or
@@ -83,8 +93,9 @@ def trim_ends(record: "SeqRecord", min_qual: int = 20,
         end -= 1
     if end < start:
         return slice_track(record, 1, 1, name=name or f"{record.name or 'tr'}_tr")
-    return slice_track(record, start + 1, end + 1,
-                       name=name or f"{record.name or 'tr'}_trimmed")
+    return slice_track(
+        record, start + 1, end + 1, name=name or f"{record.name or 'tr'}_trimmed"
+    )
 
 
 def trim_leading_ns(record: "SeqRecord", name: Optional[str] = None) -> "SeqRecord":
@@ -104,13 +115,17 @@ def trim_leading_ns(record: "SeqRecord", name: Optional[str] = None) -> "SeqReco
         end -= 1
     if start == 0 and end == n:
         return record
-    return slice_track(record, start + 1, end,
-                       name=name or f"{record.name or 'ns'}_noNs")
+    return slice_track(
+        record, start + 1, end, name=name or f"{record.name or 'ns'}_noNs"
+    )
 
 
-def strip_primers(record: "SeqRecord", forward: str = "",
-                  reverse: Optional[str] = None,
-                  name: Optional[str] = None) -> "SeqRecord":
+def strip_primers(
+    record: "SeqRecord",
+    forward: str = "",
+    reverse: Optional[str] = None,
+    name: Optional[str] = None,
+) -> "SeqRecord":
     """Remove primer sequences from the 5' (and optionally 3') read ends.
 
     The primer is matched at the read start (``forward``) and, if given, the
@@ -141,12 +156,14 @@ def strip_primers(record: "SeqRecord", forward: str = "",
             end = len(record) - len(r)
     if start == 1 and end == len(record):
         return record
-    return slice_track(record, start, end,
-                       name=name or f"{record.name or 's'}_primers_removed")
+    return slice_track(
+        record, start, end, name=name or f"{record.name or 's'}_primers_removed"
+    )
 
 
-def reverse_complement_record(record: "SeqRecord",
-                              name: Optional[str] = None) -> "SeqRecord":
+def reverse_complement_record(
+    record: "SeqRecord", name: Optional[str] = None
+) -> "SeqRecord":
     """Reverse-complement a whole chromatogram record.
 
     The sequence and quality are reversed/complemented, and the trace + peak

@@ -48,6 +48,25 @@ class TestTracks(unittest.TestCase):
             self.assertEqual(len(rec.annotations["channel 1"]),
                              len(self.query.annotations["channel 1"]))
 
+    def test_slice_preserves_channels_and_plots(self):
+        seg = slice_track(self.query, 10, 20)
+        self.assertEqual(seg.annotations["channels"],
+                         self.query.annotations["channels"])
+        # plotting a sliced record must not fail (needs channels annotation)
+        import matplotlib
+        matplotlib.use("Agg", force=True)
+        import matplotlib.pyplot as plt
+        from cfutils.show import plot_chromatograph
+        fig, ax = plt.subplots()
+        plot_chromatograph(seg, ax=ax)
+        plt.close(fig)
+
+    def test_join_preserves_channels(self):
+        seg = slice_track(self.query, 1, 20)
+        joined = join_tracks(self.query, seg)
+        self.assertEqual(joined.annotations["channels"],
+                         self.query.annotations["channels"])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -16,7 +16,7 @@ The module is symmetric with :mod:`cfutils.parser` so records round-trip.
 from __future__ import annotations
 
 import json
-from typing import Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Dict, Iterable, List, Optional, Sequence
 
 from .parser import SeqRecord
 
@@ -32,8 +32,7 @@ __all__ = [
 MISSING = "."
 
 
-def to_fasta(record: SeqRecord, name: Optional[str] = None,
-             width: int = 60) -> str:
+def to_fasta(record: SeqRecord, name: Optional[str] = None, width: int = 60) -> str:
     """Return a FASTA string of the record's called sequence (wrapped)."""
     name = name or record.name or record.id or "seq"
     seq = record.seq
@@ -43,8 +42,12 @@ def to_fasta(record: SeqRecord, name: Optional[str] = None,
     return "\n".join(lines) + "\n"
 
 
-def to_vcf(variants: Sequence, sample_id: str = "SAMPLE",
-           reference_name: str = "ref", min_qual: int = 0) -> str:
+def to_vcf(
+    variants: Sequence,
+    sample_id: str = "SAMPLE",
+    reference_name: str = "ref",
+    min_qual: int = 0,
+) -> str:
     """Render variant sites as a VCF 4.2 string.
 
     ``variants`` are :class:`~cfutils.align.SitePair` (or any object exposing
@@ -54,7 +57,7 @@ def to_vcf(variants: Sequence, sample_id: str = "SAMPLE",
     """
     header = [
         "##fileformat=VCFv4.2",
-        f"##source=cfutils",
+        "##source=cfutils",
         f"##reference={reference_name}",
         "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO",
     ]
@@ -68,13 +71,11 @@ def to_vcf(variants: Sequence, sample_id: str = "SAMPLE",
         qual = v.qual_site if v.qual_site is not None else MISSING
         if qual != MISSING and min_qual and qual < min_qual:
             continue
-        rows.append(f"{reference_name}\t{v.ref_pos}\t.\t{ref}\t{alt}"
-                    f"\t{qual}\t.\t.")
+        rows.append(f"{reference_name}\t{v.ref_pos}\t.\t{ref}\t{alt}\t{qual}\t.\t.")
     return "\n".join(header + rows) + "\n"
 
 
-def to_json(record: SeqRecord, extra: Optional[dict] = None,
-            indent: int = 2) -> str:
+def to_json(record: SeqRecord, extra: Optional[dict] = None, indent: int = 2) -> str:
     """Return a self-describing JSON report for a single record.
 
     Includes identifiers, sequence composition, quality summary and any
@@ -84,8 +85,14 @@ def to_json(record: SeqRecord, extra: Optional[dict] = None,
 
     m = read_metrics(record)
     feats = [
-        {"start": f.start, "end": f.end, "strand": f.strand,
-         "color": f.color, "label": f.label, "kind": f.kind}
+        {
+            "start": f.start,
+            "end": f.end,
+            "strand": f.strand,
+            "color": f.color,
+            "label": f.label,
+            "kind": f.kind,
+        }
         for f in record.annotations.get("features", [])
     ]
     payload = {
@@ -101,8 +108,9 @@ def to_json(record: SeqRecord, extra: Optional[dict] = None,
     return json.dumps(payload, indent=indent)
 
 
-def batch_summary(records: Iterable[SeqRecord],
-                  include_bases: bool = False) -> List[Dict]:
+def batch_summary(
+    records: Iterable[SeqRecord], include_bases: bool = False
+) -> List[Dict]:
     """Return a list of per-read summary dicts (the QC table rows)."""
     from .qc import read_metrics
 
@@ -128,8 +136,9 @@ def batch_summary(records: Iterable[SeqRecord],
     return rows
 
 
-def write_batch(records: Iterable[SeqRecord], outdir: str,
-                fmt: str = "csv", name: str = "summary") -> str:
+def write_batch(
+    records: Iterable[SeqRecord], outdir: str, fmt: str = "csv", name: str = "summary"
+) -> str:
     """Write a batch QC summary of many reads.
 
     Args:
@@ -142,7 +151,6 @@ def write_batch(records: Iterable[SeqRecord], outdir: str,
         Path of the written file.
     """
     import csv
-    import os
     from pathlib import Path
 
     outdir = Path(outdir)

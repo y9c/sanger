@@ -59,9 +59,22 @@ def reverse_complement(dna):
 
 #: IUPAC nucleotide ambiguity code -> the set of canonical bases it represents
 IUPAC = {
-    "A": "A", "C": "C", "G": "G", "T": "T", "U": "T",
-    "R": "AG", "Y": "CT", "S": "GC", "W": "AT", "K": "GT", "M": "AC",
-    "B": "CGT", "D": "AGT", "H": "ACT", "V": "ACG", "N": "ACGT",
+    "A": "A",
+    "C": "C",
+    "G": "G",
+    "T": "T",
+    "U": "T",
+    "R": "AG",
+    "Y": "CT",
+    "S": "GC",
+    "W": "AT",
+    "K": "GT",
+    "M": "AC",
+    "B": "CGT",
+    "D": "AGT",
+    "H": "ACT",
+    "V": "ACG",
+    "N": "ACGT",
 }
 
 
@@ -91,4 +104,3 @@ def normalize_ambiguity(seq, as_upper=True):
 def ambiguity_to_set(base):
     """Return the set of canonical bases an IUPAC code represents."""
     return set(IUPAC.get(str(base).upper(), "N"))
-

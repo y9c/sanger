@@ -23,7 +23,7 @@ from __future__ import annotations
 
 from typing import Callable, List, Optional, Tuple
 
-from ._mpl import plt, Axes, Figure, require_matplotlib
+from ._mpl import Axes, Figure, plt, require_matplotlib
 from .features import plot_features
 from .parser import SeqRecord
 from .show import plot_chromatograph
@@ -34,8 +34,7 @@ __all__ = ["side_by_side", "add_panel"]
 def _trace_data(record: SeqRecord, region: Optional[Tuple[int, int]] = None):
     """Resolve trace arrays for a (optional) region."""
     peaks = record.annotations["peak positions"]
-    trace_x = record.annotations.get("trace_x",
-                                     list(range(len(peaks))))
+    trace_x = record.annotations.get("trace_x", list(range(len(peaks))))
     n = len(peaks)
 
     if region is None:
@@ -88,7 +87,8 @@ def side_by_side(
     """
     require_matplotlib()
     fig, (ax_chrom, ax_panel) = plt.subplots(
-        2, 1,
+        2,
+        1,
         figsize=(figure_width, 6),
         sharex=panel_share_x,
         gridspec_kw={"height_ratios": list(height_ratios)},
@@ -106,9 +106,13 @@ def side_by_side(
     return fig, (ax_chrom, ax_panel)
 
 
-def add_panel(fig: Figure, ax_chrom: Axes,
-              panel_func: Callable[[Axes, List[float], List[float], str, SeqRecord, int], None],
-              query: SeqRecord, region: Optional[Tuple[int, int]] = None) -> Axes:
+def add_panel(
+    fig: Figure,
+    ax_chrom: Axes,
+    panel_func: Callable[[Axes, List[float], List[float], str, SeqRecord, int], None],
+    query: SeqRecord,
+    region: Optional[Tuple[int, int]] = None,
+) -> Axes:
     """Add a second panel beneath an existing chromatogram axes (late binding).
 
     Convenience when you already have a chromatogram plotted and just want an

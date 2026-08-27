@@ -61,14 +61,16 @@ def _baseline_correct(trace: np.ndarray, window: int = 51) -> np.ndarray:
     if a.size <= window:
         return a - np.median(a)
     from numpy.lib.stride_tricks import sliding_window_view
+
     half = window // 2
     padded = np.pad(a, (half, window - 1 - half), mode="edge")
     median = np.median(sliding_window_view(padded, window), axis=1)
     return a - median
 
 
-def _local_maxima(signal: np.ndarray, min_distance: int = 4,
-                  threshold: float = 0.0) -> np.ndarray:
+def _local_maxima(
+    signal: np.ndarray, min_distance: int = 4, threshold: float = 0.0
+) -> np.ndarray:
     """Indices of local maxima separated by >= min_distance samples."""
     if signal.size == 0:
         return np.array([], dtype=int)
@@ -92,11 +94,11 @@ def _local_maxima(signal: np.ndarray, min_distance: int = 4,
 class BaseCall:
     """One called base with supporting evidence."""
 
-    position: int          # 1-based position in the called sequence
+    position: int  # 1-based position in the called sequence
     base: str
-    trace_x: float         # x-sample coordinate of the winning peak
-    confidence: float      # 0..1, margin of the winning channel
-    quality: int           # approximate Phred-like quality
+    trace_x: float  # x-sample coordinate of the winning peak
+    confidence: float  # 0..1, margin of the winning channel
+    quality: int  # approximate Phred-like quality
     second_base: Optional[str] = None
     second_ratio: Optional[float] = None
     is_ambiguous: bool = False
@@ -104,9 +106,12 @@ class BaseCall:
 
 #: IUPAC ambiguity code for every unordered pair of canonical bases
 _TWO_BASE_CODE = {
-    frozenset("AG"): "R", frozenset("CT"): "Y",
-    frozenset("GC"): "S", frozenset("AT"): "W",
-    frozenset("GT"): "K", frozenset("AC"): "M",
+    frozenset("AG"): "R",
+    frozenset("CT"): "Y",
+    frozenset("GC"): "S",
+    frozenset("AT"): "W",
+    frozenset("GT"): "K",
+    frozenset("AC"): "M",
 }
 
 
@@ -140,28 +145,40 @@ class BaseCallResult:
     def call_table(self, to_dict: bool = False):
         """List ``(pos, base, quality, second_base, second_ratio, ambiguous)``."""
         rows = [
-            (c.position, c.base, c.quality, c.second_base,
-             c.second_ratio, c.is_ambiguous)
+            (
+                c.position,
+                c.base,
+                c.quality,
+                c.second_base,
+                c.second_ratio,
+                c.is_ambiguous,
+            )
             for c in self.calls
         ]
         if to_dict:
-            keys = ["pos", "base", "quality", "second_base",
-                    "second_ratio", "ambiguous"]
+            keys = [
+                "pos",
+                "base",
+                "quality",
+                "second_base",
+                "second_ratio",
+                "ambiguous",
+            ]
             return [dict(zip(keys, r)) for r in rows]
         return rows
 
     def heterozygotes(self, min_ratio: float = 0.20):
         """Return candidate mixed/heterozygous sites.
 
-        Each entry is ``(pos, major_base, minor_base)`` where ``minor_base``
-        is the second dye at that position and ``minor_ratio`` its estimated
-        minor-allele fraction (0..0.5).
+        Each entry is ``(pos, major_base, minor_base, minor_fraction)`` where
+        ``minor_fraction`` is the estimated share of the minor dye
+        (``second / (second + major)``), bounded to 0..0.5.
         """
         out = []
         for c in self.calls:
             if c.second_ratio and c.second_ratio >= min_ratio and c.second_base:
-                out.append((c.position, c.base, c.second_base,
-                            round(min(c.second_ratio, 1.0), 3)))
+                frac = c.second_ratio / (1.0 + c.second_ratio)
+                out.append((c.position, c.base, c.second_base, round(frac, 3)))
         return out
 
     def accuracy(self, reference_seq: str) -> float:
@@ -170,7 +187,7 @@ class BaseCallResult:
         Ambiguity codes match when the reference base is one of the possible
         bases the code represents.
         """
-        from .utils import ambiguity_to_set, IUPAC
+        from .utils import IUPAC, ambiguity_to_set
 
         ref = str(reference_seq).upper()
         mine = self.sequence.upper()
@@ -202,8 +219,9 @@ def _quality_from_margin(margin: float) -> int:
     return 5 + int(30 * margin)
 
 
-def detect_peaks(record: SeqRecord, min_distance: int = 5,
-                 threshold_quantile: float = 0.2) -> List[Tuple[float, int]]:
+def detect_peaks(
+    record: SeqRecord, min_distance: int = 5, threshold_quantile: float = 0.2
+) -> List[Tuple[float, int]]:
     """Detect trace peaks per channel.
 
     Returns a flat list of ``(x_sample, channel_index)``, grouped loosely in
@@ -215,18 +233,21 @@ def detect_peaks(record: SeqRecord, min_distance: int = 5,
     for ch, trace in enumerate(traces):
         corrected = _baseline_correct(trace)
         thresh = np.quantile(corrected, threshold_quantile)
-        for x in _local_maxima(corrected, min_distance=min_distance,
-                               threshold=thresh):
+        for x in _local_maxima(corrected, min_distance=min_distance, threshold=thresh):
             peaks.append((float(x), ch))
     peaks.sort()
     return peaks
 
 
-def call_bases(record: SeqRecord, min_distance: int = 5,
-               cluster_dx: int = 6, threshold_quantile: float = 0.2,
-               max_calls: Optional[int] = None,
-               use_peak_positions: bool = True,
-               hetero_threshold: float = 0.45) -> BaseCallResult:
+def call_bases(
+    record: SeqRecord,
+    min_distance: int = 5,
+    cluster_dx: int = 6,
+    threshold_quantile: float = 0.2,
+    max_calls: Optional[int] = None,
+    use_peak_positions: bool = True,
+    hetero_threshold: float = 0.45,
+) -> BaseCallResult:
     """Call bases from the raw traces of a chromatogram.
 
     Two modes:
@@ -262,10 +283,13 @@ def call_bases(record: SeqRecord, min_distance: int = 5,
     if use_peak_positions and len(record.annotations.get("peak positions", [])):
         peak_x = np.asarray(record.annotations["peak positions"], dtype=float)
         # plus the origin offset if the trace was truncated (rescaled mode)
-        x0 = float(np.asarray(record.annotations["trace_x"], dtype=float)[0]) \
-            if "trace_x" in record.annotations and len(record.annotations["trace_x"]) else 0.0
+        x0 = (
+            float(np.asarray(record.annotations["trace_x"], dtype=float)[0])
+            if "trace_x" in record.annotations and len(record.annotations["trace_x"])
+            else 0.0
+        )
         ref_positions = peak_x - x0
-        positions = ref_positions[::max(1, min_distance // 5)] if False else ref_positions
+        positions = ref_positions
         if max_calls:
             positions = positions[:max_calls]
         x_vals = positions
@@ -316,20 +340,26 @@ def call_bases(record: SeqRecord, min_distance: int = 5,
             second_ratio = (second / top) if top > 0 else 0.0
         margin = 1.0 - second_ratio
         is_ambiguous = False
-        if top > 0 and hetero_threshold > 0 and second_base \
-                and second_ratio >= hetero_threshold:
+        if (
+            top > 0
+            and hetero_threshold > 0
+            and second_base
+            and second_ratio >= hetero_threshold
+        ):
             base = _two_base_code(base, second_base)
             is_ambiguous = True
-        calls.append(BaseCall(
-            position=i,
-            base=base,
-            trace_x=float(x),
-            confidence=margin,
-            quality=_quality_from_margin(margin),
-            second_base=second_base,
-            second_ratio=second_ratio,
-            is_ambiguous=is_ambiguous,
-        ))
+        calls.append(
+            BaseCall(
+                position=i,
+                base=base,
+                trace_x=float(x),
+                confidence=margin,
+                quality=_quality_from_margin(margin),
+                second_base=second_base,
+                second_ratio=second_ratio,
+                is_ambiguous=is_ambiguous,
+            )
+        )
 
     return BaseCallResult(calls=calls)
 

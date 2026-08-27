@@ -25,7 +25,7 @@ from __future__ import annotations
 
 from collections import Counter
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Dict, Iterable, List, Optional, Tuple
+from typing import TYPE_CHECKING, Dict, Iterable, List, Tuple
 
 from .align import align_chromatograph
 from .parser import SeqRecord
@@ -62,8 +62,7 @@ class PileupColumn:
     def depth(self) -> int:
         return sum(self.counts.values())
 
-    def consensus_base(self, min_freq: float = 0.5,
-                       min_count: int = 1) -> str:
+    def consensus_base(self, min_freq: float = 0.5, min_count: int = 1) -> str:
         """Most-supported canonical base, or ``ref_base`` if no majority.
 
         A deletion (``"-"``) wins only when it is the clear plurality and the
@@ -98,8 +97,7 @@ class PileupTable:
     def iter_columns(self) -> List[PileupColumn]:
         return [self.columns[p] for p in sorted(self.columns)]
 
-    def consensus_sequence(self, min_freq: float = 0.5,
-                           min_count: int = 1) -> str:
+    def consensus_sequence(self, min_freq: float = 0.5, min_count: int = 1) -> str:
         """Return the consensus string, in reference order (deletions kept as gaps)."""
         return "".join(
             self.columns[p].consensus_base(min_freq, min_count)
@@ -107,13 +105,14 @@ class PileupTable:
         )
 
 
-def _accumulate(columns: Dict[int, PileupColumn], site, read_base: str,
-                seen: set, key: tuple) -> None:
+def _accumulate(
+    columns: Dict[int, PileupColumn], site, read_base: str, seen: set, key: tuple
+) -> None:
     """Record one read's base at a reference position (once per read/position)."""
     if key in seen:
         return
     seen.add(key)
-    col = columns.setdefault(site.ref_pos, None)
+    col = columns.get(site.ref_pos)
     if col is None:
         col = PileupColumn(ref_pos=site.ref_pos, ref_base=site.ref_base)
         columns[site.ref_pos] = col
@@ -149,15 +148,17 @@ def pileup(
     for read_idx, read in enumerate(reads):
         seen: set = set()
         for site in align_chromatograph(read, reference):
-            ref_base = site.ref_base
             read_base = site.cf_base
             if read_base == "-":
                 base = "-"
             else:
-                if quality_threshold and site.qual_site is not None \
-                        and site.qual_site < quality_threshold:
+                if (
+                    quality_threshold
+                    and site.qual_site is not None
+                    and site.qual_site < quality_threshold
+                ):
                     continue  # low-quality base excluded
-                base = read_base if read_base in _CANONICAL else read_base
+                base = read_base
             _accumulate(columns, site, base, seen, (read_idx, site.ref_pos))
 
     if min_cov > 1:
@@ -166,9 +167,7 @@ def pileup(
     return PileupTable(columns=columns)
 
 
-def consensus(
-    table: PileupTable, min_freq: float = 0.5, min_count: int = 1
-) -> str:
+def consensus(table: PileupTable, min_freq: float = 0.5, min_count: int = 1) -> str:
     """Consensus string from a :class:`PileupTable`."""
     return table.consensus_sequence(min_freq=min_freq, min_count=min_count)
 

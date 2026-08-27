@@ -26,11 +26,16 @@ plot = [
 viewer = [
     "dna-features-viewer>=3.0.0",
 ]
+# Model Context Protocol server so agents/LLMs can drive cfutils
+agent = [
+    "mcp>=2",
+]
 # everything
 all = [
     "ssw>=0.4.1,<0.5",
     "matplotlib>=3.9.2,<4",
     "dna-features-viewer>=3.0.0",
+    "mcp>=2",
 ]
 
 [project.urls]
@@ -39,6 +44,7 @@ Documentation = "https://cf.readthedocs.io/"
 
 [project.scripts]
 cfutils = "cfutils.cli:cli"
+cfutils-mcp = "cfutils.mcp_server:main"
 
 [build-system]
 requires = ["setuptools>=61", "wheel"]
@@ -57,6 +63,19 @@ cfutils = ["_swalign.pyx", "_swalign.c"]
 
 [tool.black]
 line-length = 79
+
+[tool.ruff]
+line-length = 88
+exclude = ["cfutils/_swalign.c"]
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["cfutils"]
+
 
 [dependency-groups]
 dev = [

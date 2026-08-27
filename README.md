@@ -268,6 +268,59 @@ print(to_json(rec))                                     # self-describing JSON
 write_batch([rec1, rec2], "out", fmt="csv")             # batch QC table
 ```
 
+## Agent / MCP (agent-friendly)
+
+cfutils ships a [Model Context Protocol](https://modelcontextprotocol.io) server so
+LLM agents and MCP clients can call the toolkit as tools:
+
+```bash
+pip install "cfutils[agent]"     # adds mcp>=2
+cfutils-mcp                        # run the MCP server over stdio
+python -m cfutils.mcp_server       # identical
+```
+
+The server exposes these tools (each returns JSON-serialisable data):
+
+| Tool | Purpose |
+|---|---|
+| `read_chromatogram(path)` | parse an ABI → summary (length, GC%, quality, CRL) |
+| `qc_metrics(path)` | full per-read QC metrics (incl. CRL, signal, SNR) |
+| `call_mutations(query ab1, subject fa)` | variants vs a reference (SNPs/indels) |
+| `re_call_bases(path)` | re-call bases from raw traces + heterozygotes |
+| `analyze_sequence(path, kind)` | translate / motifs / restriction / GC |
+| `trim_read(path, mode)` | quality-trim a read |
+| `export_sequence(path, outdir)` | write FASTA or VCF |
+| `plot_chromatogram(path, out, start, end)` | render a chromatogram PNG |
+
+Register it in an MCP client's config, e.g.:
+
+```json
+{ "mcpServers": { "cfutils": { "command": "cfutils-mcp" } } }
+```
+
+## High-level object API
+
+Wrap everything in one object for a terse, idiomatic workflow:
+
+```python
+from cfutils import Chromatogram
+from cfutils.parser import parse_fasta
+
+cg = Chromatogram.from_abi("./data/B5-M13R_B07.ab1")
+
+print(cg.length, cg.mean_quality, cg.gc_percent, cg.channels)  # 1141 50.2 52.0 GATC
+print(cg.qc())                                    # QC metrics incl. CRL / SNR
+res = cg.basecall()                               # re-call bases from raw traces
+
+ref = parse_fasta("./data/ref.fa")
+snps = cg.call_mutations(ref)                     # variant calling
+print(cg.to_vcf(ref))                             # VCF export
+print(cg.analyze("restriction"))                  # restriction-site scan
+
+fig, ax = cg.plot(region=(55, 90))                # render a region
+trimmed = cg.trim().trim_leading_ns()             # Mott trim then drop leading Ns
+```
+
 ## Performance & acceleration
 
 cfutils keeps the common path fast without heavy dependencies:

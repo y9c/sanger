@@ -22,7 +22,7 @@ This page walks through the full cfutils pipeline on the bundled real data
 | Low-quality (<Q20) fraction | 4.1% |
 | Mott-trimmed interval | 16–1140 (1125 bp) |
 | Reads aligned to ref | 1095 |
-| Base-caller re-call accuracy | 99.1% (n=1141) |
+| Base-caller re-call accuracy | 99.6% (n=1141) |
 | Mean re-called quality | 59.1 |
 | Quality-filtered, real SNPs | 8 |
 
@@ -31,19 +31,19 @@ This page walks through the full cfutils pipeline on the bundled real data
 The read is high-quality overall (mean Q50); the dye
 primers degrade at the 3' end (see the quality profile).  A python re-call from
 the raw four-channel traces reproduces the vendor base call with
-**99.1%** accuracy.  Comparing against the reference, **8**
+**99.6%** accuracy.  Comparing against the reference, **8**
 high-confidence single-nucleotide variants are called:
 
 | Ref pos | Change | Site Q | Local Q |
 |---|---|---|---|
-| 60 | A→T | 55 | 53 |
-| 61 | C→G | 55 | 54 |
-| 169 | A→G | 55 | 54 |
-| 170 | A→G | 55 | 54 |
-| 172 | A→G | 55 | 55 |
-| 177 | T→C | 55 | 55 |
-| 391 | G→A | 55 | 55 |
-| 592 | A→C | 55 | 53 |
+| 61 | T→A | 55 | 54 |
+| 62 | G→C | 52 | 54 |
+| 170 | G→A | 55 | 54 |
+| 171 | G→A | 55 | 54 |
+| 173 | G→A | 55 | 55 |
+| 178 | C→T | 55 | 55 |
+| 392 | A→G | 55 | 55 |
+| 593 | C→A | 55 | 53 |
 
 ## Figures
 
@@ -84,6 +84,6 @@ feature map (top) and the called sequence, sharing one x axis.
 ### Base-caller benchmark
 ![basecaller](figures/basecaller_quality.png)
 A Python re-call of the raw four-channel traces reproduces the vendor base call
-with **99.1%** accuracy (mean Q59).
+with **99.6%** accuracy (mean Q59).
 
 > Figures auto-generated; re-run `python -m scripts.generate_report` to refresh.

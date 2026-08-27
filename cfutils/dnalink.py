@@ -20,9 +20,9 @@ Typical usage::
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, List, Optional, Tuple
 
-from ._mpl import plt, Axes, Figure, require_matplotlib
+from ._mpl import Axes, Figure, plt, require_matplotlib
 from .features import ChromatogramFeature, iter_features
 from .parser import SeqRecord
 from .show import plot_chromatograph
@@ -50,14 +50,14 @@ def _dfv():
 
 
 def to_graphic_features(
-    features: List[ChromatogramFeature], length: int,
+    features: List[ChromatogramFeature],
+    length: int,
 ) -> List:
     """Translate cfutils :class:`ChromatogramFeature` to dfv ``GraphicFeature``.
 
     Coordinates are converted from 1-based to dfv's 0-based convention.
     """
-    _ = _dfv()
-    dfv = _dfv()
+    _dfv()
     from dna_features_viewer import GraphicFeature
 
     out = []
@@ -66,15 +66,21 @@ def to_graphic_features(
         end = min(length, f.end)
         if end <= start:
             end = start + 1  # dfv needs a non-empty span
-        out.append(GraphicFeature(
-            start=start, end=end, strand=f.strand, color=f.color,
-            label=f.label,
-        ))
+        out.append(
+            GraphicFeature(
+                start=start,
+                end=end,
+                strand=f.strand,
+                color=f.color,
+                label=f.label,
+            )
+        )
     return out
 
 
 def to_graphic_record(
-    record: SeqRecord, features: Optional[List[ChromatogramFeature]] = None,
+    record: SeqRecord,
+    features: Optional[List[ChromatogramFeature]] = None,
 ):
     """Build a dfv ``GraphicRecord`` from a cfutils record + its features.
 
@@ -121,7 +127,7 @@ def plot_combined(
     Returns:
         ``(fig, (ax_feat, ax_chrom))`` or, when ``ax`` is supplied, ``ax``.
     """
-    dfv = _dfv()
+    _dfv()
     from dna_features_viewer import GraphicRecord
 
     require_matplotlib()
@@ -144,7 +150,9 @@ def plot_combined(
         return ax
 
     fig, (ax_feat, ax_chrom) = plt.subplots(
-        2, 1, figsize=(figure_width, 6),
+        2,
+        1,
+        figsize=(figure_width, 6),
         sharex=True,
         gridspec_kw={"height_ratios": [1, 3]},
     )

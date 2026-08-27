@@ -15,7 +15,7 @@
 
 """parser for the ABI format.
 
-Learned from Bio.SeqIO 
+Learned from Bio.SeqIO
 
 ABI is the format used by Applied Biosystem's sequencing machines to store
 sequencing results.
@@ -89,19 +89,36 @@ _DIRFMT = ">4sI2H4I"
 
 
 class SeqRecord:
-    def __init__(self, seq, id="", name="", description="", annotations=None, letter_annotations=None):
+    def __init__(
+        self,
+        seq,
+        id="",
+        name="",
+        description="",
+        annotations=None,
+        letter_annotations=None,
+    ):
         self.seq = str(seq)  # Ensure sequence is stored as a string
         self.id = id
         self.name = name
         self.description = description
         self.annotations = annotations if annotations is not None else {}
-        self.letter_annotations = letter_annotations if letter_annotations is not None else {}
+        self.letter_annotations = (
+            letter_annotations if letter_annotations is not None else {}
+        )
 
     def __getitem__(self, key):
         new_seq = self.seq[key]
         new_annotations = self.annotations.copy()
         new_letter_annotations = {k: v[key] for k, v in self.letter_annotations.items()}
-        return SeqRecord(new_seq, self.id, self.name, self.description, new_annotations, new_letter_annotations)
+        return SeqRecord(
+            new_seq,
+            self.id,
+            self.name,
+            self.description,
+            new_annotations,
+            new_letter_annotations,
+        )
 
     def __len__(self):
         return len(self.seq)
@@ -401,6 +418,6 @@ def parse_fasta(filename: str) -> SeqRecord:
     with open(filename, "r") as file:
         lines = file.readlines()
         id_line = lines[0].strip()
-        sequence = ''.join(line.strip() for line in lines[1:])
-        seq_id = id_line[1:] if id_line.startswith('>') else ''
+        sequence = "".join(line.strip() for line in lines[1:])
+        seq_id = id_line[1:] if id_line.startswith(">") else ""
         return SeqRecord(sequence, id=seq_id)

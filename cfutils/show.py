@@ -19,7 +19,7 @@ modified:   By Ye Chang in 2018-05-14
 from collections import defaultdict
 from typing import Optional, Tuple
 
-from ._mpl import mpl, plt, Axes, HAVE_MPL, require_matplotlib
+from ._mpl import Axes, mpl, plt, require_matplotlib
 from .align import SitePair, align_chromatograph
 from .parser import SeqRecord  # Import the custom SeqRecord class
 from .utils import get_logger, reverse_complement
@@ -51,7 +51,7 @@ def plot_chromatograph(
 
     if region is None:
         # turn into 0 based for better indexing
-        region_start, region_end = 0, len(seq)
+        region_start, region_end = 0, len(seq) - 1
     else:
         region_start = max(region[0], 0)
         region_end = min(region[1], len(seq) - 1)
@@ -196,9 +196,7 @@ def show_reference(
     return ax
 
 
-def center_region(
-    pos: int, half_window: int, seq_length: int
-) -> Tuple[int, int]:
+def center_region(pos: int, half_window: int, seq_length: int) -> Tuple[int, int]:
     """Return a 1-based ``(start, end)`` region of width ``2*half_window``
     centred on ``pos``, clamped to the sequence bounds.
 

@@ -21,7 +21,7 @@ from __future__ import annotations
 
 import itertools
 from pathlib import Path
-from typing import Iterable, List, Optional, Tuple
+from typing import Iterable, List, Optional
 
 import numpy as np
 
@@ -76,8 +76,9 @@ def _build_record(
     return record
 
 
-def join_tracks(*records: SeqRecord, name: Optional[str] = None,
-                gap: int = 24) -> SeqRecord:
+def join_tracks(
+    *records: SeqRecord, name: Optional[str] = None, gap: int = 24
+) -> SeqRecord:
     """Stitch chromatogram records end-to-end into a single record.
 
     The traces, peak axis and quality are concatenated in order.  Each
@@ -127,13 +128,26 @@ def join_tracks(*records: SeqRecord, name: Optional[str] = None,
     trace_x = np.concatenate(x_parts)
     peaks = np.concatenate(peak_offsets)
 
+    # keep the channel/base order (FWO) from the first record for
+    # plotting/base-calling
+    extra = {}
+    if records and "channels" in records[0].annotations:
+        extra["channels"] = records[0].annotations["channels"]
+
     return _build_record(
-        channels, peaks, trace_x, "".join(seq_parts), qual_parts, name
+        channels,
+        peaks,
+        trace_x,
+        "".join(seq_parts),
+        qual_parts,
+        name,
+        annotations_extra=extra,
     )
 
 
-def slice_track(record: SeqRecord, start: int, end: int,
-                name: Optional[str] = None) -> SeqRecord:
+def slice_track(
+    record: SeqRecord, start: int, end: int, name: Optional[str] = None
+) -> SeqRecord:
     """Extract a 1-based, inclusive region ``[start, end]`` as a new record.
 
     Returns a fresh, independent record.  A copy of the original annotations
@@ -162,22 +176,34 @@ def slice_track(record: SeqRecord, start: int, end: int,
         raise ValueError(f"no trace samples in slice [{start}, {end}]")
 
     extra = {}
-    for key in ("sample_well", "dye", "polymer", "machine_model",
-                "run_start", "run_finish"):
+    for key in (
+        "sample_well",
+        "dye",
+        "polymer",
+        "machine_model",
+        "run_start",
+        "run_finish",
+        "channels",
+    ):
         if key in record.annotations:
             extra[key] = record.annotations[key]
 
     new_name = name or f"{record.name or 'slice'}_[{start1}-{end1}]"
     rec = _build_record(
-        seg_channels, seg_peaks, seg_x,
-        record.seq[lo_idx:hi_idx], qual[lo_idx:hi_idx], new_name,
+        seg_channels,
+        seg_peaks,
+        seg_x,
+        record.seq[lo_idx:hi_idx],
+        qual[lo_idx:hi_idx],
+        new_name,
         annotations_extra=extra,
     )
     return rec
 
 
-def split_track(record: SeqRecord, cuts: Iterable[int],
-                names: Optional[Iterable[str]] = None) -> List[SeqRecord]:
+def split_track(
+    record: SeqRecord, cuts: Iterable[int], names: Optional[Iterable[str]] = None
+) -> List[SeqRecord]:
     """Split a chromatogram into segments at the given 1-based cut positions.
 
     Each cut position becomes the *first* base of the following segment.
@@ -207,8 +233,9 @@ def split_track(record: SeqRecord, cuts: Iterable[int],
     return pieces
 
 
-def export_tracks(records: Iterable[SeqRecord], outdir: str,
-                  fmt: str = "npz") -> List[Path]:
+def export_tracks(
+    records: Iterable[SeqRecord], outdir: str, fmt: str = "npz"
+) -> List[Path]:
     """Persist trace records to disk without re-writing binary ABI.
 
     For round-tripping traces that were split/joined we export a lossless
@@ -224,6 +251,7 @@ def export_tracks(records: Iterable[SeqRecord], outdir: str,
         List of written file paths.
     """
     from pathlib import Path as P
+
     outdir = P(outdir)
     outdir.mkdir(parents=True, exist_ok=True)
     paths = []
@@ -254,8 +282,11 @@ def import_tracks(path: str) -> SeqRecord:
     if path.suffix == ".npz":
         data = np.load(path)
         return _build_record(
-            data["channels"], data["peaks"], data["trace_x"],
-            _qual_to_seq_guess(data), list(map(int, data["qual"])),
+            data["channels"],
+            data["peaks"],
+            data["trace_x"],
+            _qual_to_seq_guess(data),
+            list(map(int, data["qual"])),
             path.stem,
         )
     return _read_tsv(path)
@@ -273,8 +304,11 @@ def _qual_to_seq_guess(data) -> str:
 
 def _write_tsv(path, channels, peaks, trace_x, seq, qual) -> None:
     with open(path, "w") as fh:
-        fh.write("trace_x\tpeaks\t" + "\t".join(
-            f"ch{i+1}" for i in range(NCHANNELS)) + "\tseq\tqual\n")
+        fh.write(
+            "trace_x\tpeaks\t"
+            + "\t".join(f"ch{i + 1}" for i in range(NCHANNELS))
+            + "\tseq\tqual\n"
+        )
         n = len(trace_x)
         for j in range(n):
             row = [str(trace_x[j]) if j < len(trace_x) else ""]
@@ -288,9 +322,10 @@ def _write_tsv(path, channels, peaks, trace_x, seq, qual) -> None:
 
 def _read_tsv(path) -> SeqRecord:
     import csv
+
     with open(path) as fh:
         reader = csv.reader(fh, delimiter="\t")
-        header = next(reader)
+        next(reader)  # header
         rows = list(reader)
     trace_x, peaks, seq, qual = [], [], [], []
     channels = [[] for _ in range(NCHANNELS)]
@@ -312,5 +347,6 @@ def _read_tsv(path) -> SeqRecord:
     arr = np.zeros((NCHANNELS, len(trace_x)), dtype=float)
     for i in range(NCHANNELS):
         arr[i, : len(channels[i])] = channels[i]
-    return _build_record(arr, np.asarray(peaks), np.asarray(trace_x),
-                         "".join(seq), qual, path.stem)
+    return _build_record(
+        arr, np.asarray(peaks), np.asarray(trace_x), "".join(seq), qual, path.stem
+    )

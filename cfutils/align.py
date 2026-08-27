@@ -18,7 +18,6 @@ from typing import List, Optional, Tuple
 import numpy as np
 
 from .parser import SeqRecord
-
 from .utils import get_logger
 
 LOGGER = get_logger(__name__)
@@ -43,8 +42,7 @@ except Exception:  # pragma: no cover - cython extension not built
 class _PyAlignment:
     """Minimal stand-in for the ``ssw`` alignment result object."""
 
-    def __init__(self, reference_begin, query_begin,
-                 query_aligned, ref_aligned):
+    def __init__(self, reference_begin, query_begin, query_aligned, ref_aligned):
         self.reference_begin = reference_begin
         self.query_begin = query_begin
         # ``alignment`` is a (query, scores, reference) triple so that
@@ -65,10 +63,10 @@ def _sw_align(reference: str, query: str, match=2, mismatch=-1, gap=-1):
         return _PyAlignment(0, 0, query, reference)
     # encode bases to small ints for fast equality comparisons
     code = {"A": 0, "C": 1, "G": 2, "T": 3, "N": 4}
-    ref_i = np.fromiter((code.get(c.upper(), 4) for c in reference),
-                        dtype=np.int8, count=n)
-    qry_i = np.fromiter((code.get(c.upper(), 4) for c in query),
-                        dtype=np.int8, count=m)
+    ref_i = np.fromiter(
+        (code.get(c.upper(), 4) for c in reference), dtype=np.int8, count=n
+    )
+    qry_i = np.fromiter((code.get(c.upper(), 4) for c in query), dtype=np.int8, count=m)
     s_row = (ref_i[:, None] == qry_i[None, :]).astype(np.int8)
 
     jn = np.arange(1, m + 1)
@@ -108,12 +106,18 @@ def _sw_align(reference: str, query: str, match=2, mismatch=-1, gap=-1):
         if move == 0:
             break
         if move == 1:
-            q_al.append(query[j - 1]); r_al.append(reference[i - 1])
-            i -= 1; j -= 1
+            q_al.append(query[j - 1])
+            r_al.append(reference[i - 1])
+            i -= 1
+            j -= 1
         elif move == 2:
-            q_al.append("-"); r_al.append(reference[i - 1]); i -= 1
+            q_al.append("-")
+            r_al.append(reference[i - 1])
+            i -= 1
         else:
-            q_al.append(query[j - 1]); r_al.append("-"); j -= 1
+            q_al.append(query[j - 1])
+            r_al.append("-")
+            j -= 1
     q_al = "".join(reversed(q_al))
     r_al = "".join(reversed(r_al))
     return _PyAlignment(i, j, q_al, r_al)
@@ -164,8 +168,9 @@ def run_align(reference: str, query: str) -> List[SitePair]:
     query = str(query).upper()
     alignment = _align(reference, query)
     results = []
-    query_pos = alignment.query_begin
-    ref_pos = alignment.reference_begin
+    # begin positions are 0-based; cfutils uses 1-based positions throughout
+    query_pos = alignment.query_begin + 1
+    ref_pos = alignment.reference_begin + 1
     for query_base, _, ref_base in zip(*alignment.alignment):
         results.append(
             SitePair(
@@ -239,8 +244,9 @@ def call_mutations(
     return mutations
 
 
-def detect_orientation(query_record: SeqRecord, subject_record: SeqRecord,
-                       window: int = 200) -> int:
+def detect_orientation(
+    query_record: SeqRecord, subject_record: SeqRecord, window: int = 200
+) -> int:
     """Decide whether a read is forward or reverse relative to the reference.
 
     Compares the score of aligning the read's 5' segment to the reference in

@@ -27,22 +27,70 @@ __all__ = [
 
 #: standard genetic code (U/C/T are all accepted for T)
 CODON_TABLE = {
-    "TTT": "F", "TTC": "F", "TTA": "L", "TTG": "L",
-    "TCT": "S", "TCC": "S", "TCA": "S", "TCG": "S",
-    "TAT": "Y", "TAC": "Y", "TAA": "*", "TAG": "*",
-    "TGT": "C", "TGC": "C", "TGA": "*", "TGG": "W",
-    "CTT": "L", "CTC": "L", "CTA": "L", "CTG": "L",
-    "CCT": "P", "CCC": "P", "CCA": "P", "CCG": "P",
-    "CAT": "H", "CAC": "H", "CAA": "Q", "CAG": "Q",
-    "CGT": "R", "CGC": "R", "CGA": "R", "CGG": "R",
-    "ATT": "I", "ATC": "I", "ATA": "I", "ATG": "M",
-    "ACT": "T", "ACC": "T", "ACA": "T", "ACG": "T",
-    "AAT": "N", "AAC": "N", "AAA": "K", "AAG": "K",
-    "AGT": "S", "AGC": "S", "AGA": "R", "AGG": "R",
-    "GTT": "V", "GTC": "V", "GTA": "V", "GTG": "V",
-    "GCT": "A", "GCC": "A", "GCA": "A", "GCG": "A",
-    "GAT": "D", "GAC": "D", "GAA": "E", "GAG": "E",
-    "GGT": "G", "GGC": "G", "GGA": "G", "GGG": "G",
+    "TTT": "F",
+    "TTC": "F",
+    "TTA": "L",
+    "TTG": "L",
+    "TCT": "S",
+    "TCC": "S",
+    "TCA": "S",
+    "TCG": "S",
+    "TAT": "Y",
+    "TAC": "Y",
+    "TAA": "*",
+    "TAG": "*",
+    "TGT": "C",
+    "TGC": "C",
+    "TGA": "*",
+    "TGG": "W",
+    "CTT": "L",
+    "CTC": "L",
+    "CTA": "L",
+    "CTG": "L",
+    "CCT": "P",
+    "CCC": "P",
+    "CCA": "P",
+    "CCG": "P",
+    "CAT": "H",
+    "CAC": "H",
+    "CAA": "Q",
+    "CAG": "Q",
+    "CGT": "R",
+    "CGC": "R",
+    "CGA": "R",
+    "CGG": "R",
+    "ATT": "I",
+    "ATC": "I",
+    "ATA": "I",
+    "ATG": "M",
+    "ACT": "T",
+    "ACC": "T",
+    "ACA": "T",
+    "ACG": "T",
+    "AAT": "N",
+    "AAC": "N",
+    "AAA": "K",
+    "AAG": "K",
+    "AGT": "S",
+    "AGC": "S",
+    "AGA": "R",
+    "AGG": "R",
+    "GTT": "V",
+    "GTC": "V",
+    "GTA": "V",
+    "GTG": "V",
+    "GCT": "A",
+    "GCC": "A",
+    "GCA": "A",
+    "GCG": "A",
+    "GAT": "D",
+    "GAC": "D",
+    "GAA": "E",
+    "GAG": "E",
+    "GGT": "G",
+    "GGC": "G",
+    "GGA": "G",
+    "GGG": "G",
 }
 
 #: a small built-in set of common type-II restriction enzymes:
@@ -96,8 +144,11 @@ def find_motifs(seq: str, motif: str, both_strands: bool = False) -> List[int]:
     return sorted(set(hits))
 
 
-def restriction_sites(seq: str, enzymes: Optional[Dict[str, Tuple[str, int]]] = None,
-                      both_strands: bool = True) -> Dict[str, List[int]]:
+def restriction_sites(
+    seq: str,
+    enzymes: Optional[Dict[str, Tuple[str, int]]] = None,
+    both_strands: bool = True,
+) -> Dict[str, List[int]]:
     """Scan a sequence for restriction sites.
 
     ``enzymes`` maps enzyme names to ``(recognition_site, cut_offset)``; it
@@ -109,7 +160,6 @@ def restriction_sites(seq: str, enzymes: Optional[Dict[str, Tuple[str, int]]] = 
     """
     enzymes = enzymes or RE_BASIC
     s = seq.upper()
-    rc = reverse_complement(s)
     out: Dict[str, List[int]] = {}
     for name, (site, cut) in enzymes.items():
         site = site.upper()
@@ -121,8 +171,9 @@ def restriction_sites(seq: str, enzymes: Optional[Dict[str, Tuple[str, int]]] = 
 
 
 def _find_all(text: str, sub: str) -> List[int]:
-    return [i + 1 for i in range(len(text) - len(sub) + 1)
-            if text[i : i + len(sub)] == sub]
+    return [
+        i + 1 for i in range(len(text) - len(sub) + 1) if text[i : i + len(sub)] == sub
+    ]
 
 
 def gc_windows(seq: str, window: int = 30, step: int = 1) -> List[Tuple[int, float]]:
@@ -141,12 +192,38 @@ def gc_windows(seq: str, window: int = 30, step: int = 1) -> List[Tuple[int, flo
 
 def reverse_complement(seq: str) -> str:
     """Reverse-complement a DNA string (handles N and IUPAC ambiguity codes)."""
-    comp = str.maketrans({
-        "A": "T", "T": "A", "C": "G", "G": "C",
-        "R": "Y", "Y": "R", "S": "S", "W": "W", "K": "M", "M": "K",
-        "B": "V", "V": "B", "D": "H", "H": "D", "N": "N",
-        "a": "t", "t": "a", "c": "g", "g": "c",
-        "r": "y", "y": "r", "s": "s", "w": "w", "k": "m", "m": "k",
-        "b": "v", "v": "b", "d": "h", "h": "d", "n": "n",
-    })
+    comp = str.maketrans(
+        {
+            "A": "T",
+            "T": "A",
+            "C": "G",
+            "G": "C",
+            "R": "Y",
+            "Y": "R",
+            "S": "S",
+            "W": "W",
+            "K": "M",
+            "M": "K",
+            "B": "V",
+            "V": "B",
+            "D": "H",
+            "H": "D",
+            "N": "N",
+            "a": "t",
+            "t": "a",
+            "c": "g",
+            "g": "c",
+            "r": "y",
+            "y": "r",
+            "s": "s",
+            "w": "w",
+            "k": "m",
+            "m": "k",
+            "b": "v",
+            "v": "b",
+            "d": "h",
+            "h": "d",
+            "n": "n",
+        }
+    )
     return seq.translate(comp)[::-1]

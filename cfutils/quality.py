@@ -17,7 +17,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from statistics import mean
-from typing import TYPE_CHECKING, Iterable, List, Optional, Tuple
+from typing import TYPE_CHECKING, Iterable, List, Tuple
 
 if TYPE_CHECKING:
     from .align import SitePair
@@ -52,20 +52,24 @@ class QualityFilter:
     def passed(self, site: "SitePair") -> bool:
         """Return True if the site passes both base and local quality gates."""
         if site.qual_site is None or site.qual_local is None:
-            return site.qual_site is None and site.qual_local is None or (
-                site.qual_site is not None
-                and site.qual_site >= self.min_base_qual
-                and (site.qual_local is None
-                     or site.qual_local >= self.min_local_qual)
+            return (
+                site.qual_site is None
+                and site.qual_local is None
+                or (
+                    site.qual_site is not None
+                    and site.qual_site >= self.min_base_qual
+                    and (
+                        site.qual_local is None
+                        or site.qual_local >= self.min_local_qual
+                    )
+                )
             )
         return (
             site.qual_site >= self.min_base_qual
             and site.qual_local >= self.min_local_qual
         )
 
-    def filter(
-        self, sites: Iterable["SitePair"]
-    ) -> List["SitePair"]:
+    def filter(self, sites: Iterable["SitePair"]) -> List["SitePair"]:
         """Return only the sites passing the quality filter."""
         return [s for s in sites if self.passed(s)]
 
@@ -88,7 +92,10 @@ def site_qualities(
     return site_q, local_q
 
 
-def passed_filter(site: "SitePair", min_base_qual: int = DEFAULT_BASE_QUAL,
-                  min_local_qual: int = DEFAULT_LOCAL_QUAL) -> bool:
+def passed_filter(
+    site: "SitePair",
+    min_base_qual: int = DEFAULT_BASE_QUAL,
+    min_local_qual: int = DEFAULT_LOCAL_QUAL,
+) -> bool:
     """Functional helper, mirroring ``QualityFilter.passed`` defaults."""
     return QualityFilter(min_base_qual, min_local_qual).passed(site)

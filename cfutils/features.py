@@ -20,9 +20,9 @@ Typical usage::
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Iterable, List, Optional, Tuple
+from typing import TYPE_CHECKING, Iterable, List, Optional
 
-from ._mpl import mpl, Axes, require_matplotlib
+from ._mpl import Axes, mpl, require_matplotlib
 
 if TYPE_CHECKING:
     from .parser import SeqRecord
@@ -60,8 +60,9 @@ class ChromatogramFeature:
             raise ValueError("strand must be -1, 0 or +1")
 
     @classmethod
-    def from_sitepair(cls, site, color: str = "#e0573b",
-                      label_fmt: str = "{ref}{ref_pos}{cf}"):
+    def from_sitepair(
+        cls, site, color: str = "#e0573b", label_fmt: str = "{ref}{ref_pos}{cf}"
+    ):
         """Build a single-base feature point around an aligned mutation site."""
         return cls(
             start=site.cf_pos,
@@ -110,14 +111,22 @@ def peak_to_x(record: "SeqRecord", positions: Iterable[int]) -> List[float]:
 def _plot_arrow(ax, x0, x1, y, color, lw, alpha):
     """Small axis-aligned arrow used for strand-aware features."""
     from matplotlib.patches import FancyArrow
+
     if x1 == x0:
         return  # degenerate single-point feature; caller draws a marker
     head = 0.6 * min(abs(x1 - x0), 3.0)
     return FancyArrow(
-        x0, y, x1 - x0, 0.0,
-        width=lw, head_width=0.30, head_length=head,
+        x0,
+        y,
+        x1 - x0,
+        0.0,
+        width=lw,
+        head_width=0.30,
+        head_length=head,
         length_includes_head=True,
-        facecolor=color, edgecolor="none", alpha=alpha,
+        facecolor=color,
+        edgecolor="none",
+        alpha=alpha,
     )
 
 
@@ -151,7 +160,6 @@ def plot_features(
     if not features:
         return ax
 
-    peaks = record.annotations["peak positions"]
     band_y = y_bottom + band_height / 2.0
     lw = band_height * 0.55
     drawn_labels = []
@@ -161,9 +169,7 @@ def plot_features(
         y_correction = band_height * 0.16
 
         if feat.strand != 0 and x1 != x0:
-            arrow = _plot_arrow(
-                ax, x0, x1, band_y, feat.color, lw * 0.5, alpha
-            )
+            arrow = _plot_arrow(ax, x0, x1, band_y, feat.color, lw * 0.5, alpha)
             if arrow is not None:
                 ax.add_patch(arrow)
             direction = -1 if feat.strand < 0 else 0
@@ -172,8 +178,14 @@ def plot_features(
         else:
             # neutral / point feature -> a vertical marker
             height = band_height * 0.8
-            ax.plot([x0, x0], [y_bottom + 0.05, y_bottom + height],
-                    color=feat.color, lw=2.2, alpha=alpha, solid_capstyle="round")
+            ax.plot(
+                [x0, x0],
+                [y_bottom + 0.05, y_bottom + height],
+                color=feat.color,
+                lw=2.2,
+                alpha=alpha,
+                solid_capstyle="round",
+            )
             ax.plot(x0, band_y, marker="|", ms=14, color=feat.color, alpha=alpha)
 
         if feat.label:
@@ -185,9 +197,7 @@ def plot_features(
                 fontsize="small",
                 fontweight="bold",
                 va="bottom",
-                ha="left"
-                if (feat.strand >= 0 or x1 == x0)
-                else "right",
+                ha="left" if (feat.strand >= 0 or x1 == x0) else "right",
                 clip_on=False,
             )
             drawn_labels.append((feat.label, feat.color))
@@ -197,8 +207,8 @@ def plot_features(
 
     if show_legend and drawn_labels:
         handles = [
-            mpl.lines.Line2D([], [], color=c, lw=3, label=l, alpha=alpha)
-            for l, c in drawn_labels
+            mpl.lines.Line2D([], [], color=c, lw=3, label=label, alpha=alpha)
+            for label, c in drawn_labels
         ]
         ax.legend(handles=handles, loc="upper left", bbox_to_anchor=(0.95, 0.99))
     return ax

@@ -35,6 +35,16 @@ class TestAlignBackends(unittest.TestCase):
         sites = run_align(self.ref.seq, self.query.seq)
         self.assertGreater(len(sites), 0)
 
+    def test_coordinates_are_one_based(self):
+        # query == ref[2:] -> ref_pos must start at 3, cf_pos at 1 (1-based)
+        ref = "ACGTACGTACGT"
+        query = "GTACGTAC"
+        sites = run_align(ref, query)
+        self.assertEqual(sites[0].ref_pos, 3)
+        self.assertEqual(sites[0].cf_pos, 1)
+        self.assertEqual(sites[0].ref_base, "G")
+        self.assertEqual(sites[0].cf_base, "G")
+
     def test_call_mutations_via_backend(self):
         from cfutils.align import call_mutations
         sites = call_mutations(self.query, self.ref, report_all_sites=True)

@@ -11,7 +11,7 @@ low-quality fraction, Mott-trimmed length, and peak resolution.  Also a batch
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, Iterable, List, Tuple, Optional
+from typing import TYPE_CHECKING, Dict, Iterable, List, Tuple
 
 import numpy as np
 
@@ -32,16 +32,16 @@ __all__ = [
 LOW_QUAL = 20
 
 
-def continuous_read_length(record: "SeqRecord", min_qual: int = 20,
-                           window: int = 20) -> int:
+def continuous_read_length(
+    record: "SeqRecord", min_qual: int = 20, window: int = 20
+) -> int:
     """Continuous read length (CRL): the longest stretch with running average
     quality (over ``window`` bases) >= ``min_qual``.
 
     A key Sanger lab QC metric: for plasmid/PCR products >500 bp, a CRL above
     500 indicates high-quality data.
     """
-    qual = np.asarray(record.letter_annotations.get("phred_quality", []),
-                      dtype=float)
+    qual = np.asarray(record.letter_annotations.get("phred_quality", []), dtype=float)
     if qual.size == 0:
         return 0
     if qual.size < window:
@@ -64,15 +64,15 @@ def signal_intensity(record: "SeqRecord") -> float:
     """
     peaks = []
     for i in range(1, 5):
-        ch = np.asarray(record.annotations.get("channel " + str(i), []),
-                        dtype=float)
+        ch = np.asarray(record.annotations.get("channel " + str(i), []), dtype=float)
         if ch.size:
             peaks.append(float(ch.max()))
     return float(np.mean(peaks)) if peaks else 0.0
 
 
-def noise_metric(record: "SeqRecord", low_q: float = 0.10,
-                 high_q: float = 0.90) -> float:
+def noise_metric(
+    record: "SeqRecord", low_q: float = 0.10, high_q: float = 0.90
+) -> float:
     """Signal-to-noise proxy from the trace intensity distribution.
 
     Baseline is floored at 1 RFU (raw traces often contain exact zeros), then
@@ -81,8 +81,7 @@ def noise_metric(record: "SeqRecord", low_q: float = 0.10,
     """
     ratios = []
     for i in range(1, 5):
-        ch = np.asarray(record.annotations.get("channel " + str(i), []),
-                        dtype=float)
+        ch = np.asarray(record.annotations.get("channel " + str(i), []), dtype=float)
         if ch.size:
             hi = float(np.quantile(ch, high_q))
             lo = max(float(np.quantile(ch, low_q)), 1.0)
@@ -91,8 +90,9 @@ def noise_metric(record: "SeqRecord", low_q: float = 0.10,
     return float(np.mean(ratios)) if ratios else 0.0
 
 
-def _mott_bounds(record: "SeqRecord", cutoff: float = 0.05,
-                 segment: int = 20) -> Tuple[int, int]:
+def _mott_bounds(
+    record: "SeqRecord", cutoff: float = 0.05, segment: int = 20
+) -> Tuple[int, int]:
     """1-based start/end of the high-quality segment (Mott trimming).
 
     Returns ``(1, len)`` when the read is too short to trim.
@@ -119,8 +119,9 @@ def _mott_bounds(record: "SeqRecord", cutoff: float = 0.05,
     return max(1, trimmed_start + 1), max(trimmed_end, 1)
 
 
-def trimmed_bounds(record: "SeqRecord", cutoff: float = 0.05,
-                   segment: int = 20) -> Tuple[int, int]:
+def trimmed_bounds(
+    record: "SeqRecord", cutoff: float = 0.05, segment: int = 20
+) -> Tuple[int, int]:
     """Public helper returning 1-based high-quality segment bounds."""
     return _mott_bounds(record, cutoff=cutoff, segment=segment)
 
@@ -136,8 +137,7 @@ def read_metrics(record: "SeqRecord") -> Dict[str, float]:
     """
     seq = record.seq
     n = len(seq)
-    qual = np.asarray(record.letter_annotations.get("phred_quality", []),
-                      dtype=float)
+    qual = np.asarray(record.letter_annotations.get("phred_quality", []), dtype=float)
     peaks = np.asarray(record.annotations.get("peak positions", []), dtype=float)
 
     n_n = sum(a == "N" for a in seq.upper())

@@ -15,13 +15,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import List
 
-from ._mpl import mpl, plt, require_matplotlib
-
 from cfutils.align import call_mutations
-from cfutils.parser import parse_abi, parse_fasta, SeqRecord
+from cfutils.parser import SeqRecord, parse_abi, parse_fasta
 from cfutils.quality import QualityFilter
 from cfutils.show import annotate_mutation, highlight_base, plot_chromatograph
 
+from ._mpl import plt, require_matplotlib
 from .utils import get_logger
 
 LOGGER = get_logger(__name__)
