@@ -13,12 +13,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Build sdist
+      - name: Build sdist + manylinux wheels
         run: |
-          pip install build
-          # publish a source distribution (platform-independent): the optional
-          # Cython extension is compiled opportunistically at install time
+          pip install build cibuildwheel
+          # source distribution (platform-independent; optional C ext built
+          # opportunistically at install time)
           python -m build --sdist --outdir dist
+          # manylinux wheels for CPython 3.11-3.13 (Linux, x86_64)
+          cibuildwheel --output-dir dist
       - uses: actions/upload-artifact@v4
         with:
           name: dist

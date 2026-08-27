@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  test:
+    name: test (py${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install package (+ all extras)
+        run: |
+          pip install ".[all]" pytest ruff build
+      - name: Lint
+        run: |
+          ruff check sanger scripts test setup.py
+          ruff format --check sanger scripts test setup.py
+      - name: Test
+        run: |
+          pytest test -q
+      - name: Build sdist
+        run: |
+          python -m build --sdist --outdir dist

@@ -27,7 +27,9 @@ def _can_compile() -> bool:
                 fh.write(code)
             subprocess.run(
                 [cc, "-c", src, "-o", os.path.join(d, "x.o")],
-                check=True, capture_output=True, timeout=60,
+                check=True,
+                capture_output=True,
+                timeout=60,
             )
         return True
     except Exception:
