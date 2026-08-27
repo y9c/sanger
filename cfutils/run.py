@@ -15,8 +15,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import List
 
-import matplotlib as mpl
-import matplotlib.pyplot as plt
+from ._mpl import mpl, plt, require_matplotlib
 
 from cfutils.align import call_mutations
 from cfutils.parser import parse_abi, parse_fasta, SeqRecord
@@ -24,8 +23,6 @@ from cfutils.quality import QualityFilter
 from cfutils.show import annotate_mutation, highlight_base, plot_chromatograph
 
 from .utils import get_logger
-
-mpl.use("Agg", force=True)
 
 LOGGER = get_logger(__name__)
 
@@ -37,6 +34,7 @@ def do_mutation_showing(
     quality_filter: QualityFilter = None,
 ) -> None:
     """report mutations in pdf format."""
+    require_matplotlib()
     if quality_filter is None:
         quality_filter = QualityFilter(min_base_qual=20, min_local_qual=20)
 

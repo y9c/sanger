@@ -23,10 +23,7 @@ from __future__ import annotations
 
 from typing import Callable, List, Optional, Tuple
 
-import matplotlib.pyplot as plt
-from matplotlib.axes import Axes
-from matplotlib.figure import Figure
-
+from ._mpl import plt, Axes, Figure, require_matplotlib
 from .features import plot_features
 from .parser import SeqRecord
 from .show import plot_chromatograph
@@ -89,6 +86,7 @@ def side_by_side(
     Returns:
         ``(fig, (ax_chrom, ax_panel))``.
     """
+    require_matplotlib()
     fig, (ax_chrom, ax_panel) = plt.subplots(
         2, 1,
         figsize=(figure_width, 6),
@@ -116,6 +114,7 @@ def add_panel(fig: Figure, ax_chrom: Axes,
     Convenience when you already have a chromatogram plotted and just want an
     aligned extra panel.
     """
+    require_matplotlib()
     from matplotlib.gridspec import GridSpec
 
     gs = ax_chrom.get_subplotspec().get_gridspec()

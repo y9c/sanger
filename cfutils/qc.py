@@ -11,7 +11,7 @@ low-quality fraction, Mott-trimmed length, and peak resolution.  Also a batch
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, Iterable, List, Tuple
+from typing import TYPE_CHECKING, Dict, Iterable, List, Tuple, Optional
 
 import numpy as np
 
@@ -21,12 +21,74 @@ if TYPE_CHECKING:
 __all__ = [
     "read_metrics",
     "trimmed_bounds",
+    "continuous_read_length",
+    "signal_intensity",
+    "noise_metric",
     "summarize",
     "LOW_QUAL",
 ]
 
 #: conventional low-quality Phred threshold
 LOW_QUAL = 20
+
+
+def continuous_read_length(record: "SeqRecord", min_qual: int = 20,
+                           window: int = 20) -> int:
+    """Continuous read length (CRL): the longest stretch with running average
+    quality (over ``window`` bases) >= ``min_qual``.
+
+    A key Sanger lab QC metric: for plasmid/PCR products >500 bp, a CRL above
+    500 indicates high-quality data.
+    """
+    qual = np.asarray(record.letter_annotations.get("phred_quality", []),
+                      dtype=float)
+    if qual.size == 0:
+        return 0
+    if qual.size < window:
+        return int((qual >= min_qual).sum()) if (qual >= min_qual).all() else 0
+    run = np.convolve(qual, np.ones(window) / window, mode="valid")
+    good = run >= min_qual
+    # longest run of good windows, plus the window-width adjustment
+    best = cur = 0
+    for g in good:
+        cur = cur + 1 if g else 0
+        best = max(best, cur)
+    return int(window + best - 1) if best else 0
+
+
+def signal_intensity(record: "SeqRecord") -> float:
+    """Estimate average signal intensity of the chip channels.
+
+    Returns the mean of each channel's peak (max) intensity, an indicator of
+    reaction robustness.
+    """
+    peaks = []
+    for i in range(1, 5):
+        ch = np.asarray(record.annotations.get("channel " + str(i), []),
+                        dtype=float)
+        if ch.size:
+            peaks.append(float(ch.max()))
+    return float(np.mean(peaks)) if peaks else 0.0
+
+
+def noise_metric(record: "SeqRecord", low_q: float = 0.10,
+                 high_q: float = 0.90) -> float:
+    """Signal-to-noise proxy from the trace intensity distribution.
+
+    Baseline is floored at 1 RFU (raw traces often contain exact zeros), then
+    the ratio of the ``high_q``-percentile (peak-ish) to the baseline is
+    averaged over the four channels.  Higher is cleaner signal.
+    """
+    ratios = []
+    for i in range(1, 5):
+        ch = np.asarray(record.annotations.get("channel " + str(i), []),
+                        dtype=float)
+        if ch.size:
+            hi = float(np.quantile(ch, high_q))
+            lo = max(float(np.quantile(ch, low_q)), 1.0)
+            if hi > 0:
+                ratios.append(hi / lo)
+    return float(np.mean(ratios)) if ratios else 0.0
 
 
 def _mott_bounds(record: "SeqRecord", cutoff: float = 0.05,

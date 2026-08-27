@@ -55,32 +55,38 @@ plt.show()
 
 ## How to install?
 
-### form pypi
+### lightweight core
 
-_(use this way ONLY, if you don't know what's going on)_
+The default install pulls only `numpy`, `click` and `rich-click` — no C
+compiler and no plotting library required:
 
 ```bash
-pip install --user cfutils
+pip install cfutils
 ```
 
-### manipulate the source code
+Parsing, QC, alignment (a NumPy Smith-Waterman fallback is built in), analysis
+and export all work out of the box.
 
-- clone from github
+### optional extras
+
+```bash
+pip install "cfutils[plot]"     # matplotlib -> chromatogram figures
+pip install "cfutils[align]"    # ssw (C) -> faster alignment
+pip install "cfutils[viewer]"   # DNA Features Viewer integration
+pip install "cfutils[all]"      # everything
+```
+
+The bundled Cython Smith-Waterman accelerator (`cfutils._swalign`) is compiled
+automatically when a C compiler is present at build time and used
+transparently; otherwise the NumPy fallback is used.
+
+### from source
 
 ```bash
 git clone git@github.com:y9c/cfutils.git
-```
-
-- install the dependence
-
-```bash
-make init
-```
-
-- do unittest
-
-```bash
-make test
+cd cfutils
+make init       # install dependencies
+make test       # run the test-suite
 ```
 
 ## ChangeLog
@@ -228,11 +234,54 @@ short = trim(rec)                 # Mott quality trim, keeps peaks/trace aligned
 rc    = reverse_complement_record(rec)
 ```
 
-### QC metrics
+### QC metrics (incl. continuous read length)
 ```python
-from cfutils.qc import read_metrics, summarize
-print(read_metrics(rec))          # length, GC%, N%, mean/min Q, trimmed interval...
+from cfutils.qc import read_metrics, continuous_read_length, noise_metric, signal_intensity
+m = read_metrics(rec)
+print(m["mean_qual"], m["trim_start"], m["trim_end"])
+print("CRL:", continuous_read_length(rec))   # longest run with 20-base avg Q >= 20
+print("signal:", signal_intensity(rec), "SNR:", noise_metric(rec))
 ```
+
+### automatic orientation detection
+```python
+from cfutils.align import detect_orientation
+ori = detect_orientation(rec, ref)           # +1 forward, -1 reverse-complement
+```
+
+### mixed / heterozygous bases
+```python
+from cfutils.parser import parse_abi
+from cfutils.basecaller import call_bases
+res = call_bases(parse_abi("./data/B5-M13R_B07.ab1", rescale=False))
+print(res.sequence)
+for pos, major, minor, frac in res.heterozygotes(min_ratio=0.2):
+    print(pos, major, minor, frac)           # e.g. 4 M C 0.74
+```
+
+### export to standard formats
+```python
+from cfutils.export import to_fasta, to_vcf, to_json, write_batch
+print(to_fasta(rec))                                   # FASTA
+print(to_vcf(mutations, reference_name="ref"))          # VCF of variants
+print(to_json(rec))                                     # self-describing JSON
+write_batch([rec1, rec2], "out", fmt="csv")             # batch QC table
+```
+
+## Performance & acceleration
+
+cfutils keeps the common path fast without heavy dependencies:
+
+* **Base-calling / trace analysis** — the running-median baseline correction is
+  vectorised with NumPy (sliding-window median), giving ~12x over a naive loop.
+* **Alignment** — dispatch order is: bundled **Cython Smith-Waterman**
+  (`cfutils._swalign`, self-contained) -> **ssw** (if installed) -> **NumPy
+  Smith-Waterman**.  All three share the same interface.
+* **Parsing** — the ABI reader already unpacks channel/quality arrays with a
+  single C `struct.unpack` per record (~7 ms per `.ab1`).
+
+Benchmarks on the bundled 1141 bp sample: parse ~7 ms; full read↔reference
+alignment ~15 ms; re-call bases ~35 ms; mutation report + figure ~0.5 s.
 
 ## TODO
 

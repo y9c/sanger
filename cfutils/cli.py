@@ -23,13 +23,12 @@ organised around the package modules::
 
 import importlib.metadata
 
-import matplotlib as mpl
-
-mpl.use("Agg", force=True)
-
 import rich_click as click
 
-__VERSION__ = importlib.metadata.version("cfutils")
+try:
+    __VERSION__ = importlib.metadata.version("cfutils")
+except Exception:  # pragma: no cover - not installed as a package
+    __VERSION__ = "0.0.0.dev62"
 
 CTX = dict(help_option_names=["-h", "--help"])
 

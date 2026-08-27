@@ -1,0 +1,46 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+Alignment backend equivalence tests.
+
+Verifies the Cython Smith-Waterman accelerator produces the same alignment as
+the pure-Python/NumPy fallback, and that mutation calling works through either.
+"""
+
+import unittest
+
+from cfutils.align import (_HAVE_CY, _sw_align, _cy_swalign, run_align)
+from cfutils.parser import parse_abi, parse_fasta
+
+
+class TestAlignBackends(unittest.TestCase):
+    """Test alignment backends (Cython vs NumPy) agree."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.query = parse_abi("./data/B5-M13R_B07.ab1")
+        cls.ref = parse_fasta("./data/ref.fa")
+
+    @unittest.skipUnless(_HAVE_CY, "cython accelerator not built")
+    def test_cython_matches_numpy(self):
+        ref = self.ref.seq
+        qry = self.query.seq[100:250]
+        cy = _cy_swalign(ref, qry)
+        np_ = _sw_align(ref, qry)
+        # both should find the matching substring with no gaps in this region
+        self.assertEqual(cy[2].replace("-", ""), np_.alignment[0].replace("-", ""))
+        self.assertGreater(len(cy[2].replace("-", "")), 100)
+
+    def test_run_align_works(self):
+        sites = run_align(self.ref.seq, self.query.seq)
+        self.assertGreater(len(sites), 0)
+
+    def test_call_mutations_via_backend(self):
+        from cfutils.align import call_mutations
+        sites = call_mutations(self.query, self.ref, report_all_sites=True)
+        # the sample should align most of its length
+        self.assertGreater(len(sites), 1000)
+
+
+if __name__ == "__main__":
+    unittest.main()

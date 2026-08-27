@@ -22,10 +22,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, List, Optional, Tuple, Union
 
-import matplotlib.pyplot as plt
-from matplotlib.axes import Axes
-from matplotlib.figure import Figure
-
+from ._mpl import plt, Axes, Figure, require_matplotlib
 from .features import ChromatogramFeature, iter_features
 from .parser import SeqRecord
 from .show import plot_chromatograph
@@ -127,6 +124,7 @@ def plot_combined(
     dfv = _dfv()
     from dna_features_viewer import GraphicRecord
 
+    require_matplotlib()
     seq_len = len(record)
     if region is not None:
         start1, end1 = max(1, region[0]), min(seq_len, region[1])

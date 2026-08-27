@@ -10,9 +10,27 @@ keywords = ["DNA", "mutation", "chromatogram", "biology"]
 dependencies = [
     "click>=8.0.0,<9",
  "rich-click>=1.8.0,<2",
- "ssw>=0.4.1,<0.5",
- "matplotlib>=3.9.2,<4",
  "numpy>=2.3.3,<3",
+]
+
+[project.optional-dependencies]
+# C-accelerated alignment (a pure-Python/NumPy fallback is always available)
+align = [
+    "ssw>=0.4.1,<0.5",
+]
+# plotting (importing/using cfutils works without it)
+plot = [
+    "matplotlib>=3.9.2,<4",
+]
+# DNA Features Viewer integration for combined feature maps
+viewer = [
+    "dna-features-viewer>=3.0.0",
+]
+# everything
+all = [
+    "ssw>=0.4.1,<0.5",
+    "matplotlib>=3.9.2,<4",
+    "dna-features-viewer>=3.0.0",
 ]
 
 [project.urls]
@@ -23,11 +41,19 @@ Documentation = "https://cf.readthedocs.io/"
 cfutils = "cfutils.cli:cli"
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
 
-[tool.hatch.build.targets.wheel]
-packages = ["cfutils"]
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["cfutils*"]
+
+[[tool.setuptools.ext-modules]]
+name = "cfutils._swalign"
+sources = ["cfutils/_swalign.c"]
+
+[tool.setuptools.package-data]
+cfutils = ["_swalign.pyx", "_swalign.c"]
 
 [tool.black]
 line-length = 79
@@ -35,9 +61,4 @@ line-length = 79
 [dependency-groups]
 dev = [
     "pytest>=8.3.5",
-]
-
-[project.optional-dependencies]
-viewer = [
-    "dna-features-viewer>=3.0.0",
 ]

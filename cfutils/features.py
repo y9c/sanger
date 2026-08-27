@@ -22,9 +22,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Iterable, List, Optional, Tuple
 
-import matplotlib as mpl
-from matplotlib.axes import Axes
-from matplotlib.patches import FancyArrow, Rectangle
+from ._mpl import mpl, Axes, require_matplotlib
 
 if TYPE_CHECKING:
     from .parser import SeqRecord
@@ -111,6 +109,7 @@ def peak_to_x(record: "SeqRecord", positions: Iterable[int]) -> List[float]:
 
 def _plot_arrow(ax, x0, x1, y, color, lw, alpha):
     """Small axis-aligned arrow used for strand-aware features."""
+    from matplotlib.patches import FancyArrow
     if x1 == x0:
         return  # degenerate single-point feature; caller draws a marker
     head = 0.6 * min(abs(x1 - x0), 3.0)
@@ -145,6 +144,7 @@ def plot_features(
         show_legend: whether to draw a legend for labelled features.
         alpha: transparency of the coloured features.
     """
+    require_matplotlib()
     if features is None:
         features = list(iter_features(record))
     features = list(features)

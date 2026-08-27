@@ -55,17 +55,16 @@ def _channel_traces(record: SeqRecord) -> Tuple[np.ndarray, List[str]]:
 
 def _baseline_correct(trace: np.ndarray, window: int = 51) -> np.ndarray:
     """Subtract a running median baseline to remove dye bleed / drift."""
-    if trace.size == 0:
-        return trace
-    import numpy as np
-
-    n = trace.size
+    a = np.asarray(trace, dtype=float)
+    if a.size == 0:
+        return a
+    if a.size <= window:
+        return a - np.median(a)
+    from numpy.lib.stride_tricks import sliding_window_view
     half = window // 2
-    baseline = np.empty_like(trace)
-    for i in range(n):
-        lo, hi = max(0, i - half), min(n, i + half + 1)
-        baseline[i] = np.median(trace[lo:hi])
-    return trace - baseline
+    padded = np.pad(a, (half, window - 1 - half), mode="edge")
+    median = np.median(sliding_window_view(padded, window), axis=1)
+    return a - median
 
 
 def _local_maxima(signal: np.ndarray, min_distance: int = 4,
@@ -150,6 +149,20 @@ class BaseCallResult:
                     "second_ratio", "ambiguous"]
             return [dict(zip(keys, r)) for r in rows]
         return rows
+
+    def heterozygotes(self, min_ratio: float = 0.20):
+        """Return candidate mixed/heterozygous sites.
+
+        Each entry is ``(pos, major_base, minor_base)`` where ``minor_base``
+        is the second dye at that position and ``minor_ratio`` its estimated
+        minor-allele fraction (0..0.5).
+        """
+        out = []
+        for c in self.calls:
+            if c.second_ratio and c.second_ratio >= min_ratio and c.second_base:
+                out.append((c.position, c.base, c.second_base,
+                            round(min(c.second_ratio, 1.0), 3)))
+        return out
 
     def accuracy(self, reference_seq: str) -> float:
         """Fraction of calls matching a reference (same-length) sequence.

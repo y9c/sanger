@@ -19,10 +19,7 @@ modified:   By Ye Chang in 2018-05-14
 from collections import defaultdict
 from typing import Optional, Tuple
 
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-from matplotlib.axes import Axes
-
+from ._mpl import mpl, plt, Axes, HAVE_MPL, require_matplotlib
 from .align import SitePair, align_chromatograph
 from .parser import SeqRecord  # Import the custom SeqRecord class
 from .utils import get_logger, reverse_complement
@@ -44,6 +41,7 @@ def plot_chromatograph(
 
     region: include both start and end (1-based)
     """
+    require_matplotlib()
     if ax is None:
         ax = plt.gca()
         # _, ax = plt.subplots(1, 1, figsize=(16, 6))
@@ -227,7 +225,7 @@ def highlight_base(
     """
     Highlight the area around a peak with a rectangle.
     """
-
+    require_matplotlib()
     peaks = seq.annotations["peak positions"]
     peak = peaks[pos_highlight - 1]
 

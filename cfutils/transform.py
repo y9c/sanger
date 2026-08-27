@@ -29,7 +29,8 @@ if TYPE_CHECKING:
     from .parser import SeqRecord
 
 __all__ = [
-    "trim", "trim_ends", "strip_primers", "reverse_complement_record", "NCHANNELS",
+    "trim", "trim_ends", "trim_leading_ns", "strip_primers",
+    "reverse_complement_record", "NCHANNELS",
 ]
 
 
@@ -84,6 +85,27 @@ def trim_ends(record: "SeqRecord", min_qual: int = 20,
         return slice_track(record, 1, 1, name=name or f"{record.name or 'tr'}_tr")
     return slice_track(record, start + 1, end + 1,
                        name=name or f"{record.name or 'tr'}_trimmed")
+
+
+def trim_leading_ns(record: "SeqRecord", name: Optional[str] = None) -> "SeqRecord":
+    """Remove the unreliable leading run of ``N``/low-quality bases.
+
+    The first 20-40 bases of a Sanger read are typically poorly resolved
+    (short products migrate erratically) and are called as ``N``.  This trims
+    the leading ``N`` run (and trailing one), keeping peak/trace axes aligned.
+    """
+    seq = record.seq.upper()
+    n = len(seq)
+    start = 0
+    while start < n and seq[start] == "N":
+        start += 1
+    end = n
+    while end > start and seq[end - 1] == "N":
+        end -= 1
+    if start == 0 and end == n:
+        return record
+    return slice_track(record, start + 1, end,
+                       name=name or f"{record.name or 'ns'}_noNs")
 
 
 def strip_primers(record: "SeqRecord", forward: str = "",
