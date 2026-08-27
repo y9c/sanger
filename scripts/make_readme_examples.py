@@ -29,7 +29,7 @@ mpl.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-from cfutils import Chromatogram
+from cfutils import Chromatogram, style
 from cfutils.align import call_mutations
 from cfutils.composite import _trace_data
 from cfutils.features import ChromatogramFeature, plot_features
@@ -40,7 +40,7 @@ HERE = Path(__file__).resolve().parent.parent
 DATA = HERE / "data"
 OUT = HERE / "examples"
 
-plt.rcParams.update({"figure.dpi": 140, "savefig.bbox": "tight"})
+style.apply()
 
 
 def _panel(ax, cg, region, func):

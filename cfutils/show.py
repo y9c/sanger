@@ -22,6 +22,7 @@ from typing import Optional, Tuple
 from ._mpl import Axes, mpl, plt, require_matplotlib
 from .align import SitePair, align_chromatograph
 from .parser import SeqRecord  # Import the custom SeqRecord class
+from .style import BASE_TO_COLOR
 from .utils import get_logger, reverse_complement
 
 LOGGER = get_logger(__name__)
@@ -56,7 +57,7 @@ def plot_chromatograph(
         region_start = max(region[0], 0)
         region_end = min(region[1], len(seq) - 1)
 
-    _colors = defaultdict(lambda: "purple", {"A": "g", "C": "b", "G": "k", "T": "r"})
+    _colors = defaultdict(lambda: "purple", BASE_TO_COLOR)
     if color_map is not None:
         _colors.update(color_map)
 

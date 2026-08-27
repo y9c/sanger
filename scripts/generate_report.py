@@ -26,6 +26,7 @@ mpl.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
+from cfutils import style as _style
 from cfutils.align import align_chromatograph, call_mutations
 from cfutils.assembly import consensus, coverage, pileup
 from cfutils.features import ChromatogramFeature, plot_features
@@ -44,7 +45,7 @@ FIGDIR = HERE / "docs" / "figures"
 QUERY_AB1 = DATA / "B5-M13R_B07.ab1"
 SUBJECT_FA = DATA / "ref.fa"
 
-plt.rcParams.update({"figure.dpi": 150, "savefig.bbox": "tight"})
+_style.apply()
 
 
 # --------------------------------------------------------------------------- #

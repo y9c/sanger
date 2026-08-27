@@ -45,6 +45,8 @@ from .show import (
     plot_chromatograph,
     show_reference,
 )
+from .style import BASE_TO_COLOR
+from .style import apply as apply_style
 from .tracks import join_tracks, slice_track, split_track
 from .transform import (
     reverse_complement_record,
@@ -108,5 +110,7 @@ __all__ = [
     "write_batch",
     "detect_orientation",
     "Chromatogram",
+    "apply_style",
+    "BASE_TO_COLOR",
     "__version__",
 ]
