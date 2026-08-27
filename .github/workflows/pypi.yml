@@ -7,23 +7,32 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Build sdist + manylinux wheels
+      - name: Install build tools
         run: |
           pip install build cibuildwheel
+      - name: Build sdist (Linux only)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
           # source distribution (platform-independent; optional C ext built
           # opportunistically at install time)
           python -m build --sdist --outdir dist
-          # manylinux wheels for CPython 3.10-3.14 (Linux, x86_64)
-          cibuildwheel --platform linux --output-dir dist
+      - name: Build wheels
+        run: |
+          # manylinux / musllinux on Linux; macosx arm64 + x86_64 on macOS
+          cibuildwheel --output-dir dist
       - uses: actions/upload-artifact@v4
         with:
-          name: dist
+          name: dist-${{ matrix.os }}
           path: dist
 
   publish:
@@ -36,8 +45,9 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: dist
+          pattern: dist-*
           path: dist
+          merge-multiple: true
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@v1.14.2
         with:
