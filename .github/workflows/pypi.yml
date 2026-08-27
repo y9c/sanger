@@ -1,33 +1,40 @@
-name: Publish Python 🐍 distributions 📦 to PyPI
+name: Publish to PyPI
 
 on:
   push:
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+    tags: ["v*"]
+  workflow_dispatch:
 
 jobs:
-  build-n-publish:
-    name: Build and publish Python 🐍 distributions 📦 to PyPI
-    runs-on: ubuntu-18.04
+  build:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@master
-
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          python-version: 3.8
-
-      - name: Install poetry
-        run: >-
-          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python &&
-          source $HOME/.poetry/env
-
-      - name: Build a source tarball
-        run: >-
-          $HOME/.poetry/bin/poetry build
-
-      - name: Publish distribution 📦 to PyPI
-        uses: pypa/gh-action-pypi-publish@master
+          python-version: "3.12"
+      - name: Build package
+        run: |
+          pip install build
+          python -m build
+      - uses: actions/upload-artifact@v4
         with:
-          password: ${{ secrets.pypi_password }}
+          name: dist
+          path: dist
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    # must match the Environment name you enter on the PyPI form
+    environment: pypi
+    permissions:
+      id-token: write # required for trusted publishing (no API token)
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release
+        with:
+          packages-dir: dist
