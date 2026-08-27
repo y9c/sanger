@@ -2,14 +2,14 @@
 [![Pypi Releases](https://img.shields.io/pypi/v/cfutils.svg)](https://pypi.python.org/pypi/cfutils)
 [![Downloads](https://static.pepy.tech/badge/cfutils)](https://pepy.tech/project/cfutils)
 
-**Chromatogram File Utils**
+# Chromatogram File Utils
 
 A lightweight toolkit for **Sanger sequencing** data: chromatogram
 visualization, alignment & mutation calling, quality control, base-calling,
 trimming, assembly and export — usable as a CLI, a Python library, or an
 MCP server for LLM agents.
 
-**Quick start**
+## Quick start
 
 ```bash
 pip install cfutils
@@ -27,18 +27,36 @@ print(cg.to_vcf(ref))                             # variant calling -> VCF
 cg.plot(region=(55, 90))                          # render a region
 ```
 
-**Examples**
+## Examples
 
 The gallery below is produced from the bundled real ABI sample
 (`data/B5-M13R_B07.ab1` vs `data/ref.fa`) by `python -m scripts.make_readme_examples`.
 
-| | |
-|---|---|
-| **Mutation calling** — SNP `T61A` highlighted and annotated.<br>![mutation](examples/mutation_call.png) | **Quality control** — per-base Phred, CRL and Mott trimming.<br>![quality](examples/quality_profile.png) |
-| **Side-by-side** — chromatogram + GC% + quality panels.<br>![side-by-side](examples/side_by_side.png) | **Feature overlay** — primers / amplicon / SNPs.<br>![features](examples/feature_overlay.png) |
-| **Re-called bases** — mixed/heterozygous sites (M/W/K).<br>![basecall](examples/basecall_hetero.png) | **Assembly** — pileup depth + consensus vs a reference.<br>![assembly](examples/assembly.png) |
+**Mutation calling** — the SNP `T61A` is highlighted and annotated.
 
-**Installation**
+![Mutation calling](examples/mutation_call.png)
+
+**Quality control** — per-base Phred quality, CRL and Mott trimming.
+
+![Quality profile](examples/quality_profile.png)
+
+**Side-by-side panels** — chromatogram + GC% + quality on a shared axis.
+
+![Side-by-side](examples/side_by_side.png)
+
+**Feature overlay** — primers, amplicon and SNPs on the trace.
+
+![Feature overlay](examples/feature_overlay.png)
+
+**Re-called bases** — mixed/heterozygous sites are marked (M/W/K).
+
+![Re-called bases](examples/basecall_hetero.png)
+
+**Assembly** — pileup depth and consensus against a reference.
+
+![Assembly](examples/assembly.png)
+
+## Installation
 
 The default install pulls only `numpy`, `click` and `rich-click` — no C
 compiler and no plotting library required. Parsing, QC, alignment (a bundled
@@ -71,7 +89,7 @@ make init       # install dependencies
 make test       # run the test-suite
 ```
 
-**Command-line interface**
+## Command-line interface
 
 Built on `rich-click`, with themed command groups (`cfutils --help`):
 
@@ -105,7 +123,7 @@ cfutils export batch *.ab1 -o out -f csv               # batch QC table
 cfutils plot dnaviewer read.ab1 --start 50 --end 100   # with DNA Features Viewer
 ```
 
-**Python API**
+## Python API
 
 The high-level [`Chromatogram`](#chromatogram-object) object is the easiest way
 to work with the toolkit; the low-level modules remain available for custom work.
@@ -216,7 +234,7 @@ fig, (ax_feat, ax_chrom) = plot_combined(cg.to_record, features=feats, region=(5
 
 </details>
 
-**Chromatogram object**
+## Chromatogram object
 
 A terse, idiomatic workflow in one object:
 
@@ -236,7 +254,7 @@ cg.to_fasta(), cg.to_vcf(ref)      # export
 cg.export("out")                   # write to disk
 ```
 
-**Agent / MCP**
+## Agent / MCP
 
 cfutils ships a [Model Context Protocol](https://modelcontextprotocol.io) server
 so LLM agents and MCP clients can call the toolkit as tools:
@@ -264,7 +282,7 @@ Register it in an MCP client's config, e.g.:
 { "mcpServers": { "cfutils": { "command": "cfutils-mcp" } } }
 ```
 
-**ChangeLog**
+## ChangeLog
 
 - Replace the external `ssw` aligner with a bundled Cython Smith-Waterman
   (+ NumPy fallback) — no external alignment dependency.
@@ -278,7 +296,7 @@ Register it in an MCP client's config, e.g.:
 - Fix false-positive mutations from lowercase reference bases (case-insensitive).
 - Build the CLI with rich-click (themed groups, short options, `--version`).
 
-**TODO**
+## TODO
 
 - [x] call mutation by alignment and plot Chromatogram graphic
 - [x] add a doc
