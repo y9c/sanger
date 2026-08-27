@@ -34,8 +34,7 @@ all = [
 ]
 
 [project.urls]
-Repository = "https://github.com/yech1990/sanger"
-Documentation = "https://cf.readthedocs.io/"
+Repository = "https://github.com/y9c/sanger"
 
 [project.scripts]
 sanger = "sanger.cli:cli"

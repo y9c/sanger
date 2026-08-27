@@ -1,4 +1,3 @@
-[![Readthedocs](https://readthedocs.org/projects/sanger/badge/?version=latest)](https://sanger.readthedocs.io/en/latest/?badge=latest)
 [![Pypi Releases](https://img.shields.io/pypi/v/sanger.svg)](https://pypi.python.org/pypi/sanger)
 [![Downloads](https://static.pepy.tech/badge/sanger)](https://pepy.tech/project/sanger)
 

@@ -33,7 +33,7 @@ except Exception:  # pragma: no cover - not installed as a package
 CTX = dict(help_option_names=["-h", "--help"])
 
 
-class CfutilsGroup(click.RichGroup):
+class SangerGroup(click.RichGroup):
     """Root group that surfaces bad input/data errors cleanly.
 
     Library ``ValueError`` / ``RuntimeError`` (bad input or data) are turned
@@ -106,7 +106,7 @@ def _emit(record, outdir):
 #  Root group
 # --------------------------------------------------------------------------- #
 @click.group(
-    cls=CfutilsGroup,
+    cls=SangerGroup,
     invoke_without_command=False,
     help="sanger — Sanger sequencing chromatogram analysis toolkit.",
     context_settings=CTX,
