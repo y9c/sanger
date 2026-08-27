@@ -102,21 +102,22 @@ compiler and no plotting library required:
 pip install cfutils
 ```
 
-Parsing, QC, alignment (a NumPy Smith-Waterman fallback is built in), analysis
-and export all work out of the box.
+Parsing, QC, alignment (a bundled Cython Smith-Waterman with a NumPy fallback),
+analysis and export all work out of the box — no external alignment library is
+required.
 
 ### optional extras
 
 ```bash
 pip install "cfutils[plot]"     # matplotlib -> chromatogram figures
-pip install "cfutils[align]"    # ssw (C) -> faster alignment
 pip install "cfutils[viewer]"   # DNA Features Viewer integration
+pip install "cfutils[agent]"    # MCP server for LLM agents
 pip install "cfutils[all]"      # everything
 ```
 
-The bundled Cython Smith-Waterman accelerator (`cfutils._swalign`) is compiled
-automatically when a C compiler is present at build time and used
-transparently; otherwise the NumPy fallback is used.
+The bundled Cython Smith-Waterman accelerator (`cfutils._swalign`, self-contained,
+no ssw dependency) is compiled automatically when a C compiler is present at
+build time and used transparently; otherwise the NumPy fallback is used.
 
 ### from source
 

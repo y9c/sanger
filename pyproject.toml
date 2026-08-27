@@ -14,10 +14,6 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-# C-accelerated alignment (a pure-Python/NumPy fallback is always available)
-align = [
-    "ssw>=0.4.1,<0.5",
-]
 # plotting (importing/using cfutils works without it)
 plot = [
     "matplotlib>=3.9.2,<4",
@@ -32,7 +28,6 @@ agent = [
 ]
 # everything
 all = [
-    "ssw>=0.4.1,<0.5",
     "matplotlib>=3.9.2,<4",
     "dna-features-viewer>=3.0.0",
     "mcp>=2",

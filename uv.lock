@@ -198,14 +198,10 @@ dependencies = [
 agent = [
     { name = "mcp" },
 ]
-align = [
-    { name = "ssw" },
-]
 all = [
     { name = "dna-features-viewer" },
     { name = "matplotlib" },
     { name = "mcp" },
-    { name = "ssw" },
 ]
 plot = [
     { name = "matplotlib" },
@@ -230,10 +226,8 @@ requires-dist = [
     { name = "mcp", marker = "extra == 'all'", specifier = ">=2" },
     { name = "numpy", specifier = ">=2.3.3,<3" },
     { name = "rich-click", specifier = ">=1.8.0,<2" },
-    { name = "ssw", marker = "extra == 'align'", specifier = ">=0.4.1,<0.5" },
-    { name = "ssw", marker = "extra == 'all'", specifier = ">=0.4.1,<0.5" },
 ]
-provides-extras = ["align", "plot", "viewer", "agent", "all"]
+provides-extras = ["plot", "viewer", "agent", "all"]
 
 [package.metadata.requires-dev]
 dev = [{ name = "pytest", specifier = ">=8.3.5" }]
@@ -1337,15 +1331,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/f8/00/b42a44342a054d58c
 wheels = [
     { url = "https://files.pythonhosted.org/packages/dd/3a/764912c58293d95b6dcdf4cc255f9d10de310580ced547b082eb9d72018c/sse_starlette-3.4.8-py3-none-any.whl", hash = "sha256:6e82314c786709a3cd9520f2285cf9fff90e181e598e8a357b0cf80f66afba0d", size = 16516, upload-time = "2026-08-05T11:19:48.748Z" },
 ]
-
-[[package]]
-name = "ssw"
-version = "0.4.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "six" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/3c/07/395a237cc8b4d23f4363cca47d614fc28eac89b8ec0ed9032245036608c4/ssw-0.4.1.tar.gz", hash = "sha256:a0c090ccc4efee269aa9855f31b1e5c4411c293e569788b43a8a43cd64d949b0", size = 17351, upload-time = "2019-05-10T17:42:32.046Z" }
 
 [[package]]
 name = "starlette"

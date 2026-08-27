@@ -22,14 +22,6 @@ from .utils import get_logger
 
 LOGGER = get_logger(__name__)
 
-try:  # ssw is a compiled extension; fall back to a pure-Python aligner
-    import ssw
-
-    _HAVE_SSW = True
-except Exception:  # pragma: no cover - ssw not installed
-    ssw = None
-    _HAVE_SSW = False
-
 try:  # our own Cython Smith-Waterman accelerator (self-contained)
     from ._swalign import sw_align as _cy_swalign
 
@@ -126,14 +118,12 @@ def _sw_align(reference: str, query: str, match=2, mismatch=-1, gap=-1):
 def _align(reference: str, query: str):
     """Dispatch to the fastest available aligner.
 
-    Priority: our Cython SW (self-contained, C speed) -> ssw (compiled, if
-    installed) -> pure-Python/NumPy Smith-Waterman.
+    Priority: our Cython SW (self-contained, C speed) -> pure-Python/NumPy
+    Smith-Waterman.  No external alignment library is required.
     """
     if _HAVE_CY:
         bi, bj, q_al, r_al = _cy_swalign(reference, query)
         return _PyAlignment(bi, bj, q_al, r_al)
-    if _HAVE_SSW:
-        return ssw.Aligner().align(reference=reference, query=query)
     return _sw_align(reference, query)
 
 
