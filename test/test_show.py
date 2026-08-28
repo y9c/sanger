@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Unit tests for sanger show module."""
 
+import sysconfig
 import unittest
 
 import matplotlib.pyplot as plt
@@ -8,6 +9,10 @@ import matplotlib.pyplot as plt
 from sanger.align import SitePair
 from sanger.parser import parse_abi, parse_fasta
 from sanger.show import annotate_mutation, highlight_base, plot_chromatograph
+
+# matplotlib's deepcopy of tick properties recurses infinitely on
+# free-threaded (Py_GIL_DISABLED) builds, so plotting tests cannot run there.
+FREE_THREADED = bool(sysconfig.get_config_var("Py_GIL_DISABLED"))
 
 
 class TestShowFunc(unittest.TestCase):
@@ -19,11 +24,17 @@ class TestShowFunc(unittest.TestCase):
         self.subject_record = parse_fasta("./data/ref.fa")
         self.fig, self.ax = plt.subplots(1, 1, figsize=(15, 6))
 
+    @unittest.skipIf(
+        FREE_THREADED, "matplotlib deepcopy recurses on free-threaded builds"
+    )
     def test_plot_chromatograph(self) -> None:
         """Test plot_chromatograph function runs without error."""
         plot_chromatograph(self.query_record, region=(10, 30), ax=self.ax)
         self.assertTrue(True)
 
+    @unittest.skipIf(
+        FREE_THREADED, "matplotlib deepcopy recurses on free-threaded builds"
+    )
     def test_highlight_base(self) -> None:
         """Test highlight_base overlays highlight on chromatograph."""
         plot_chromatograph(self.query_record, region=(10, 20), ax=self.ax)

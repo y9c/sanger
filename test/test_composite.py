@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Unit tests for sanger composite (side-by-side plotting) module."""
 
+import sysconfig
 import unittest
 
 import matplotlib.pyplot as plt
@@ -8,6 +9,10 @@ import matplotlib.pyplot as plt
 from sanger.composite import add_panel, side_by_side
 from sanger.features import ChromatogramFeature
 from sanger.parser import parse_abi
+
+# matplotlib's deepcopy of tick properties recurses infinitely on
+# free-threaded (Py_GIL_DISABLED) builds, so plotting tests cannot run there.
+FREE_THREADED = bool(sysconfig.get_config_var("Py_GIL_DISABLED"))
 
 
 def gc_panel(ax, trace_x, peaks, seq, record, start_pos=None):
@@ -38,6 +43,9 @@ class TestComposite(unittest.TestCase):
     def setUpClass(cls):
         cls.query = parse_abi("./data/B5-M13R_B07.ab1")
 
+    @unittest.skipIf(
+        FREE_THREADED, "matplotlib deepcopy recurses on free-threaded builds"
+    )
     def test_side_by_side_runs(self):
         fig, (ax_chrom, ax_panel) = side_by_side(
             self.query,
@@ -50,6 +58,9 @@ class TestComposite(unittest.TestCase):
         self.assertIsNotNone(fig)
         plt.close(fig)
 
+    @unittest.skipIf(
+        FREE_THREADED, "matplotlib deepcopy recurses on free-threaded builds"
+    )
     def test_add_panel_runs(self):
         fig, ax = plt.subplots(1, 1, figsize=(16, 5))
         from sanger.show import plot_chromatograph

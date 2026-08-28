@@ -2,15 +2,23 @@
 """Unit tests for sanger advanced mutation reporting."""
 
 import os
+import sysconfig
 import tempfile
 import unittest
 
 from sanger.run import report_mutation
 
+# matplotlib's deepcopy of tick properties recurses infinitely on
+# free-threaded (Py_GIL_DISABLED) builds, so plotting tests cannot run there.
+FREE_THREADED = bool(sysconfig.get_config_var("Py_GIL_DISABLED"))
+
 
 class TestFunc(unittest.TestCase):
     """Test advanced mutation reporting in sanger."""
 
+    @unittest.skipIf(
+        FREE_THREADED, "matplotlib deepcopy recurses on free-threaded builds"
+    )
     def test_plot_mutation(self) -> None:
         """Test report_mutation with plot output enabled and check output files."""
         with tempfile.TemporaryDirectory() as tmpdir:

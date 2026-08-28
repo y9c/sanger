@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Unit tests for sanger features (annotation overlay) module."""
 
+import sysconfig
 import unittest
 
 import matplotlib.pyplot as plt
@@ -15,6 +16,10 @@ from sanger.features import (
 )
 from sanger.parser import parse_abi
 from sanger.show import plot_chromatograph
+
+# matplotlib's deepcopy of tick properties recurses infinitely on
+# free-threaded (Py_GIL_DISABLED) builds, so plotting tests cannot run there.
+FREE_THREADED = bool(sysconfig.get_config_var("Py_GIL_DISABLED"))
 
 
 class TestFeatures(unittest.TestCase):
@@ -63,6 +68,9 @@ class TestFeatures(unittest.TestCase):
         plot_features(self.query, ax, features=feats)
         plt.close(fig)
 
+    @unittest.skipIf(
+        FREE_THREADED, "matplotlib deepcopy recurses on free-threaded builds"
+    )
     def test_plot_features_clips_out_of_range(self):
         """Features outside the visible x-range must not expand the axes."""
         fig, ax = plt.subplots(1, 1, figsize=(15, 6))

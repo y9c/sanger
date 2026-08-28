@@ -81,6 +81,12 @@ The bundled Cython Smith-Waterman accelerator (`sanger._swalign`,
 self-contained, no `ssw` dependency) is compiled automatically when a C
 compiler is present at build time; otherwise the NumPy fallback is used.
 
+> **Free-threaded (no-GIL) Python:** the `[plot]` features are currently
+> skipped on free-threaded builds (e.g. `cpython-3.14t`) because matplotlib's
+> tick-copy recurses there. Everything else — parsing, alignment, QC,
+> base-calling, export — works fine; plotting tests are skipped automatically
+> (`Py_GIL_DISABLED`).
+
 From source:
 
 ```bash

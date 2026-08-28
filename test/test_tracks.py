@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Unit tests for sanger tracks (split/join) module."""
 
+import sysconfig
 import unittest
 
 import numpy as np
@@ -13,6 +14,10 @@ from sanger.tracks import (
     slice_track,
     split_track,
 )
+
+# matplotlib's deepcopy of tick properties recurses infinitely on
+# free-threaded (Py_GIL_DISABLED) builds, so plotting tests cannot run there.
+FREE_THREADED = bool(sysconfig.get_config_var("Py_GIL_DISABLED"))
 
 
 class TestTracks(unittest.TestCase):
@@ -68,6 +73,9 @@ class TestTracks(unittest.TestCase):
                 len(self.query.annotations["channel 1"]),
             )
 
+    @unittest.skipIf(
+        FREE_THREADED, "matplotlib deepcopy recurses on free-threaded builds"
+    )
     def test_slice_preserves_channels_and_plots(self):
         seg = slice_track(self.query, 10, 20)
         self.assertEqual(
