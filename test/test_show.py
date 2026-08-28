@@ -41,6 +41,19 @@ class TestShowFunc(unittest.TestCase):
         highlight_base(14, self.query_record, self.ax)
         self.assertTrue(True)
 
+    @unittest.skipIf(
+        FREE_THREADED, "matplotlib deepcopy recurses on free-threaded builds"
+    )
+    def test_region_selects_1based_bases(self) -> None:
+        """region=(start, end) is 1-based inclusive: render bases start..end.
+
+        Regression: the region was applied as 0-based indices, shifting the
+        window one base to the right (bases 11..21 instead of 10..20).
+        """
+        ax = plot_chromatograph(self.query_record, region=(10, 20), ax=self.ax)
+        labels = [t.get_text() for t in ax.get_xticklabels() if t.get_text()]
+        self.assertEqual(labels, [str(i) for i in range(10, 21)])
+
     def test_annotate_mutation(self) -> None:
         """Test annotate_mutation overlays mutation annotation."""
         mutation = SitePair(ref_pos=10, ref_base="A", cf_pos=14, cf_base="T")

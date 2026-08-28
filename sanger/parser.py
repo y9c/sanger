@@ -150,6 +150,13 @@ def abi_iterator(handle):
     # initialize annotations
     annot = dict(zip(_EXTRACT.values(), [None] * len(_EXTRACT)))
 
+    # defaults for tags that may be absent from a file, so a record is still
+    # produced instead of raising UnboundLocalError (e.g. no SMPL1/PBAS2/PCON2)
+    seq = ""
+    qual = []
+    sample_id = ""
+    channelorders = "ACGT"
+
     # parse header and extract data from directories
     header = struct.unpack(_HEADFMT, handle.read(struct.calcsize(_HEADFMT)))
 
@@ -377,8 +384,10 @@ def rescale_trace(seq: SeqRecord) -> SeqRecord:
         [t for (i, t) in enumerate(trace) if peaks[0] <= i < peaks[-1]]
         for trace in traces
     ]
-    #  peaks = [(p - peaks[0]) / step for p in peaks]
-    peaks = [p / step for p in peaks]
+    # subtract peaks[0] so the rescaled peak axis starts at 0, in step with
+    # trace_x (which starts at 0.0 here); otherwise every base label is
+    # shifted right by peaks[0]/step units relative to its trace peak.
+    peaks = [(p - peaks[0]) / step for p in peaks]
 
     x = [1.0 * i / step for i in range(len(traces[0]))]
 

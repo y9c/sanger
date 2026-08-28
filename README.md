@@ -291,6 +291,18 @@ Register it in an MCP client's config, e.g.:
 
 ## ChangeLog
 
+- Fix rescaled peak-axis drift: `peaks[0]` now aligns to 0 (in step with
+  `trace_x`) instead of being shifted right by `peaks[0]/step`.
+- Fix `reverse_complement_record` axis: traces/peaks are now both mirrored
+  **and** reversed so each RC base sits over the correct dye signal.
+- Fix 1-based `region=(start, end)` in `plot_chromatograph` so the requested
+  bases are shown and `composite.side_by_side` / `dnalink.plot_combined`
+  panels line up exactly with the chromatogram.
+- Make `Chromatogram.export(fmt=...)` actually write `fasta` / `json` / `vcf`
+  (previously `fmt` was ignored); unknown formats now raise `ValueError`.
+- Harden `abi_iterator` against files missing `SMPL1` / `PBAS2` / `PCON2` tags.
+- Skip matplotlib plotting tests on free-threaded (`Py_GIL_DISABLED`) builds,
+  where matplotlib's tick-copy deep-copy recurses.
 - Replace the external `ssw` aligner with a bundled Cython Smith-Waterman
   (+ NumPy fallback) — no external alignment dependency.
 - Reverse-complement the chromatogram file (inspired by Snapgene).

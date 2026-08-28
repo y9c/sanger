@@ -54,6 +54,21 @@ class TestChromatogram(unittest.TestCase):
     def test_repr(self):
         self.assertIn("B5-M13R_B07", repr(self.cg))
 
+    def test_export_formats(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertTrue(self.cg.export(tmp).endswith(".fa"))
+            self.assertTrue(self.cg.export(tmp, fmt="json").endswith(".json"))
+            vcf = self.cg.export(tmp, fmt="vcf", reference=self.ref)
+            self.assertTrue(vcf.endswith(".vcf"))
+            # unknown formats must fail loudly, not silently write FASTA
+            with self.assertRaises(ValueError):
+                self.cg.export(tmp, fmt="bogus")
+            # vcf without a reference must fail
+            with self.assertRaises(ValueError):
+                self.cg.export(tmp, fmt="vcf")
+
 
 if __name__ == "__main__":
     unittest.main()

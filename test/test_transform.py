@@ -3,6 +3,8 @@
 
 import unittest
 
+import numpy as np
+
 from sanger.parser import parse_abi
 from sanger.transform import reverse_complement_record, strip_primers, trim, trim_ends
 from sanger.utils import normalize_ambiguity
@@ -47,10 +49,32 @@ class TestTransform(unittest.TestCase):
         self.assertEqual(
             len(rc.annotations["channel 1"]), len(self.query.annotations["channel 1"])
         )
+        # axis alignment: rc.seq[0] is the complement of the ORIGINAL LAST base,
+        # so it must sit at the LEFT (smallest peak x) of the flipped axis
+        rp = rc.annotations["peak positions"]
+        rt = rc.annotations["trace_x"]
+        self.assertTrue(
+            all(rp[i] <= rp[i + 1] for i in range(len(rp) - 1)),
+            "RC peak axis must be increasing (mirrored then reversed)",
+        )
+        self.assertEqual(len(rt), len(rc.annotations["channel 1"]))
+        # rc.seq[0] should sit where the original last peak maps to after flip:
+        # xmax - orig_peaks[-1]
+        xmax = max(self.query.annotations["trace_x"])
+        self.assertAlmostEqual(
+            rp[0], xmax - self.query.annotations["peak positions"][-1], delta=1e-6
+        )
 
     def test_double_rc_is_identity_seq(self):
         rc2 = reverse_complement_record(reverse_complement_record(self.query))
         self.assertEqual(rc2.seq, self.query.seq)
+        # double-RC must also restore the original peak axis (mirror+reverse twice)
+        np.testing.assert_allclose(
+            rc2.annotations["peak positions"],
+            self.query.annotations["peak positions"],
+            rtol=1e-6,
+            atol=1e-6,
+        )
 
     def test_normalize_ambiguity(self):
         self.assertEqual(normalize_ambiguity("ACGT"), "ACGT")

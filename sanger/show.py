@@ -54,8 +54,11 @@ def plot_chromatograph(
         # turn into 0 based for better indexing
         region_start, region_end = 0, len(seq) - 1
     else:
-        region_start = max(region[0], 0)
-        region_end = min(region[1], len(seq) - 1)
+        # region is a 1-based inclusive (start, end); convert to 0-based
+        # indices so the same region as composite/dnalink/center_region shows
+        # exactly the requested bases (previously shifted one base right)
+        region_start = max(region[0] - 1, 0)
+        region_end = min(region[1] - 1, len(seq) - 1)
 
     _colors = defaultdict(lambda: "purple", BASE_TO_COLOR)
     if color_map is not None:

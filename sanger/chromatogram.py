@@ -193,10 +193,7 @@ class Chromatogram:
         """Return +1 (forward) or -1 (reverse-complement) vs ``reference``."""
         from .align import detect_orientation
 
-        rec = self.record
-        if self.path:
-            rec = self.record
-        return detect_orientation(rec, reference)
+        return detect_orientation(self.record, reference)
 
     def analyze(
         self,
@@ -233,12 +230,26 @@ class Chromatogram:
         sites = call_mutations(self.record, reference, report_all_sites=True)
         return to_vcf(sites, reference_name=reference.name or "ref", min_qual=min_qual)
 
-    def export(self, outdir: str, fmt: str = "fasta") -> str:
+    def export(self, outdir: str, fmt: str = "fasta", reference=None) -> str:
+        """Write the record to ``outdir`` in ``fmt`` (: ``fasta``/``json``/``vcf``)."""
+        from .export import to_json
 
         outdir = Path(outdir)
         outdir.mkdir(parents=True, exist_ok=True)
-        dest = outdir / f"{self.name or 'seq'}.fa"
-        dest.write_text(self.to_fasta())
+        name = self.name or "seq"
+        if fmt in ("fasta", "fa"):
+            dest = outdir / f"{name}.fa"
+            dest.write_text(self.to_fasta())
+        elif fmt == "json":
+            dest = outdir / f"{name}.json"
+            dest.write_text(to_json(self.record))
+        elif fmt == "vcf":
+            if reference is None:
+                raise ValueError("export fmt='vcf' requires a `reference` record")
+            dest = outdir / f"{name}.vcf"
+            dest.write_text(self.to_vcf(reference))
+        else:
+            raise ValueError(f"unknown export format: {fmt!r}")
         return str(dest)
 
     def plot(self, region: Optional[Tuple[int, int]] = None, ax=None):

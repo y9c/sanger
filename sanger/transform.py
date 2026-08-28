@@ -144,11 +144,9 @@ def strip_primers(
         f = forward.upper()
         if seq.startswith(f):
             start = len(f) + 1
-        else:
-            # tolerate the primer being reverse-complemented on the read
-            rc = reverse_complement_record(record).seq.upper()
-            if rc.startswith(f):
-                pass  # user should reverse-complement the record first
+        # (the reverse-complemented-primer tolerance is intentionally a no-op:
+        #  callers should reverse-complement the record first via
+        #  reverse_complement_record before stripping)
     end = len(record)
     if reverse:
         r = reverse.upper()
@@ -193,14 +191,17 @@ def reverse_complement_record(
         annotations=dict(record.annotations),
         letter_annotations={"phred_quality": qual},
     )
-    # mirror the traces and peaks about the trace axis so they point left
+    # mirror the traces and peaks about the trace axis so they point left,
+    # then reverse them so index k lines up with the reversed sequence/quality
+    # (both must be transformed identically or each base sits over the wrong
+    # dye signal / wrong x location)
     if trace_x.size and channels.size:
         xmax = float(trace_x.max())
-        new.annotations["trace_x"] = (xmax - trace_x).tolist()
+        new.annotations["trace_x"] = (xmax - trace_x)[::-1].tolist()
         # reverse the sample order within each channel
         for i in range(1, 5):
             new.annotations["channel " + str(i)] = channels[i - 1][::-1].tolist()
-        new.annotations["peak positions"] = (xmax - peaks).tolist()
+        new.annotations["peak positions"] = (xmax - peaks)[::-1].tolist()
     return new
 
 
